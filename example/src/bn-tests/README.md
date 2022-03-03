@@ -1,0 +1,1 @@
+# All of the test has been copied from https://github.com/indutny/bn.js/blob/master/test/utils-test.js

@@ -2,13 +2,13 @@
 #include <ReactCommon/CallInvokerHolder.h>
 #include <jni.h>
 #include <jsi/jsi.h>
-#include "FastCryptoHostObject.h"
+#include "BigNumberHostObject.h"
 
 using namespace facebook;
 
 class CryptoCppAdapter : public jni::HybridClass<CryptoCppAdapter> {
 public:
-static auto constexpr kJavaDescriptor = "Lcom/reactnativefastcrypto/FastCryptoModule;";
+static auto constexpr kJavaDescriptor = "Lcom/reactnativeBigNumber/BigNumberModule;";
 
 static jni::local_ref<jni::HybridClass<CryptoCppAdapter>::jhybriddata> initHybrid(
   jni::alias_ref<jhybridobject> jThis) {
@@ -20,9 +20,9 @@ explicit CryptoCppAdapter() {
 
 void install(jsi::Runtime& runtime, std::shared_ptr<facebook::react::CallInvoker> jsCallInvoker) {
   auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("margelo crypto worker thread");
-  auto hostObject = std::make_shared<margelo::FastCryptoHostObject>(jsCallInvoker, workerQueue);
+  auto hostObject = std::make_shared<margelo::BigNumberHostObject>(jsCallInvoker, workerQueue);
   auto object = jsi::Object::createFromHostObject(runtime, hostObject);
-  runtime.global().setProperty(runtime, "__FastCryptoProxy", std::move(object));
+  runtime.global().setProperty(runtime, "__BigNumberProxy", std::move(object));
 }
 
 void nativeInstall(jlong jsiPtr, jni::alias_ref<facebook::react::CallInvokerHolder::javaobject>
@@ -32,7 +32,7 @@ void nativeInstall(jlong jsiPtr, jni::alias_ref<facebook::react::CallInvokerHold
   if (runtime) {
     install(*runtime, jsCallInvoker);
   }
-  // if runtime was nullptr, FastCrypto will not be installed. This should only happen while Remote Debugging (Chrome), but will be weird either way.
+  // if runtime was nullptr, BigNumber will not be installed. This should only happen while Remote Debugging (Chrome), but will be weird either way.
 }
 
 static void registerNatives() {

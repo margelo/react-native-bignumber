@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9.0)
 
-set (PACKAGE_NAME "react-native-fast-crypto")
+set (PACKAGE_NAME "react-native-bignumber")
 set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 file (GLOB LIBFBJNI_INCLUDES "${BUILD_DIR}/fbjni-*-headers.jar/")
 file (GLOB LIBRN_SO "${BUILD_DIR}/react-native-0*/jni/${ANDROID_ABI}")
@@ -27,23 +27,19 @@ if(${REACT_NATIVE_VERSION} LESS 66)
         )
 endif()
 
-add_library(reactnativefastcrypto  # <-- Library name
+add_library(reactnativeBigNumber  # <-- Library name
         SHARED
         "src/main/cpp/cpp-adapter.cpp"
-        "../cpp/FastCryptoHostObject.cpp"
+        "../cpp/BigNumberHostObject.cpp"
         "../cpp/JSI Utils/TypedArray.cpp"
         "../cpp/Utils/DispatchQueue.cpp"
         "../cpp/JSI Utils/ThreadAwareHostObject.cpp"
         "../cpp/JSI Utils/SmartHostObject.cpp"
-        "../cpp/HMAC/HmacInstaller.cpp"
-        "../cpp/HMAC/HmacHostObject.cpp"
-        "../cpp/fastpbkdf2/Pbkdf2HostObject.cpp"
-        "../cpp/fastpbkdf2/fastpbkdf2.c"
         ${INCLUDE_JSI_CPP} # only on older RN versions
 )
 
 set_target_properties(
-        reactnativefastcrypto PROPERTIES
+        reactnativeBigNumber PROPERTIES
         CXX_STANDARD 17
         CXX_EXTENSIONS OFF
         POSITION_INDEPENDENT_CODE ON
@@ -96,7 +92,7 @@ endif()
 find_package(openssl REQUIRED CONFIG)
 
 target_link_libraries(
-        reactnativefastcrypto
+        reactnativeBigNumber
         ${TURBOMODULES_LIB}
         ${FBJNI_LIB}
         ${log-lib}

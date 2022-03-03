@@ -2,7 +2,7 @@ import type { TestResult } from './TestResult';
 import { rootSuite } from './MochaRNAdapter';
 import 'mocha';
 import type * as MochaTypes from 'mocha';
-import { pbkdf2RegisterTests } from './pbkdf2Tests/pbkdf2Tests';
+import { pbkdf2RegisterTests } from './bn-tests/pbkdf2Tests';
 
 export async function testLib(addTestResult: (testResult: TestResult) => void) {
   console.log('setting up mocha');
@@ -48,9 +48,6 @@ export async function testLib(addTestResult: (testResult: TestResult) => void) {
       );
     })
     .once(EVENT_RUN_END, () => {});
-
-  pbkdf2RegisterTests();
-  //HmacTests.add();
 
   runner.run();
 }

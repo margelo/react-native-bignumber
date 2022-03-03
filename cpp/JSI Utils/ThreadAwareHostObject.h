@@ -2,8 +2,8 @@
 // Created by Szymon on 24/02/2022.
 //
 
-#ifndef FASTCRYPTOEXAMPLE_THREADAWAREHOSTOBJECT_H
-#define FASTCRYPTOEXAMPLE_THREADAWAREHOSTOBJECT_H
+#ifndef BigNumberEXAMPLE_THREADAWAREHOSTOBJECT_H
+#define BigNumberEXAMPLE_THREADAWAREHOSTOBJECT_H
 
 
 
@@ -42,4 +42,4 @@ std::shared_ptr<DispatchQueue::dispatch_queue> dispatchQueue;
 } // namespace margelo
 
 
-#endif //FASTCRYPTOEXAMPLE_THREADAWAREHOSTOBJECT_H
+#endif //BigNumberEXAMPLE_THREADAWAREHOSTOBJECT_H

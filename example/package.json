@@ -1,6 +1,6 @@
 {
-  "name": "react-native-fast-crypto-example",
-  "description": "Example app for react-native-fast-crypto",
+  "name": "react-native-bignumber-example",
+  "description": "Example app for react-native-bignumber",
   "version": "0.0.1",
   "private": true,
   "scripts": {

@@ -2,8 +2,8 @@
 // Created by Szymon on 24/02/2022.
 //
 
-#ifndef FASTCRYPTOEXAMPLE_SMARTHOSTOBJECT_H
-#define FASTCRYPTOEXAMPLE_SMARTHOSTOBJECT_H
+#ifndef BigNumberEXAMPLE_SMARTHOSTOBJECT_H
+#define BigNumberEXAMPLE_SMARTHOSTOBJECT_H
 
 #include "ThreadAwareHostObject.h"
 #include "JSIMacros.h"
@@ -38,4 +38,4 @@ std::vector<std::pair<std::string, JSIValueBuilder> > fields;
 
 }  // namespace margelo
 
-#endif //FASTCRYPTOEXAMPLE_SMARTHOSTOBJECT_H
+#endif //BigNumberEXAMPLE_SMARTHOSTOBJECT_H

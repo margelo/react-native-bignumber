@@ -2,8 +2,8 @@
 // Created by Szymon on 24/02/2022.
 //
 
-#ifndef FASTCRYPTOEXAMPLE_JSIMACROS_H
-#define FASTCRYPTOEXAMPLE_JSIMACROS_H
+#ifndef BigNumberEXAMPLE_JSIMACROS_H
+#define BigNumberEXAMPLE_JSIMACROS_H
 
 // if you want to create a new marco use (https://godbolt.org) provide flag -E in right panel
 
@@ -23,4 +23,4 @@
                                                           body \
                                                           )
 
-#endif //FASTCRYPTOEXAMPLE_JSIMACROS_H
+#endif //BigNumberEXAMPLE_JSIMACROS_H

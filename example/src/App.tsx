@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { FastCrypto } from 'react-native-fast-crypto';
+import { BigNumber } from 'react-native-bignumber';
 import { Tests } from './Tests';
 
 // Uncomment to run benchmark
@@ -15,9 +15,9 @@ export default function App() {
     <View style={styles.container}>
       <Text>
         Hello!{' '}
-        {FastCrypto == null
-          ? 'FastCrypto is null :('
-          : 'FastCrypto is installed!'}
+        {BigNumber == null
+          ? 'BigNumber is null :('
+          : 'BigNumber is installed!'}
       </Text>
       <Tests />
     </View>

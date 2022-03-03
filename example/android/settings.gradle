@@ -1,6 +1,6 @@
-rootProject.name = 'FastCryptoExample'
+rootProject.name = 'BigNumberExample'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativefastcrypto'
-project(':reactnativefastcrypto').projectDir = new File(rootProject.projectDir, '../../android')
+include ':reactnativeBigNumber'
+project(':reactnativeBigNumber').projectDir = new File(rootProject.projectDir, '../../android')
