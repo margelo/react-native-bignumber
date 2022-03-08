@@ -35,6 +35,7 @@ add_library(reactnativeBigNumber  # <-- Library name
         "../cpp/Utils/DispatchQueue.cpp"
         "../cpp/JSI Utils/ThreadAwareHostObject.cpp"
         "../cpp/JSI Utils/SmartHostObject.cpp"
+        "../cpp/BigNumber/BigNumber.cpp"
         ${INCLUDE_JSI_CPP} # only on older RN versions
 )
 

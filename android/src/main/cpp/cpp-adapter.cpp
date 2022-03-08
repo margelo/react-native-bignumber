@@ -8,7 +8,7 @@ using namespace facebook;
 
 class CryptoCppAdapter : public jni::HybridClass<CryptoCppAdapter> {
 public:
-static auto constexpr kJavaDescriptor = "Lcom/reactnativeBigNumber/BigNumberModule;";
+static auto constexpr kJavaDescriptor = "Lcom/reactnativebignumber/BigNumberModule;";
 
 static jni::local_ref<jni::HybridClass<CryptoCppAdapter>::jhybriddata> initHybrid(
   jni::alias_ref<jhybridobject> jThis) {

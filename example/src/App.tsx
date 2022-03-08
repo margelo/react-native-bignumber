@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { BigNumber } from 'react-native-bignumber';
+import { BN } from 'react-native-bignumber';
 import { Tests } from './Tests';
 
 // Uncomment to run benchmark
@@ -14,10 +14,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>
-        Hello!{' '}
-        {BigNumber == null
-          ? 'BigNumber is null :('
-          : 'BigNumber is installed!'}
+        Hello! {BN == null ? 'BigNumber is null :(' : 'BigNumber is installed!'}
       </Text>
       <Tests />
     </View>
