@@ -1,9 +1,43 @@
-import { NativeBigNumber } from './NativeBigNumber/NativeBigNumber';
+import {
+  NativeBigNumber,
+  InternalNumber,
+} from './NativeBigNumber/NativeBigNumber';
 
-async function runAsync(): Promise<number> {
-  return NativeBigNumber.runAsync();
+const createFromString = NativeBigNumber.createFromString;
+const createFromNumber = NativeBigNumber.creareFromNumber;
+
+export class BN {
+  private internalBigNum: InternalNumber;
+
+  constructor(asString: string, base: 2 | 10 | 16);
+  constructor(value: number);
+  constructor(in: InternalNumber);
+  constructor(...args: any[]) {
+    if (typeof args[0] === 'string') {
+      this.internalBigNum = createFromString(args[0], args[1]);
+      return;
+    }
+    if (typeof args[0] === 'number') {
+      this.internalBigNum = createFromNumber(args[0]);
+      return;
+    }
+    if ((typeof args[0] === 'object') && args[0].isInternalBigNum) {
+      this.internalBigNum = args[0];
+      return;
+    }
+    throw 'BN constructor got wrong params :(';
+  }
+
+  toString(base: 2 | 10 | 16, len?: number) {
+    this.internalBigNum.toString(base, len);
+  }
+
+  iadd(other: BN) {
+    this.internalBigNum.add(other.internalBigNum);
+  }
+
+  add(other: BN) {
+    return new BN(this.internalBigNum.add(other.internalBigNum));
+  }
 }
 
-export const BigNumber = {
-  runAsync,
-};

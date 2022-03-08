@@ -1,7 +1,15 @@
 import { NativeModules, Platform } from 'react-native';
 
+export interface InternalNumber {
+  toString: (base: 2 | 10 | 16, len?: number) => string;
+  add: (other: InternalNumber) => InternalNumber;
+  iadd: (other: InternalNumber) => void;
+  isInternalBigNum: true;
+}
+
 interface NativeBigNumberSpec {
-  runAsync: () => Promise<number>;
+  createFromString: (strRep: string, base: number) => InternalNumber;
+  creareFromNumber: (number: number) => InternalNumber;
 }
 
 // global func declaration for JSI functions

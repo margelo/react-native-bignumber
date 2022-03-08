@@ -5,6 +5,7 @@
 #include <jsi/jsi.h>
 #include <ReactCommon/CallInvoker.h>
 #include <memory>
+#include <openssl/ossl_typ.h>
 #include "Utils/DispatchQueue.h"
 #include "JSI Utils/SmartHostObject.h"
 
@@ -19,7 +20,10 @@ explicit BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
                               std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
 
 virtual ~BigNumberHostObject() {
+
 }
+
+    static BN_CTX *bn_ctx;
 };
 
 }  // namespace margelo
