@@ -15,21 +15,21 @@ export class BN {
   constructor(...args: any[]) {
     if (typeof args[0] === 'string') {
       this.internalBigNum = createFromString(args[0], args[1]);
-      return;
+      return this;
     }
     if (typeof args[0] === 'number') {
       this.internalBigNum = createFromNumber(args[0]);
-      return;
+      return this;
     }
     if ((typeof args[0] === 'object') && args[0].isInternalBigNum) {
       this.internalBigNum = args[0];
-      return;
+      return this;
     }
     throw 'BN constructor got wrong params :(';
   }
 
   toString(base: 2 | 10 | 16, len?: number) {
-    this.internalBigNum.toString(base, len);
+    return this.internalBigNum.toString(base, len);
   }
 
   iadd(other: BN) {

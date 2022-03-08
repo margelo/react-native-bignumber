@@ -3,6 +3,8 @@
 //
 
 #include "BigNumber.h"
+#include <android/log.h>
+#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -27,7 +29,12 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx, std::sh
     if (base == 10) {
         BN_dec2bn(&(this->bign), numberAsString.c_str());
     }
-    if (base == 2) { // TODO(Szymon) fix negative numbers
+    if (base == 2) {
+        bool negative = false;
+        if (numberAsString.front() == '-') {
+            negative = true;
+            numberAsString.erase(0, 1);
+        }
         int needToAdd = (4 - (numberAsString.size() % 4)) % 4;
         while (needToAdd--) {
             numberAsString = "0" + numberAsString;
@@ -35,7 +42,7 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx, std::sh
         int n = numberAsString.size()/4 + 1;
         char * inHex = new char[n];
         inHex[n - 1] = '\0';
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n - 1; ++i) {
             int value = 0;
             int beginning = i * 4;
             for (int j = 0; j < 4; ++j) {
@@ -52,6 +59,10 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx, std::sh
         }
 
         BN_hex2bn(&(this->bign), inHex);
+
+        if (negative) {
+            BN_set_negative(this->bign, 1);
+        }
 
         delete [] inHex;
     }
@@ -121,35 +132,32 @@ void BigNumber::installMethods() {
         }
     }));
 
-
     this->fields.push_back(HOST_LAMBDA("iadd", {
             const jsi::Value & otherValue = arguments[0];
             if (!otherValue.isObject()) {
-                throw "iadd expects BigNumb";
+                throw jsi::JSError(runtime, "iadd expects BigNumb");
             }
             jsi::Object otherObject = otherValue.asObject(runtime);
             if (!otherObject.isHostObject<BigNumber>(runtime)) {
-                throw "iadd expects BigNumb";
+                throw jsi::JSError(runtime, "iadd expects BigNumb");
             }
             std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
             BN_add(this->bign, other->bign, this->bign);
     }));
 
-
-
     this->fields.push_back(HOST_LAMBDA("add", {
             const jsi::Value & otherValue = arguments[0];
             if (!otherValue.isObject()) {
-                throw "iadd expects BigNumb";
+                throw jsi::JSError(runtime, "add expects BigNumb");
             }
             jsi::Object otherObject = otherValue.asObject(runtime);
             if (!otherObject.isHostObject<BigNumber>(runtime)) {
-                throw "iadd expects BigNumb";
+                throw jsi::JSError(runtime, "add expects BigNumb");
             }
             std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
             std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
-            BN_add(this->bign, other->bign, res->bign);
+            BN_add(res->bign, other->bign, this->bign);
             return jsi::Object::createFromHostObject(runtime, res);
     }));
 

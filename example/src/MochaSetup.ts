@@ -55,12 +55,21 @@ export async function testLib(addTestResult: (testResult: TestResult) => void) {
       var a = new BN('10', 10);
       chai.expect(a.toString(10)).to.be.eql('10');
     });
+
     it('basic add', () => {
       var a = new BN('dead', 16);
       var b = new BN('101010', 2);
 
       var res = a.add(b);
       chai.expect(res.toString(10)).to.be.eql('57047');
+    });
+
+    it('basic add with negative num', () => {
+      var a = new BN('5', 16);
+      var b = new BN('-101010', 2);
+
+      var res = a.add(b);
+      chai.expect(res.toString(10)).to.be.eql('-37');
     });
   });
 
