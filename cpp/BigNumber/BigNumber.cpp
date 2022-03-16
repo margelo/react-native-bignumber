@@ -4,6 +4,7 @@
 
 #include "BigNumber.h"
 #include <android/log.h>
+#include "Utils/BigNumHelper.h"
 #define APPNAME "MyApp"
 
 namespace margelo {
@@ -250,13 +251,19 @@ void BigNumber::installMethods() {
     }));
 
     this->fields.push_back(HOST_LAMBDA("setn", {
-        const jsi::Value & otherValue = arguments[0];
-        if (!otherValue.isNumber()) {
-            throw jsi::JSError(runtime, "setn expects integer");
+        const jsi::Value & indexValue = arguments[0];
+        const jsi::Value & newValue = arguments[1];
+        if (!indexValue.isNumber() || !newValue.isNumber()) {
+            throw jsi::JSError(runtime, "setn expects 2 integers");
         }
-        unsigned int other = otherValue.asNumber();
+        int value = newValue.asNumber();
+        unsigned int index = indexValue.asNumber();
 
-        BN_set_bit(this->bign, other);
+        if (value) {
+            BN_set_bit(this->bign, index);
+        } else {
+            BN_clear_bit(this->bign, index);
+        }
     }));
 
     this->fields.push_back(HOST_LAMBDA("testn", {
@@ -267,6 +274,29 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         return jsi::Value(runtime, BN_is_bit_set(this->bign, other) != 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("bincn", { // Can be optimised with low level API
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "testn expects integer");
+        }
+        unsigned int value = otherValue.asNumber();
+        std::shared_ptr<BigNumber> temp = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+
+        BN_zero(temp->bign);
+        BN_set_bit(temp->bign, value);
+        BN_add(this->bign, temp->bign, this->bign);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("inotn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "testn expects integer");
+        }
+        unsigned int len = otherValue.asNumber();
+
+        BigNumHelper::BN_notn(this->bign, len);
     }));
 
     this->fields.push_back(HOST_LAMBDA("imaskn", {
@@ -307,6 +337,26 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_lshift(res->bign, this->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ishrn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "ishrn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        BN_rshift(this->bign, this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("shrn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "shrn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_rshift(res->bign, this->bign, other);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -754,7 +804,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
-        BN_gcd(this->bign, this->bign, other->bign, this->ctx);
+        BigNumHelper::BN_or(this->bign, this->bign, other->bign);
     }));
 
     this->fields.push_back(HOST_LAMBDA("or", {
@@ -769,7 +819,67 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
-        BN_gcd(res->bign, this->bign, other->bign, this->ctx);
+        BigNumHelper::BN_or(res->bign, this->bign, other->bign);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("iand", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "iand expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "iand expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        BigNumHelper::BN_and(this->bign, this->bign, other->bign);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("and", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "and expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "and expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BigNumHelper::BN_and(res->bign, this->bign, other->bign);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ixor", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "ixor expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "ixor expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        BigNumHelper::BN_xor(this->bign, this->bign, other->bign);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("xor", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "xor expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "xor expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BigNumHelper::BN_xor(res->bign, this->bign, other->bign);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 

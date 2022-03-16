@@ -36,6 +36,7 @@ add_library(reactnativeBigNumber  # <-- Library name
         "../cpp/JSI Utils/ThreadAwareHostObject.cpp"
         "../cpp/JSI Utils/SmartHostObject.cpp"
         "../cpp/BigNumber/BigNumber.cpp"
+        "../cpp/Utils/BigNumHelper.cpp"
         ${INCLUDE_JSI_CPP} # only on older RN versions
 )
 
@@ -102,4 +103,5 @@ target_link_libraries(
         ${REACT_LIB}
         android
         openssl::crypto
+        openssl::ssl
 )
