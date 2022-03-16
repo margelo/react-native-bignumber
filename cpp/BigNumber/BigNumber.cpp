@@ -132,6 +132,186 @@ void BigNumber::installMethods() {
         }
     }));
 
+    // with number
+
+    this->fields.push_back(HOST_LAMBDA("iaddn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "iaddn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_add_word(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("addn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "iaddn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_add_word(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isubn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "isubn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_sub_word(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("subn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "subn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_sub_word(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("imuln", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "imuln expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_mul_word(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("muln", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "muln expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_mul_word(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("idivn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "idivn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_div_word(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("divn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "divn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_div_word(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("imodn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "imodn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_mod_word(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("modn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "modn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_mod_word(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("setn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "setn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        BN_set_bit(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("testn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "testn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+
+        return jsi::Value(runtime, BN_is_bit_set(this->bign, other) != 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("imaskn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "imaskn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        BN_mask_bits(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("maskn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "maskn expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_mask_bits(res->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ishln", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "ishln expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        BN_lshift(this->bign, this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("shln", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "shln expects integer");
+        }
+        unsigned int other = otherValue.asNumber();
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_lshift(res->bign, this->bign, other);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    // with BigNumber
+
     this->fields.push_back(HOST_LAMBDA("iadd", {
             const jsi::Value & otherValue = arguments[0];
             if (!otherValue.isObject()) {
@@ -161,6 +341,437 @@ void BigNumber::installMethods() {
             return jsi::Object::createFromHostObject(runtime, res);
     }));
 
+    this->fields.push_back(HOST_LAMBDA("isub", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "isub expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "isub expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+        BN_sub(this->bign, this->bign, other->bign);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("sub", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "sub expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "sub expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_sub(res->bign, this->bign, other->bign);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("imul", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "imul expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "imul expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+        BN_mul(this->bign, other->bign, this->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("mul", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "mul expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "mul expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_mul(res->bign, other->bign, this->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("idiv", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "idiv expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "idiv expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+        BN_div(this->bign, nullptr, this->bign, other->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("div", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "div expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "div expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_div(res->bign, nullptr, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("divmod", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "divmod expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "divmod expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        std::shared_ptr<BigNumber> rem = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_div(res->bign, rem->bign, this->bign, other->bign, this->ctx);
+        jsi::Object obj(runtime);
+        obj.setProperty(runtime, "div", jsi::Object::createFromHostObject(runtime, res));
+        obj.setProperty(runtime, "mod", jsi::Object::createFromHostObject(runtime, rem));
+        return obj;
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("divRound", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "divRound expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "divRound expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        std::shared_ptr<BigNumber> rem = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+
+        if (BN_is_zero(res->bign)) {
+            return jsi::Object::createFromHostObject(runtime, res);
+        }
+
+        std::shared_ptr<BigNumber> temp = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_div(res->bign, rem->bign, this->bign, other->bign, this->ctx);
+        BN_sub(temp->bign, other->bign, rem->bign);
+        if (BN_cmp(rem->bign, temp->bign) <= 0) {
+            return jsi::Object::createFromHostObject(runtime, res);
+        } else {
+            BN_add_word(res->bign, 1);
+            return jsi::Object::createFromHostObject(runtime, res);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isqr", {
+        BN_sqr(this->bign, this->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("sqr", {
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_sqr(res->bign, this->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isZero", {
+        if (BN_zero(this->bign)) {
+            return jsi::Value(runtime, true);
+        } else {
+            return jsi::Value(runtime, false);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isOne", {
+        if (BN_one(this->bign)) {
+            return jsi::Value(runtime, true);
+        } else {
+            return jsi::Value(runtime, false);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("bitLength", {
+        return jsi::Value(runtime, BN_num_bits(this->bign));
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("byteLength", {
+        return jsi::Value(runtime, BN_num_bytes(this->bign));
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isNeg", {
+        if (BN_is_negative(this->bign)) {
+            return jsi::Value(runtime, true);
+        } else {
+            return jsi::Value(runtime, false);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isOdd", {
+        if (BN_is_odd(this->bign)) {
+            return jsi::Value(runtime, true);
+        } else {
+            return jsi::Value(runtime, false);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isEven", {
+        if (!BN_is_odd(this->bign)) {
+            return jsi::Value(runtime, true);
+        } else {
+            return jsi::Value(runtime, false);
+        }
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("iabs", {
+        BN_set_negative(this->bign, 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("abs", {
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_set_negative(res->bign, 0);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ineg", {
+        BN_set_negative(this->bign, 1);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("neg", {
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BN_set_negative(res->bign, 1);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ipow", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "ipow expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "ipow expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+        BN_exp(this->bign, this->bign, other->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("pow", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "pow expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "pow expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_exp(res->bign, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("cmp", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign));
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("lt", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign) < 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("lte", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign) <= 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("gt", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign) > 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("gte", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign) >= 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("eq", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "cmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_cmp(this->bign, other->bign) == 0);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ucmp", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "ucmp expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "ucmp expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        return jsi::Value(runtime, BN_ucmp(this->bign, other->bign));
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("imod", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "imod expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "imod expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+        BN_div(nullptr, this->bign, this->bign, other->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("mod", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "mod expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "mod expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_div(nullptr, res->bign, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("igcd", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "igcd expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "igcd expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        BN_gcd(this->bign, this->bign, other->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("gcd", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "gcd expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "gcd expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_gcd(res->bign, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("ior", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "ior expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "ior expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        BN_gcd(this->bign, this->bign, other->bign, this->ctx);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("or", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "or expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "or expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_gcd(res->bign, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
 
     this->fields.push_back(JSI_VALUE("isInternalBigNum", {
         return jsi::Value(runtime, true);

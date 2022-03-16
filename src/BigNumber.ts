@@ -33,7 +33,7 @@ export class BN {
   }
 
   iadd(other: BN) {
-    this.internalBigNum.add(other.internalBigNum);
+    this.internalBigNum.iadd(other.internalBigNum);
   }
 
   add(other: BN) {
