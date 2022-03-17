@@ -4,13 +4,16 @@
 
 #include "BigNumHelper.h"
 
+namespace margelo {
+
+/* that implementation would be 32-64 times faster
 struct bignum_st_hack
 {
-    BN_ULONG *d;    /* Pointer to an array of 'BN_BITS2' bit chunks. */
-    int top;        /* Index of last used d +1. */
-    /* The next are internal book keeping for bn_expand. */
-    int dmax;       /* Size of the d array. */
-    int neg;        /* one if the number is negative */
+    BN_ULONG *d;    // Pointer to an array of 'BN_BITS2' bit chunks.
+    int top;        //
+    // The next are internal book keeping for bn_expand.
+    int dmax;       // Size of the d array.
+    int neg;       //  one if the number is negative
     int flags;
 };
 
@@ -132,4 +135,110 @@ void BigNumHelper::bn_correct_top(BIGNUM *a) { // looks like it's not exported :
             a->neg = 0;
         a->flags &= ~BN_FLG_FIXED_TOP;
         // bn_pollute(a); Looks to be only used in debug
+} */
+
+//TODO try to do it more efficiently
+
+int BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+    int sizeA = BN_num_bits(a);
+    int sizeB = BN_num_bits(b);
+    if (sizeA < sizeB) {
+        std::swap(a, b);
+        std::swap(sizeA, sizeB);
+    }
+    for (int i = 0; i < sizeB; ++i) {
+        int abit = BN_is_bit_set(a, i) ? 1 : 0;
+        int bbit = BN_is_bit_set(b, i) ? 1 : 0;
+
+        int val = abit ^ bbit;
+
+        if (val) {
+            BN_set_bit(r, i);
+        } else {
+            BN_clear_bit(r, i);
+        }
+    }
+
+    for (int i = sizeB; i < sizeA; ++i) {
+        int val = BN_is_bit_set(a, i) ? 1 : 0;
+
+        if (val) {
+            BN_set_bit(r, i);
+        } else {
+            BN_clear_bit(r, i);
+        }
+    }
 }
+
+int BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+    int sizeA = BN_num_bits(a);
+    int sizeB = BN_num_bits(b);
+    if (sizeA < sizeB) {
+        std::swap(a, b);
+        std::swap(sizeA, sizeB);
+    }
+    for (int i = 0; i < sizeB; ++i) {
+        int abit = BN_is_bit_set(a, i) ? 1 : 0;
+        int bbit = BN_is_bit_set(b, i) ? 1 : 0;
+
+        int val = abit & bbit;
+
+        if (val) {
+            BN_set_bit(r, i);
+        } else {
+            BN_clear_bit(r, i);
+        }
+    }
+}
+
+int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+    int sizeA = BN_num_bits(a);
+    int sizeB = BN_num_bits(b);
+    if (sizeA < sizeB) {
+        std::swap(a, b);
+        std::swap(sizeA, sizeB);
+    }
+    for (int i = 0; i < sizeB; ++i) {
+        int abit = BN_is_bit_set(a, i) ? 1 : 0;
+        int bbit = BN_is_bit_set(b, i) ? 1 : 0;
+
+        int val = abit | bbit;
+
+        if (val) {
+            BN_set_bit(r, i);
+        } else {
+            BN_clear_bit(r, i);
+        }
+    }
+
+    for (int i = sizeB; i < sizeA; ++i) {
+        int val = BN_is_bit_set(a, i) ? 1 : 0;
+
+        if (val) {
+            BN_set_bit(r, i);
+        } else {
+            BN_clear_bit(r, i);
+        }
+    }
+}
+
+void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
+    int sizeA = BN_num_bits(a);
+
+    for (int i = 0; i < sizeA; ++i) {
+        int abit = BN_is_bit_set(a, i) ? 1 : 0;
+        int val = 1 - abit;
+
+        if (val) {
+            BN_set_bit(a, i);
+        } else {
+            BN_clear_bit(a, i);
+        }
+    }
+
+    for (int i = sizeA; i < len; ++i) {
+        BN_set_bit(a, i);
+    }
+}
+
+} // namespace margelo

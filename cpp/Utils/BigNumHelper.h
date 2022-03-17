@@ -13,16 +13,20 @@
 #include <openssl/opensslconf.h>
 #include <openssl/crypto.h>
 
+namespace margelo {
+
 class BigNumHelper {
 public:
     static int BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+
     static int BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+
     static int BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
     static void BN_notn(BIGNUM *pSt, unsigned int len);
 
     static void bn_correct_top(BIGNUM *pSt);
 };
-
+} // namespace margelo
 
 #endif //BIGNUMBEREXAMPLE_BIGNUMHELPER_H

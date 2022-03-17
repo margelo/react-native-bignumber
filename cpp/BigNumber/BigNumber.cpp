@@ -545,6 +545,12 @@ void BigNumber::installMethods() {
         }
     }));
 
+    this->fields.push_back(HOST_LAMBDA("clone", {
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
     this->fields.push_back(HOST_LAMBDA("isOne", {
         if (BN_one(this->bign)) {
             return jsi::Value(runtime, true);
@@ -760,6 +766,22 @@ void BigNumber::installMethods() {
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_div(nullptr, res->bign, this->bign, other->bign, this->ctx);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("invm", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "invm expects BigNumb");
+        }
+        jsi::Object otherObject = otherValue.asObject(runtime);
+        if (!otherObject.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "invm expects BigNumb");
+        }
+        std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_mod_inverse(res->bign, this->bign, other->bign, this->ctx);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 

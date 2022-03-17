@@ -37,6 +37,8 @@ add_library(reactnativeBigNumber  # <-- Library name
         "../cpp/JSI Utils/SmartHostObject.cpp"
         "../cpp/BigNumber/BigNumber.cpp"
         "../cpp/Utils/BigNumHelper.cpp"
+        "../cpp/BigNumber/RedBigNum.cpp"
+        "../cpp/BigNumber/ModContext.cpp"
         ${INCLUDE_JSI_CPP} # only on older RN versions
 )
 
