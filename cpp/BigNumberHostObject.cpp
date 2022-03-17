@@ -102,7 +102,7 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 		return jsi::Object::createFromHostObject(runtime, res);
 	}));
 
-	this->fields.push_back(HOST_LAMBDA("Mod2Bn", {
+	this->fields.push_back(HOST_LAMBDA("mod2Bn", {
 		const jsi::Value & val = arguments[0];
 		if (!val.isObject()) {
 			throw jsi::JSError(runtime, "bn2Mod expects first arg to be a RedBigNumber");

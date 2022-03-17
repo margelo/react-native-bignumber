@@ -147,11 +147,11 @@ void RedBigNum::installMethods() { // TODO
             throw jsi::JSError(runtime, "redPow expects RedBigNum");
         }
         jsi::Object obj = otherValue.getObject(runtime);
-        if (!obj.isHostObject<RedBigNum>(runtime)) {
+        if (!obj.isHostObject<BigNumber>(runtime)) {
             throw jsi::JSError(runtime, "redPow expects RedBigNum");
         }
 
-        std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
+        std::shared_ptr<BigNumber> other = obj.getHostObject<BigNumber>(runtime);
 
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_mod_exp_mont(res->bign, this->bign, other->bign, this->m, this->ctx, this->mctx);

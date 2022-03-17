@@ -59,7 +59,7 @@ export interface InternalNumber {
   clone: () => InternalNumber;
   bitLength: () => number;
   byteLength: () => number;
-  isNeq: () => boolean;
+  isNeg: () => boolean;
   isOdd: () => boolean;
   isEven: () => boolean;
 
@@ -90,7 +90,7 @@ export interface InternalRedNumber {
   redIAdd: (other: InternalRedNumber) => void;
   redSub: (other: InternalRedNumber) => InternalRedNumber;
   redISub: (other: InternalRedNumber) => void;
-  redShl: (places: number) => void;
+  redShl: (places: number) => InternalRedNumber;
   redMul: (other: InternalRedNumber) => InternalRedNumber;
   redIMul: (other: InternalRedNumber) => void;
   redSqr: () => InternalRedNumber;
@@ -98,7 +98,7 @@ export interface InternalRedNumber {
   redSqrt: () => InternalRedNumber;
   redInvm: () => InternalRedNumber;
   redNeg: () => InternalRedNumber;
-  redPow: (other: InternalRedNumber) => InternalRedNumber;
+  redPow: (other: InternalNumber) => InternalRedNumber;
   isInternalRedBigNum: true;
 }
 
@@ -108,8 +108,11 @@ interface NativeBigNumberSpec {
   createFromString: (strRep: string, base: number) => InternalNumber;
   createFromNumber: (number: number) => InternalNumber;
   createModCtx: (internalNumber: InternalNumber) => InternalModContext;
-  bn2Mod: (internalNumber: InternalNumber) => InternalRedNumber;
-  Mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
+  bn2Mod: (
+    internalNumber: InternalNumber,
+    mctx: InternalModContext
+  ) => InternalRedNumber;
+  mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
 }
 
 // global func declaration for JSI functions
