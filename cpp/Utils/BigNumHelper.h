@@ -25,7 +25,9 @@ public:
 
     static void BN_notn(BIGNUM *pSt, unsigned int len);
 
-    static void bn_correct_top(BIGNUM *pSt);
+    static void EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b);
+
+    // static void bn_correct_top(BIGNUM *pSt);
 };
 } // namespace margelo
 
