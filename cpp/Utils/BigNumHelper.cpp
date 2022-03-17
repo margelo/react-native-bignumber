@@ -242,7 +242,7 @@ void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
 }
 
 void BigNumHelper::EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b) {
-    //TODO (Szymon) 
+    //TODO (Szymon)
 }
 
 } // namespace margelo

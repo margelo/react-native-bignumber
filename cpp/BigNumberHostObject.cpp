@@ -55,23 +55,6 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 		return jsi::Object::createFromHostObject(runtime, res);
 	}));
 
-	this->fields.push_back(HOST_LAMBDA("createModCtx", {
-		const jsi::Value & val = arguments[0];
-		if (!val.isObject()) {
-			throw jsi::JSError(runtime, "createModCtx expects bignumber");
-		}
-		jsi::Object obj = val.asObject(runtime);
-
-		if (!obj.isHostObject<BigNumber>(runtime)) {
-			throw jsi::JSError(runtime, "createModCtx expects bignumber");
-		}
-
-		std::shared_ptr<BigNumber> mod = obj.getHostObject<BigNumber>(runtime);
-
-		std::shared_ptr<ModContext> res = std::make_shared<ModContext>(mod->bign, mod->ctx);
-		return jsi::Object::createFromHostObject(runtime, res);
-	}));
-
 	this->fields.push_back(HOST_LAMBDA("createMCTX", {
 		const jsi::Value & val = arguments[0];
 		if (!val.isObject()) {

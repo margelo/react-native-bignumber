@@ -196,6 +196,10 @@ void RedBigNum::installMethods() { // TODO
         BN_mod_lshift(res->bign, this->bign, number, this->m, this->ctx);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
+
+    this->fields.push_back(JSI_VALUE("isInternalRedBigNum", {
+        return jsi::Value(runtime, true);
+    }));
 }
 
 }

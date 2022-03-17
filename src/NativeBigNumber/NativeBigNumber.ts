@@ -7,9 +7,31 @@ export interface InternalNumber {
   isInternalBigNum: true;
 }
 
+export interface InternalRedNumber {
+  redAdd: (other: InternalRedNumber) => InternalRedNumber;
+  redIAdd: (other: InternalRedNumber) => void;
+  redSub: (other: InternalRedNumber) => InternalRedNumber;
+  redISub: (other: InternalRedNumber) => void;
+  redShl: (places: number) => void;
+  redMul: (other: InternalRedNumber) => InternalRedNumber;
+  redIMul: (other: InternalRedNumber) => void;
+  redSqr: () => InternalRedNumber;
+  redISqr: () => void;
+  redSqrt: () => InternalRedNumber;
+  redInvm: () => InternalRedNumber;
+  redNeg: () => InternalRedNumber;
+  redPow: (other: InternalRedNumber) => InternalRedNumber;
+  isInternalRedBigNum: true;
+}
+
+export interface InternalModContext {}
+
 interface NativeBigNumberSpec {
   createFromString: (strRep: string, base: number) => InternalNumber;
-  creareFromNumber: (number: number) => InternalNumber;
+  createFromNumber: (number: number) => InternalNumber;
+  createModCtx: (internalNumber: InternalNumber) => InternalModContext;
+  bn2Mod: (internalNumber: InternalNumber) => InternalRedNumber;
+  Mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
 }
 
 // global func declaration for JSI functions
