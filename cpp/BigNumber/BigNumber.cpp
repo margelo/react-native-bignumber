@@ -102,7 +102,7 @@ void BigNumber::installMethods() {
         }
 
         char *strRep = nullptr;
-        if (base == 2) {
+        if (base == 2) { // TODO (Szymon)
             throw jsi::JSError(runtime, "BN to bin hasn't been implemented yet! :(");
         }
         if (base == 10) {
@@ -306,6 +306,18 @@ void BigNumber::installMethods() {
         }
         unsigned int other = otherValue.asNumber();
         BN_mask_bits(this->bign, other);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("notn", {
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "notn expects integer");
+        }
+        unsigned int len = otherValue.asNumber();
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        BigNumHelper::BN_notn(res->bign, len);
+        return jsi::Object::createFromHostObject(runtime, res);
     }));
 
     this->fields.push_back(HOST_LAMBDA("maskn", {

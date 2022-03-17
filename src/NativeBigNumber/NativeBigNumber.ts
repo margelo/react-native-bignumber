@@ -2,8 +2,86 @@ import { NativeModules, Platform } from 'react-native';
 
 export interface InternalNumber {
   toString: (base: 2 | 10 | 16, len?: number) => string;
+
   add: (other: InternalNumber) => InternalNumber;
   iadd: (other: InternalNumber) => void;
+  iaddn: (other: number) => void;
+  addn: (other: number) => InternalNumber;
+
+  sub: (other: InternalNumber) => InternalNumber;
+  isub: (other: InternalNumber) => void;
+  isubn: (other: number) => void;
+  subn: (other: number) => InternalNumber;
+
+  mul: (other: InternalNumber) => InternalNumber;
+  imul: (other: InternalNumber) => void;
+  imuln: (other: number) => void;
+  muln: (other: number) => InternalNumber;
+
+  div: (other: InternalNumber) => InternalNumber;
+  idiv: (other: InternalNumber) => void;
+  idivn: (other: number) => void;
+  divn: (other: number) => InternalNumber;
+
+  mod: (other: InternalNumber) => InternalNumber;
+  umod: (other: InternalNumber) => InternalNumber;
+  imod: (other: InternalNumber) => void;
+  imodn: (other: number) => void;
+  modn: (other: number) => InternalNumber;
+
+  pow: (other: InternalNumber) => InternalNumber;
+  ipow: (other: InternalNumber) => void;
+
+  setn: (other: number) => void;
+  testn: (bit: number) => boolean;
+  bincn: (bit: number) => void;
+  inotn: (width: number) => void;
+  notn: (width: number) => InternalNumber;
+  imaskn: (bit: number) => void;
+  maskn: (bit: number) => InternalNumber;
+  ishln: (places: number) => void;
+  shln: (places: number) => InternalNumber;
+  ishrn: (places: number) => void;
+  shrn: (places: number) => InternalNumber;
+
+  divmod: (m: InternalNumber) => { div: InternalNumber; mod: InternalNumber };
+  divRound: (other: InternalNumber) => InternalNumber;
+
+  sqr: () => InternalNumber;
+  isqr: () => void;
+  abs: () => InternalNumber;
+  iabs: () => void;
+  neg: () => InternalNumber;
+  ineg: () => void;
+
+  isZero: () => boolean;
+  isOne: () => boolean;
+  clone: () => InternalNumber;
+  bitLength: () => number;
+  byteLength: () => number;
+  isNeq: () => boolean;
+  isOdd: () => boolean;
+  isEven: () => boolean;
+
+  cmp: (other: InternalNumber) => -1 | 0 | 1;
+  ucmp: (other: InternalNumber) => -1 | 0 | 1;
+  lt: (other: InternalNumber) => boolean;
+  lte: (other: InternalNumber) => boolean;
+  gt: (other: InternalNumber) => boolean;
+  gte: (other: InternalNumber) => boolean;
+  eq: (other: InternalNumber) => boolean;
+
+  invm: (other: InternalNumber) => InternalNumber;
+  gcd: (other: InternalNumber) => InternalNumber;
+  igcd: (other: InternalNumber) => boolean;
+
+  ior: (other: InternalNumber) => void;
+  or: (other: InternalNumber) => InternalNumber;
+  iand: (other: InternalNumber) => void;
+  and: (other: InternalNumber) => InternalNumber;
+  ixor: (other: InternalNumber) => void;
+  xor: (other: InternalNumber) => InternalNumber;
+
   isInternalBigNum: true;
 }
 
