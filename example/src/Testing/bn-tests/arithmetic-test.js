@@ -1,6 +1,6 @@
 import { BN } from 'react-native-bignumber';
 import chai from 'chai';
-import { describe, it } from '../MochaRNAdapter';
+import { describe, it, itOnly } from '../MochaRNAdapter';
 var fixtures = require('./fixtures');
 const assert = chai.assert;
 
@@ -19,7 +19,7 @@ export function registerArythmeticTests() {
         assert.equal(r.toString(16), '125868');
       });
 
-      it('should handle carry properly (in-place)', function () {
+      itOnly('should handle carry properly (in-place)', function () {
         var k = new BN('abcdefabcdefabcdef', 16);
         var r = new BN('deadbeef', 16);
 

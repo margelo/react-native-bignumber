@@ -77,6 +77,7 @@ void RedBigNum::installMethods() { // TODO
 
         std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
         BN_mod_add_quick(this->bign, this->bign, other->bign, this->m); // TODO (Szymon) are we sure that values are less than m?
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("redSub", {
@@ -108,6 +109,7 @@ void RedBigNum::installMethods() { // TODO
 
         std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
         BN_mod_sub_quick(this->bign, this->bign, other->bign, this->m); // TODO (Szymon) are we sure that values are less than m?
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("redMul", {
@@ -139,6 +141,7 @@ void RedBigNum::installMethods() { // TODO
 
         std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
         BN_mod_mul_montgomery(this->bign, this->bign, other->bign, this->mctx, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("redPow", {

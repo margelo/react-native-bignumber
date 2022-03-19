@@ -1,5 +1,5 @@
 import type { RowItemType } from '../navigators/children/TestingScreen/RowItemType';
-import { rootSuite, describe, it } from './MochaRNAdapter';
+import { rootSuite, describe, it, clearTests } from './MochaRNAdapter';
 import 'mocha';
 import type * as MochaTypes from 'mocha';
 import chai from 'chai';
@@ -20,7 +20,7 @@ export function testLib(
     EVENT_SUITE_END,
   } = Mocha.Runner.constants;
 
-  rootSuite.suites = []; // clean suites;
+  clearTests();
   var runner = new Mocha.Runner(rootSuite) as MochaTypes.Runner;
 
   let indents = -1;

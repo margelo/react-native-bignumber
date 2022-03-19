@@ -143,6 +143,7 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         BN_add_word(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("addn", {
@@ -166,6 +167,7 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         BN_sub_word(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("subn", {
@@ -189,6 +191,7 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         BN_mul_word(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("muln", {
@@ -212,6 +215,7 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         BN_div_word(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("divn", {
@@ -235,6 +239,7 @@ void BigNumber::installMethods() {
         unsigned int other = otherValue.asNumber();
 
         BN_mod_word(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("modn", {
@@ -264,6 +269,7 @@ void BigNumber::installMethods() {
         } else {
             BN_clear_bit(this->bign, index);
         }
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("testn", {
@@ -287,6 +293,7 @@ void BigNumber::installMethods() {
         BN_zero(temp->bign);
         BN_set_bit(temp->bign, value);
         BN_add(this->bign, temp->bign, this->bign);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("inotn", {
@@ -297,6 +304,7 @@ void BigNumber::installMethods() {
         unsigned int len = otherValue.asNumber();
 
         BigNumHelper::BN_notn(this->bign, len);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("imaskn", {
@@ -306,6 +314,7 @@ void BigNumber::installMethods() {
         }
         unsigned int other = otherValue.asNumber();
         BN_mask_bits(this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("notn", {
@@ -339,6 +348,7 @@ void BigNumber::installMethods() {
         }
         unsigned int other = otherValue.asNumber();
         BN_lshift(this->bign, this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("shln", {
@@ -359,6 +369,7 @@ void BigNumber::installMethods() {
         }
         unsigned int other = otherValue.asNumber();
         BN_rshift(this->bign, this->bign, other);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("shrn", {
@@ -385,6 +396,8 @@ void BigNumber::installMethods() {
             }
             std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
             BN_add(this->bign, other->bign, this->bign);
+
+            return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("add", {
@@ -414,6 +427,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
         BN_sub(this->bign, this->bign, other->bign);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("sub", {
@@ -443,6 +457,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
         BN_mul(this->bign, other->bign, this->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("mul", {
@@ -472,6 +487,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
         BN_div(this->bign, nullptr, this->bign, other->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("div", {
@@ -541,6 +557,7 @@ void BigNumber::installMethods() {
 
     this->fields.push_back(HOST_LAMBDA("isqr", {
         BN_sqr(this->bign, this->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("sqr", {
@@ -605,6 +622,7 @@ void BigNumber::installMethods() {
 
     this->fields.push_back(HOST_LAMBDA("iabs", {
         BN_set_negative(this->bign, 0);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("abs", {
@@ -616,6 +634,7 @@ void BigNumber::installMethods() {
 
     this->fields.push_back(HOST_LAMBDA("ineg", {
         BN_set_negative(this->bign, 1);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("neg", {
@@ -636,6 +655,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
         BN_exp(this->bign, this->bign, other->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("pow", {
@@ -763,6 +783,7 @@ void BigNumber::installMethods() {
         }
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
         BN_div(nullptr, this->bign, this->bign, other->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("mod", {
@@ -825,6 +846,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         BN_gcd(this->bign, this->bign, other->bign, this->ctx);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("gcd", {
@@ -855,6 +877,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         BigNumHelper::BN_or(this->bign, this->bign, other->bign);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("or", {
@@ -885,6 +908,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         BigNumHelper::BN_and(this->bign, this->bign, other->bign);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("and", {
@@ -915,6 +939,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         BigNumHelper::BN_xor(this->bign, this->bign, other->bign);
+        return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("xor", {
