@@ -78,7 +78,9 @@ export const Entry: React.FC<EntryProps> = ({}: EntryProps) => {
           title="run"
           onPress={() => {
             navigation.navigate('TestingScreen', {
-              testRegistrators: tests.map((it) => it.registrator),
+              testRegistrators: tests
+                .filter((it) => it.value)
+                .map((it) => it.registrator),
             });
           }}
         />
