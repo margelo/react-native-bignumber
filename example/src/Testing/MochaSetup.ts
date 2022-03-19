@@ -1,11 +1,14 @@
-import type { TestResult } from './TestResult';
+import type { RowItemType } from '../navigators/children/TestingScreen/RowItemType';
 import { rootSuite, describe, it } from './MochaRNAdapter';
 import 'mocha';
 import type * as MochaTypes from 'mocha';
 import chai from 'chai';
 import { BN } from 'react-native-bignumber';
 
-export async function testLib(addTestResult: (testResult: TestResult) => void) {
+export function testLib(
+  addTestResult: (testResult: RowItemType) => void,
+  testRegistrators: Array<() => void> = []
+) {
   console.log('setting up mocha');
 
   const {
@@ -23,7 +26,13 @@ export async function testLib(addTestResult: (testResult: TestResult) => void) {
   const indent = () => Array(indents).join('  ');
   runner
     .once(EVENT_RUN_BEGIN, () => {})
-    .on(EVENT_SUITE_BEGIN, () => {
+    .on(EVENT_SUITE_BEGIN, (suite: MochaTypes.Suite) => {
+      addTestResult({
+        indentation: indents,
+        description: suite.fullTitle(),
+        key: Math.random().toString(),
+        type: 'grouping',
+      });
       indents++;
     })
     .on(EVENT_SUITE_END, () => {
@@ -31,17 +40,19 @@ export async function testLib(addTestResult: (testResult: TestResult) => void) {
     })
     .on(EVENT_TEST_PASS, (test: MochaTypes.Runnable) => {
       addTestResult({
-        name: test.fullTitle(),
+        indentation: indents,
+        description: test.fullTitle(),
         key: Math.random().toString(),
-        status: 'correct',
+        type: 'correct',
       });
       console.log(`${indent()}pass: ${test.fullTitle()}`);
     })
     .on(EVENT_TEST_FAIL, (test: MochaTypes.Runnable, err: Error) => {
       addTestResult({
-        name: test.fullTitle(),
+        indentation: indents,
+        description: test.fullTitle(),
         key: Math.random().toString(),
-        status: 'incorrect',
+        type: 'incorrect',
         errorMsg: err.message,
       });
       console.log(
@@ -73,5 +84,13 @@ export async function testLib(addTestResult: (testResult: TestResult) => void) {
     });
   });
 
+  testRegistrators.forEach((register) => {
+    register();
+  });
+
   runner.run();
+
+  return () => {
+    runner.abort();
+  };
 }
