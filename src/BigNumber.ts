@@ -36,6 +36,7 @@ export class RedBigNumber {
 
   redIAdd(other: RedBigNumber) {
     this.internalRedBigNum.redIAdd(other.internalRedBigNum);
+    return this;
   }
 
   redSub(other: RedBigNumber) {
@@ -44,6 +45,7 @@ export class RedBigNumber {
 
   redISub(other: RedBigNumber) {
     this.internalRedBigNum.redISub(other.internalRedBigNum);
+    return this;
   }
 
   redMul(other: RedBigNumber) {
@@ -52,6 +54,7 @@ export class RedBigNumber {
 
   redIMul(other: RedBigNumber) {
     this.internalRedBigNum.redIMul(other.internalRedBigNum);
+    return this;
   }
 
   redShl(places: number) {
@@ -68,6 +71,7 @@ export class RedBigNumber {
 
   redISqr() {
     this.internalRedBigNum.redISqr();
+    return this;
   }
 
   redNeg() {
@@ -131,6 +135,7 @@ export class BN {
   // add
   iadd(other: BN) {
     this.internalBigNum.iadd(other.internalBigNum);
+    return this;
   }
 
   add(other: BN) {
@@ -139,6 +144,7 @@ export class BN {
 
   iaddn(other: number) {
     this.internalBigNum.iaddn(other);
+    return this;
   }
 
   addn(other: number) {
@@ -148,6 +154,7 @@ export class BN {
   // sub
   isub(other: BN) {
     this.internalBigNum.isub(other.internalBigNum);
+    return this;
   }
 
   sub(other: BN) {
@@ -156,6 +163,7 @@ export class BN {
 
   isubn(other: number) {
     this.internalBigNum.isubn(other);
+    return this;
   }
 
   subn(other: number) {
@@ -165,6 +173,7 @@ export class BN {
   // mul
   imul(other: BN) {
     this.internalBigNum.imul(other.internalBigNum);
+    return this;
   }
 
   mul(other: BN) {
@@ -173,6 +182,7 @@ export class BN {
 
   imuln(other: number) {
     this.internalBigNum.imuln(other);
+    return this;
   }
 
   muln(other: number) {
@@ -182,6 +192,7 @@ export class BN {
   // div
   idiv(other: BN) {
     this.internalBigNum.idiv(other.internalBigNum);
+    return this;
   }
 
   div(other: BN) {
@@ -190,6 +201,7 @@ export class BN {
 
   idivn(other: number) {
     this.internalBigNum.idivn(other);
+    return this;
   }
 
   divn(other: number) {
@@ -207,6 +219,7 @@ export class BN {
   // mod
   imod(other: BN) {
     this.internalBigNum.imod(other.internalBigNum);
+    return this;
   }
 
   mod(other: BN) {
@@ -219,6 +232,7 @@ export class BN {
 
   imodn(other: number) {
     this.internalBigNum.imodn(other);
+    return this;
   }
 
   modn(other: number) {
@@ -228,6 +242,7 @@ export class BN {
   // pow
   ipow(other: BN) {
     this.internalBigNum.ipow(other.internalBigNum);
+    return this;
   }
 
   pow(other: BN) {
@@ -237,6 +252,7 @@ export class BN {
   // bit manipulation
   setn(bit: number) {
     this.internalBigNum.setn(bit);
+    return this;
   }
 
   testn(bit: number) {
@@ -245,6 +261,7 @@ export class BN {
 
   bincn(bit: number) {
     this.internalBigNum.bincn(bit);
+    return this;
   }
 
   notn(width: number) {
@@ -253,6 +270,7 @@ export class BN {
 
   inotn(width: number) {
     this.internalBigNum.inotn(width);
+    return this;
   }
 
   maskn(width: number) {
@@ -261,6 +279,7 @@ export class BN {
 
   imaskn(width: number) {
     this.internalBigNum.imaskn(width);
+    return this;
   }
 
   shln(width: number) {
@@ -269,6 +288,7 @@ export class BN {
 
   ishln(width: number) {
     this.internalBigNum.ishln(width);
+    return this;
   }
 
   shrn(width: number) {
@@ -277,6 +297,7 @@ export class BN {
 
   ishrn(width: number) {
     this.internalBigNum.ishrn(width);
+    return this;
   }
 
   // no arg operations
@@ -286,6 +307,7 @@ export class BN {
 
   isqr() {
     this.internalBigNum.isqr();
+    return this;
   }
 
   abs() {
@@ -294,6 +316,7 @@ export class BN {
 
   iabs() {
     this.internalBigNum.iabs();
+    return this;
   }
 
   neg() {
@@ -302,6 +325,7 @@ export class BN {
 
   ineg() {
     this.internalBigNum.ineg();
+    return this;
   }
 
   clone() {
@@ -372,7 +396,8 @@ export class BN {
   }
 
   igcd(other: BN) {
-    return new BN(this.internalBigNum.igcd(other.internalBigNum));
+    this.internalBigNum.igcd(other.internalBigNum);
+    return this;
   }
 
   gcd(other: BN) {
@@ -390,6 +415,7 @@ export class BN {
 
   ior(other: BN) {
     this.internalBigNum.ior(other.internalBigNum);
+    return this;
   }
 
   and(other: BN) {
@@ -398,6 +424,7 @@ export class BN {
 
   iand(other: BN) {
     this.internalBigNum.iand(other.internalBigNum);
+    return this;
   }
 
   xor(other: BN) {
@@ -406,6 +433,7 @@ export class BN {
 
   ixor(other: BN) {
     this.internalBigNum.ixor(other.internalBigNum);
+    return this;
   }
 
   // min max

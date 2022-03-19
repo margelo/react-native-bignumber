@@ -19,7 +19,7 @@ export function registerArythmeticTests() {
         assert.equal(r.toString(16), '125868');
       });
 
-      itOnly('should handle carry properly (in-place)', function () {
+      it('should handle carry properly (in-place)', function () {
         var k = new BN('abcdefabcdefabcdef', 16);
         var r = new BN('deadbeef', 16);
 
