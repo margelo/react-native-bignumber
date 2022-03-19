@@ -5,6 +5,7 @@
 #include "BigNumber.h"
 #include <android/log.h>
 #include "Utils/BigNumHelper.h"
+#include <cctype>
 #define APPNAME "MyApp"
 
 namespace margelo {
@@ -120,14 +121,14 @@ void BigNumber::installMethods() {
         }
         if (base == 16) {
             strRep = BN_bn2hex(this->bign);
-            if (len == -1) {
-                return jsi::String::createFromAscii(runtime, strRep);
-            }
             int sizeOfRep = strlen(strRep);
+            if (len == -1) {
+                len = sizeOfRep;
+            }
             std::string res(len, '0');
             for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
                 char dig = strRep[sizeOfRep - 1 - i];
-                res[len - 1 - i] = dig;
+                res[len - 1 - i] = tolower(dig);
             }
             return jsi::String::createFromAscii(runtime, res.c_str());
         }
