@@ -42,8 +42,9 @@ type TestingScreenProps = NativeStackScreenProps<
 >;
 
 export const TestingScreen: React.FC<TestingScreenProps> = ({
-  testRegistrators,
+  route,
 }: TestingScreenProps) => {
+  const { testRegistrators } = route.params;
   const [rows, addRow] = useTestRows();
 
   useEffect(() => {
