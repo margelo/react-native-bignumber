@@ -25,7 +25,7 @@ const useTests = (): [
     (index: number) => {
       setTests((tests) => {
         tests[index].value = !tests[index].value;
-        return tests;
+        return [...tests];
       });
     },
     [setTests]
@@ -59,7 +59,7 @@ export const Entry: React.FC<EntryProps> = ({}: EntryProps) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.testList}>
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
           {tests.map((test, index: number) => (
             <TestItem
               key={index.toString()}
@@ -102,8 +102,12 @@ const styles = StyleSheet.create({
   },
   menu: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignContent: 'space-around',
+    justifyContent: 'space-around',
+  },
+  scrollView: {
+    paddingHorizontal: 10,
   },
 });

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { NavigationRoot } from './navigators/Root';
+import { Root } from './navigators/Root';
 
 export default function App() {
-  return <NavigationRoot />;
+  return <Root />;
 }
 
 const styles = StyleSheet.create({

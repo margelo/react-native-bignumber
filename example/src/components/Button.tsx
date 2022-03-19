@@ -21,9 +21,12 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#99FFFF',
     padding: 10,
     borderRadius: 5,
     alignContent: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'black',
   },
 });

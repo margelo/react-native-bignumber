@@ -5,7 +5,7 @@ import type { RootStackParamList } from './RootProps';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export function Root(): React.ReactNode {
+export const Root: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -35,4 +35,4 @@ export function Root(): React.ReactNode {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};

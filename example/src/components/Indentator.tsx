@@ -21,9 +21,8 @@ export const Indentator: React.FC<IndentatorProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    padding: 10,
+    padding: 5,
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'center',
   },
 });

@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 10,
     flexDirection: 'column',
+    borderRadius: 5,
+    padding: 5,
   },
   text: {
     flexShrink: 1,

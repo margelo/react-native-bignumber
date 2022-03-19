@@ -20,19 +20,23 @@ export function testLib(
     EVENT_SUITE_END,
   } = Mocha.Runner.constants;
 
+  rootSuite.suites = []; // clean suites;
   var runner = new Mocha.Runner(rootSuite) as MochaTypes.Runner;
 
-  let indents = 0;
+  let indents = -1;
   const indent = () => Array(indents).join('  ');
   runner
     .once(EVENT_RUN_BEGIN, () => {})
     .on(EVENT_SUITE_BEGIN, (suite: MochaTypes.Suite) => {
-      addTestResult({
-        indentation: indents,
-        description: suite.fullTitle(),
-        key: Math.random().toString(),
-        type: 'grouping',
-      });
+      const name = suite.fullTitle();
+      if (name !== '') {
+        addTestResult({
+          indentation: indents,
+          description: name,
+          key: Math.random().toString(),
+          type: 'grouping',
+        });
+      }
       indents++;
     })
     .on(EVENT_SUITE_END, () => {
@@ -91,6 +95,7 @@ export function testLib(
   runner.run();
 
   return () => {
+    console.log('aborting');
     runner.abort();
   };
 }
