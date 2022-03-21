@@ -31,9 +31,9 @@ std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
 
     virtual ~BigNumber();
 
-private:
-    BN_CTX * ctx;
     BIGNUM * bign;
+    BN_CTX * ctx;
+private:
 
     void installMethods();
 };

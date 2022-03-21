@@ -151,6 +151,11 @@ android {
             keyPassword 'android'
         }
     }
+    packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/*.so']
+        }
+    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -183,9 +188,6 @@ android {
         }
     }
 
-    packagingOptions {
-        pickFirst '**/*.so'
-    }
 }
 
 dependencies {

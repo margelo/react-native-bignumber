@@ -30,7 +30,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.2'
+    classpath 'com.android.tools.build:gradle:7.1.2'
     classpath 'de.undercouch:gradle-download-task:4.1.2'
   }
 }
@@ -91,9 +91,7 @@ android {
   defaultConfig {
     minSdkVersion 21
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
-    versionCode 1
-    versionName "1.0"
-    externalNativeBuild {
+      externalNativeBuild {
       cmake {
         cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
         arguments '-DANDROID_STL=c++_shared',
@@ -116,20 +114,22 @@ android {
       path "CMakeLists.txt"
     }
   }
+    packagingOptions {
+        jniLibs {
+            excludes += ['**/libc++_shared.so', '**/libfbjni.so', '**/libreactnativejni.so', '**/libjsi.so']
+        }
+        resources {
+            excludes += ['**/MANIFEST.MF']
+        }
+    }
 
-  packagingOptions {
-    excludes = ["**/libc++_shared.so", "**/libfbjni.so", "**/libreactnativejni.so", "**/libjsi.so", "**/MANIFEST.MF"]
-  }
 
-  buildTypes {
+    buildTypes {
     release {
       minifyEnabled false
     }
   }
-  lintOptions {
-    disable 'GradleCompatible'
-  }
-  compileOptions {
+    compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
@@ -142,6 +142,9 @@ android {
   buildFeatures {
     prefab true
   }
+    lint {
+        disable 'GradleCompatible'
+    }
 }
 
 repositories {

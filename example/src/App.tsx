@@ -1,24 +1,10 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { BN } from 'react-native-bignumber';
-import { Tests } from './Tests';
-
-// Uncomment to run benchmark
-/*import { benchmarkAgainstOldCrypto } from './Benchmarks';
-setTimeout(async () => {
-  await benchmarkAgainstOldCrypto();
-}, 5000);*/
+import { Root } from './navigators/Root';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>
-        Hello! {BN == null ? 'BigNumber is null :(' : 'BigNumber is installed!'}
-      </Text>
-      <Tests />
-    </View>
-  );
+  return <Root />;
 }
 
 const styles = StyleSheet.create({
