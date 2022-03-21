@@ -241,6 +241,14 @@ void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
     }
 }
 
+void BigNumHelper::BN_smart_neg(BIGNUM *pSt) {
+    if (BN_is_negative(pSt)) {
+        BN_set_negative(pSt, 0);
+    } else {
+        BN_set_negative(pSt, 1);
+    }
+}
+
 void BigNumHelper::EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b) {
     //TODO (Szymon)
 }

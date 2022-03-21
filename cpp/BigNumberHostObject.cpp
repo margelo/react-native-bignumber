@@ -8,6 +8,8 @@
 #include <BigNumber/BigNumber.h>
 #include <BigNumber/ModContext.h>
 #include <BigNumber/RedBigNum.h>
+#include <android/log.h>
+#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -31,7 +33,8 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 	}));
 
 	this->fields.push_back(HOST_LAMBDA("createFromNumber", {
-		int val = arguments[0].asNumber();
+        int val = (int) arguments[0].asNumber();
+
 
 		std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(val, BigNumberHostObject::bn_ctx,
 																	 this->weakJsCallInvoker.lock(), this->dispatchQueue);

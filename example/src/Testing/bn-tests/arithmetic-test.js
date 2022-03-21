@@ -30,6 +30,14 @@ export function registerArythmeticTests() {
         assert.equal(r.toString(16), 'ac79bd9b79be7a277bde');
       });
 
+      it('double neg', () => {
+        const a = new BN(10);
+        a.ineg();
+        assert.equal(a.toString(10), '-10');
+        a.ineg();
+        assert.equal(a.toString(10), '10');
+      });
+
       it('should properly do positive + negative', function () {
         var a = new BN('abcd', 16);
         var b = new BN('-abce', 16);
@@ -47,6 +55,7 @@ export function registerArythmeticTests() {
     describe('.iaddn()', function () {
       it('should allow a sign change', function () {
         var a = new BN(-100);
+        assert.equal(a.toString(10), '-100');
         assert.equal(a.negative, 1);
 
         a.iaddn(200);
@@ -628,6 +637,7 @@ export function registerArythmeticTests() {
       it('should act like .mod() on small numbers', function () {
         assert.equal(new BN('10', 16).modrn(256).toString(16), '10');
         assert.equal(new BN('10', 16).modrn(-256).toString(16), '-10');
+
         assert.equal(new BN('100', 16).modrn(256).toString(16), '0');
         assert.equal(new BN('1001', 16).modrn(256).toString(16), '1');
         assert.equal(new BN('100000000001', 16).modrn(256).toString(16), '1');

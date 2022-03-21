@@ -81,7 +81,10 @@ BigNumber::BigNumber(int value, BN_CTX * ctx, std::shared_ptr<react::CallInvoker
 
     this->ctx = ctx;
     this->bign = BN_new();
-    BN_set_word(this->bign, value);
+    BN_set_word(this->bign, abs(value));
+    if (value < 0) {
+        BN_set_negative(this->bign, 1);
+    }
 
     installMethods();
 }
@@ -96,7 +99,10 @@ BigNumber::BigNumber(const BigNumber & other): SmartHostObject(other.weakJsCallI
 void BigNumber::installMethods() {
 
     this->fields.push_back(HOST_LAMBDA("toString", {
-        int base = (int) arguments[0].asNumber();
+        int base = 10;
+        if (!arguments[0].isUndefined() && arguments[0].isNumber()) {
+            base = (int) arguments[0].asNumber();
+        }
         int len = -1;
         if (!arguments[1].isUndefined()) {
             len = (int) arguments[1].asNumber();
@@ -115,21 +121,38 @@ void BigNumber::installMethods() {
             std::string res(len, '0');
             for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
                 char dig = strRep[sizeOfRep - 1 - i];
+                if (dig == '-') {
+                    res = "-" + res;
+                    break;
+                }
                 res[len - 1 - i] = dig;
             }
             return jsi::String::createFromAscii(runtime, res.c_str());
         }
         if (base == 16) {
+            if (BN_is_zero(this->bign)) {
+                return jsi::String::createFromAscii(runtime, "0");
+            }
             strRep = BN_bn2hex(this->bign);
             int sizeOfRep = strlen(strRep);
+            bool removeLeadingZeros = false;
             if (len == -1) {
                 len = sizeOfRep;
+                removeLeadingZeros = true;
             }
             std::string res(len, '0');
             for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
                 char dig = strRep[sizeOfRep - 1 - i];
                 res[len - 1 - i] = tolower(dig);
             }
+            // remove leading zeros (because bn.js does it)
+            int start = 0;
+            if (res[0] == '-') {
+                start = 1;
+            }
+            int ptr = start;
+            while (ptr < len && res[ptr] == '0')ptr++;
+            res.erase(start, ptr-start);
             return jsi::String::createFromAscii(runtime, res.c_str());
         }
     }));
@@ -141,9 +164,14 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "iaddn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
-        BN_add_word(this->bign, other);
+        if (other < 0) {
+            BN_sub_word(this->bign, abs(other));
+        } else {
+            BN_add_word(this->bign, other);
+        }
+
         return jsi::Value::undefined();
     }));
 
@@ -152,11 +180,16 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "iaddn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_add_word(res->bign, other);
+
+        if (other < 0) {
+            BN_sub_word(res->bign, abs(other));
+        } else {
+            BN_add_word(res->bign, other);
+        }
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -165,9 +198,13 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "isubn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
-        BN_sub_word(this->bign, other);
+        if (other < 0) {
+            BN_add_word(this->bign, abs(other));
+        } else {
+            BN_sub_word(this->bign, other);
+        }
         return jsi::Value::undefined();
     }));
 
@@ -176,11 +213,16 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "subn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_sub_word(res->bign, other);
+
+        if (other < 0) {
+            BN_add_word(res->bign, abs(other));
+        } else {
+            BN_sub_word(res->bign, other);
+        }
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -189,9 +231,12 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "imuln expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
-        BN_mul_word(this->bign, other);
+        BN_mul_word(this->bign, abs(other)); //TODO(Szymon) other can be negative
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(this->bign);
+        }
         return jsi::Value::undefined();
     }));
 
@@ -200,11 +245,14 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "muln expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_mul_word(res->bign, other);
+        BN_mul_word(res->bign, abs(other));
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(res->bign);
+        }
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -213,9 +261,14 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "idivn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
-        BN_div_word(this->bign, other);
+        std::shared_ptr<BigNumber> otherBn = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_set_word(otherBn->bign, abs(other));
+        BN_div(this->bign, nullptr, this->bign, otherBn->bign, this->ctx);
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(this->bign);
+        }
         return jsi::Value::undefined();
     }));
 
@@ -224,11 +277,17 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "divn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_div_word(res->bign, other);
+
+        std::shared_ptr<BigNumber> otherBn = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_set_word(otherBn->bign, abs(other));
+        BN_div(res->bign, nullptr, res->bign, otherBn->bign, this->ctx);
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(res->bign);
+        }
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -237,22 +296,34 @@ void BigNumber::installMethods() {
         if (!otherValue.isNumber()) {
             throw jsi::JSError(runtime, "imodn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
-        BN_mod_word(this->bign, other);
+        std::shared_ptr<BigNumber> otherBn = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_set_word(otherBn->bign, abs(other));
+        BN_div(nullptr, this->bign, this->bign, otherBn->bign, this->ctx);
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(this->bign);
+        }
+
         return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("modn", {
         const jsi::Value & otherValue = arguments[0];
         if (!otherValue.isNumber()) {
-            throw jsi::JSError(runtime, "modn expects integer");
+            throw jsi::JSError(runtime, "divn expects integer");
         }
-        unsigned int other = otherValue.asNumber();
+        int other = otherValue.asNumber();
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_mod_word(res->bign, other);
+
+        std::shared_ptr<BigNumber> otherBn = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_set_word(otherBn->bign, abs(other));
+        BN_div(nullptr, res->bign, res->bign, otherBn->bign, this->ctx);
+        if (other < 0) {
+            BigNumHelper::BN_smart_neg(res->bign);
+        }
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -541,6 +612,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         std::shared_ptr<BigNumber> rem = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
 
+        BN_copy(res->bign, this->bign);
         if (BN_is_zero(res->bign)) {
             return jsi::Object::createFromHostObject(runtime, res);
         }
@@ -548,7 +620,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> temp = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_div(res->bign, rem->bign, this->bign, other->bign, this->ctx);
         BN_sub(temp->bign, other->bign, rem->bign);
-        if (BN_cmp(rem->bign, temp->bign) <= 0) {
+        if (BN_cmp(rem->bign, temp->bign) < 0) {
             return jsi::Object::createFromHostObject(runtime, res);
         } else {
             BN_add_word(res->bign, 1);
@@ -634,14 +706,15 @@ void BigNumber::installMethods() {
     }));
 
     this->fields.push_back(HOST_LAMBDA("ineg", {
-        BN_set_negative(this->bign, 1);
+        BigNumHelper::BN_smart_neg(this->bign);
+
         return jsi::Value::undefined();
     }));
 
     this->fields.push_back(HOST_LAMBDA("neg", {
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_copy(res->bign, this->bign);
-        BN_set_negative(res->bign, 1);
+        BigNumHelper::BN_smart_neg(res->bign);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 

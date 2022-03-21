@@ -27,6 +27,8 @@ public:
 
     static void EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b);
 
+    static void BN_smart_neg(BIGNUM *pSt);
+
     // static void bn_correct_top(BIGNUM *pSt);
 };
 } // namespace margelo

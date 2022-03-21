@@ -95,6 +95,9 @@ export class BN {
   constructor(in: InternalNumber);
   constructor(...args: any[]) {
     if (typeof args[0] === 'string') {
+      if (args[1] === 'hex') {
+        args[1] = 16;
+      }
       this.internalBigNum = createFromString(args[0], args[1]);
       return this;
     }
@@ -130,6 +133,10 @@ export class BN {
 
   toString(base: 2 | 10 | 16, len?: number) {
     return this.internalBigNum.toString(base, len);
+  }
+
+  toNumber() {
+    return parseInt(this.internalBigNum.toString(10, 53));
   }
 
   // add
@@ -177,6 +184,10 @@ export class BN {
   }
 
   mul(other: BN) {
+    return new BN(this.internalBigNum.mul(other.internalBigNum));
+  }
+
+  mulf(other: BN) {
     return new BN(this.internalBigNum.mul(other.internalBigNum));
   }
 
@@ -236,6 +247,10 @@ export class BN {
   }
 
   modn(other: number) {
+    return new BN(this.internalBigNum.modn(other));
+  }
+
+  modrn(other: number) {
     return new BN(this.internalBigNum.modn(other));
   }
 
@@ -361,9 +376,17 @@ export class BN {
     return this.internalBigNum.isNeg();
   }
 
+  get negative() {
+    return this.isNeg();
+  }
+
   // compare methods
   cmp(other: BN) {
     return this.internalBigNum.cmp(other.internalBigNum);
+  }
+
+  cmpn(other: number) {
+    return this.internalBigNum.cmp(new BN(other).internalBigNum);
   }
 
   ucmp(other: BN) {
@@ -449,6 +472,14 @@ export class BN {
       return this;
     }
     return other;
+  }
+
+  static max(a: BN, b: BN) {
+    return a.max(b);
+  }
+
+  static min(a: BN, b: BN) {
+    return a.min(b);
   }
 }
 
