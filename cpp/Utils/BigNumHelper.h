@@ -17,11 +17,11 @@ namespace margelo {
 
 class BigNumHelper {
 public:
-    static int BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+    static void BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
-    static int BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+    static void BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
-    static int BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+    static void BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
     static void BN_notn(BIGNUM *pSt, unsigned int len);
 

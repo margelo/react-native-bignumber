@@ -2,6 +2,7 @@
 // Created by Szymon on 16/03/2022.
 //
 
+#include <algorithm>
 #include "BigNumHelper.h"
 
 namespace margelo {
@@ -138,8 +139,9 @@ void BigNumHelper::bn_correct_top(BIGNUM *a) { // looks like it's not exported :
 } */
 
 //TODO try to do it more efficiently
+//TODO probably it's better to start from most significant bits to avoid unnecessary expanding of nums
 
-int BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     int sizeA = BN_num_bits(a);
     int sizeB = BN_num_bits(b);
     if (sizeA < sizeB) {
@@ -152,9 +154,8 @@ int BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
 
         int val = abit ^ bbit;
 
-        if (val) {
-            BN_set_bit(r, i);
-        } else {
+        BN_set_bit(r, i); // To expand
+        if (!val) {
             BN_clear_bit(r, i);
         }
     }
@@ -162,15 +163,14 @@ int BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     for (int i = sizeB; i < sizeA; ++i) {
         int val = BN_is_bit_set(a, i) ? 1 : 0;
 
-        if (val) {
-            BN_set_bit(r, i);
-        } else {
+        BN_set_bit(r, i); // To expand
+        if (!val) {
             BN_clear_bit(r, i);
         }
     }
 }
 
-int BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     int sizeA = BN_num_bits(a);
     int sizeB = BN_num_bits(b);
     if (sizeA < sizeB) {
@@ -183,15 +183,18 @@ int BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
 
         int val = abit & bbit;
 
-        if (val) {
-            BN_set_bit(r, i);
-        } else {
+        BN_set_bit(r, i); // To expand
+        if (!val) {
             BN_clear_bit(r, i);
         }
     }
+    for (int i = sizeB; i < sizeA; ++i) { // in case r is equal to a or b
+        BN_set_bit(r, i); // To expand
+        BN_clear_bit(r, i);
+    }
 }
 
-int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     int sizeA = BN_num_bits(a);
     int sizeB = BN_num_bits(b);
     if (sizeA < sizeB) {
@@ -204,9 +207,8 @@ int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
 
         int val = abit | bbit;
 
-        if (val) {
-            BN_set_bit(r, i);
-        } else {
+        BN_set_bit(r, i); // To expand
+        if (!val) {
             BN_clear_bit(r, i);
         }
     }
@@ -214,9 +216,8 @@ int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     for (int i = sizeB; i < sizeA; ++i) {
         int val = BN_is_bit_set(a, i) ? 1 : 0;
 
-        if (val) {
-            BN_set_bit(r, i);
-        } else {
+        BN_set_bit(r, i); // To expand
+        if (!val) {
             BN_clear_bit(r, i);
         }
     }
@@ -225,7 +226,7 @@ int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
 void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
     int sizeA = BN_num_bits(a);
 
-    for (int i = 0; i < sizeA; ++i) {
+    for (int i = 0; i < std::min(sizeA, (int)len); ++i) {
         int abit = BN_is_bit_set(a, i) ? 1 : 0;
         int val = 1 - abit;
 

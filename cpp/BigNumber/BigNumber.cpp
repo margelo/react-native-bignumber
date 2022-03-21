@@ -99,6 +99,10 @@ BigNumber::BigNumber(const BigNumber & other): SmartHostObject(other.weakJsCallI
 void BigNumber::installMethods() {
 
     this->fields.push_back(HOST_LAMBDA("toString", {
+        if (BN_is_zero(this->bign)) {
+            return jsi::String::createFromAscii(runtime, "0");
+        }
+
         int base = 10;
         if (!arguments[0].isUndefined() && arguments[0].isNumber()) {
             base = (int) arguments[0].asNumber();
@@ -109,52 +113,62 @@ void BigNumber::installMethods() {
         }
 
         char *strRep = nullptr;
-        if (base == 2) { // TODO (Szymon)
-            throw jsi::JSError(runtime, "BN to bin hasn't been implemented yet! :(");
+        if (base == 2) {
+            bool negative = BN_is_negative(this->bign);
+            BN_set_negative(this->bign, 0);
+            char * hexRep = BN_bn2hex(this->bign);
+            if (negative) {
+                BN_set_negative(this->bign, 1);
+            }
+            int hexRepLen = strlen(hexRep);
+            const int strRepLen = (negative) ? hexRepLen * 4 + 2 : hexRepLen * 4 + 1;
+            strRep = new char[strRepLen];
+            int offset = (int) negative;
+
+            strRep[strRepLen - 1] = '\0';
+            if (negative) {
+                strRep[0] = '-';
+            }
+
+            for (int i = 0; i < hexRepLen; ++i) {
+                for (int bit = 0; bit < 4; ++bit) {
+                    int hexVal = static_cast<int>(hexRep[i] >= 'a' ? hexRep[i] - 'a' : hexRep[i] - '0');
+                    char val = ((hexRep[i] & (1 << bit)) > 0) ? '1' : '0';
+                    strRep[offset + i * 4 + (4 - bit - 1)] = val;
+                }
+            }
+            delete [] hexRep;
         }
         if (base == 10) {
             strRep = BN_bn2dec(this->bign);
-            if (len == -1) {
-                return jsi::String::createFromAscii(runtime, strRep);
-            }
-            int sizeOfRep = strlen(strRep);
-            std::string res(len, '0');
-            for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
-                char dig = strRep[sizeOfRep - 1 - i];
-                if (dig == '-') {
-                    res = "-" + res;
-                    break;
-                }
-                res[len - 1 - i] = dig;
-            }
-            return jsi::String::createFromAscii(runtime, res.c_str());
         }
         if (base == 16) {
-            if (BN_is_zero(this->bign)) {
-                return jsi::String::createFromAscii(runtime, "0");
-            }
             strRep = BN_bn2hex(this->bign);
-            int sizeOfRep = strlen(strRep);
-            bool removeLeadingZeros = false;
-            if (len == -1) {
-                len = sizeOfRep;
-                removeLeadingZeros = true;
-            }
-            std::string res(len, '0');
-            for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
-                char dig = strRep[sizeOfRep - 1 - i];
-                res[len - 1 - i] = tolower(dig);
-            }
-            // remove leading zeros (because bn.js does it)
-            int start = 0;
-            if (res[0] == '-') {
-                start = 1;
-            }
-            int ptr = start;
-            while (ptr < len && res[ptr] == '0')ptr++;
-            res.erase(start, ptr-start);
-            return jsi::String::createFromAscii(runtime, res.c_str());
         }
+        int sizeOfRep = strlen(strRep);
+        if (len == -1) {
+            len = sizeOfRep;
+        }
+        std::string res(len, '0');
+        for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
+            char dig = strRep[sizeOfRep - 1 - i];
+            if (dig == '-') {
+                res = "-" + res;
+                break;
+            }
+            res[len - 1 - i] = dig;
+        }
+
+        int start = 0;
+        if (res[0] == '-') {
+            start = 1;
+        }
+        int ptr = start;
+        while (ptr < len && res[ptr] == '0') ptr++;
+        res.erase(start, ptr-start);
+
+        delete [] strRep;
+        return jsi::String::createFromAscii(runtime, res.c_str());
     }));
 
     // with number
@@ -997,6 +1011,7 @@ void BigNumber::installMethods() {
         std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
         std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(this->ctx, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+
         BigNumHelper::BN_and(res->bign, this->bign, other->bign);
         return jsi::Object::createFromHostObject(runtime, res);
     }));

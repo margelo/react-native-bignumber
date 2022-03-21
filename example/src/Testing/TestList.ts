@@ -1,5 +1,6 @@
 import type { TestItemType } from '../navigators/children/Entry/TestItemType';
 import { registerArythmeticTests } from './bn-tests/arithmetic-test.js';
+import { registerBinaryTests } from './bn-tests/binary-test.js';
 import { BN } from 'react-native-bignumber';
 import { describe, it } from './MochaRNAdapter';
 import chai from 'chai';
@@ -37,5 +38,10 @@ export const TEST_LIST: Array<TestItemType> = [
     description: 'Arithmetic tests',
     value: false,
     registrator: registerArythmeticTests,
+  },
+  {
+    description: 'Binary tests',
+    value: false,
+    registrator: registerBinaryTests,
   },
 ];
