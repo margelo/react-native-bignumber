@@ -115,6 +115,59 @@ function startBenchmarking() {
     );
     console.log('test create two BN - result: ' + time);
   }
+
+  {
+    console.log('test red sqrt BN');
+    let time = cmp(
+      () => {
+        const fn = FastBN.red;
+        var p = new FastBN(263);
+        var m = fn(p);
+        var q = new FastBN(11).toRed(m);
+
+        var qr = q.redSqrt();
+
+        qr = q.redSqrt();
+
+        p = new FastBN('fffffffffffffffffffffffffffffffeffffffffffffffff', 16);
+        m = fn(p);
+
+        q = new FastBN(13).toRed(m);
+        qr = q.redSqrt(true, p);
+
+        qr = q.redSqrt(false, p);
+
+        // Tonelli-shanks
+        p = new FastBN(13);
+        m = fn(p);
+        q = new FastBN(10).toRed(m);
+      },
+      () => {
+        const fn = BN.red;
+        var p = new BN(263);
+        var m = fn(p);
+        var q = new BN(11).toRed(m);
+
+        var qr = q.redSqrt();
+
+        qr = q.redSqrt();
+
+        p = new BN('fffffffffffffffffffffffffffffffeffffffffffffffff', 16);
+        m = fn(p);
+
+        q = new BN(13).toRed(m);
+        qr = q.redSqrt(true, p);
+
+        qr = q.redSqrt(false, p);
+
+        // Tonelli-shanks
+        p = new BN(13);
+        m = fn(p);
+        q = new BN(10).toRed(m);
+      }
+    );
+    console.log('test red sqrt BN - result: ' + time);
+  }
 }
 
 type BenchmarksProps = NativeStackScreenProps<RootStackParamList, 'Benchmarks'>;
