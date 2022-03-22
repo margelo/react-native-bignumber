@@ -17,33 +17,6 @@ function cmp(f: () => void, g: () => void) {
 }
 
 function startBenchmarking() {
-  {
-    console.log('test create two BN');
-    let time = cmp(
-      () => {
-        const p = new FastBN(
-          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
-          16
-        );
-        const a = new FastBN(
-          'e1d969b8192fbac73ea5b7921896d6a2263d4d4077bb8e5055361d1f7f8163f3',
-          16
-        );
-      },
-      () => {
-        const p = new BN(
-          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
-          16
-        );
-        const a = new BN(
-          'e1d969b8192fbac73ea5b7921896d6a2263d4d4077bb8e5055361d1f7f8163f3',
-          16
-        );
-      }
-    );
-    console.log('test create two BN - result: ' + time);
-  }
-
   const p = new FastBN(
     'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
     16
@@ -114,6 +87,33 @@ function startBenchmarking() {
       }
     );
     console.log('test div - result: ' + time);
+  }
+
+  {
+    console.log('test create two BN');
+    let time = cmp(
+      () => {
+        const p = new FastBN(
+          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
+          16
+        );
+        const a = new FastBN(
+          'e1d969b8192fbac73ea5b7921896d6a2263d4d4077bb8e5055361d1f7f8163f3',
+          16
+        );
+      },
+      () => {
+        const p = new BN(
+          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
+          16
+        );
+        const a = new BN(
+          'e1d969b8192fbac73ea5b7921896d6a2263d4d4077bb8e5055361d1f7f8163f3',
+          16
+        );
+      }
+    );
+    console.log('test create two BN - result: ' + time);
   }
 }
 

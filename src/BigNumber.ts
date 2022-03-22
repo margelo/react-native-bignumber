@@ -13,6 +13,107 @@ const createModCtx = NativeBigNumber.createModCtx;
 const createModCtxFromNumber = NativeBigNumber.createModCtxFromNumber;
 const getPrimeContext = NativeBigNumber.getPrimeContext;
 
+//bignumber
+const {
+  toString,
+  add,
+  iadd,
+  iaddn,
+  addn,
+
+  sub,
+  isub,
+  isubn,
+  subn,
+
+  mul,
+  imul,
+  imuln,
+  muln,
+
+  div,
+  idiv,
+  idivn,
+  divn,
+
+  mod,
+  imod,
+  umod,
+  imodn,
+  modn,
+
+  pow,
+  ipow,
+
+  setn,
+  testn,
+  bincn,
+  inotn,
+  notn,
+  imaskn,
+  maskn,
+  ishln,
+  shln,
+  ishrn,
+  shrn,
+
+  divmod,
+  divRound,
+
+  sqr,
+  isqr,
+  abs,
+  iabs,
+  neg,
+  ineg,
+
+  isZero,
+  isOne,
+  clone,
+  bitLength,
+  byteLength,
+  isNeg,
+  isOdd,
+  isEven,
+
+  cmp,
+  ucmp,
+  lt,
+  lte,
+  gt,
+  gte,
+  eq,
+
+  invm,
+  gcd,
+  igcd,
+  ior,
+  or,
+  iand,
+  and,
+  ixor,
+  xor,
+} = NativeBigNumber;
+
+// redbignum
+const {
+  redAdd,
+  redIAdd,
+  redSub,
+  redISub,
+  redShl,
+  redMul,
+  redIMul,
+  redSqr,
+  redISqr,
+  redSqrt,
+  redInvm,
+  redNeg,
+  redPow,
+  cloneRed,
+  isRedZero,
+} = NativeBigNumber;
+
 export class RedBigNumber {
   private internalRedBigNum: InternalRedNumber;
   private mctx: InternalModContext;
@@ -29,11 +130,11 @@ export class RedBigNumber {
   }
 
   clone() {
-    return new RedBigNumber(this.internalRedBigNum.clone(), this.mctx);
+    return new RedBigNumber(cloneRed.call(this.internalRedBigNum), this.mctx);
   }
 
   isZero() {
-    return this.internalRedBigNum.isZero();
+    return isRedZero.call(this.internalRedBigNum);
   }
 
   fromRed() {
@@ -41,59 +142,59 @@ export class RedBigNumber {
   }
 
   redAdd(other: RedBigNumber) {
-    return new RedBigNumber(this.internalRedBigNum.redAdd(other.internalRedBigNum), this.mctx);
+    return new RedBigNumber(redAdd.call(this.internalRedBigNum,other.internalRedBigNum), this.mctx);
   }
 
   redIAdd(other: RedBigNumber) {
-    this.internalRedBigNum.redIAdd(other.internalRedBigNum);
+    redIAdd.call(this.internalRedBigNum, other.internalRedBigNum);
     return this;
   }
 
   redSub(other: RedBigNumber) {
-    return new RedBigNumber(this.internalRedBigNum.redSub(other.internalRedBigNum), this.mctx);
+    return new RedBigNumber(redSub.call(this.internalRedBigNum, other.internalRedBigNum), this.mctx);
   }
 
   redISub(other: RedBigNumber) {
-    this.internalRedBigNum.redISub(other.internalRedBigNum);
+    redISub.call(this.internalRedBigNum, other.internalRedBigNum);
     return this;
   }
 
   redMul(other: RedBigNumber) {
-    return new RedBigNumber(this.internalRedBigNum.redMul(other.internalRedBigNum), this.mctx);
+    return new RedBigNumber(redMul.call(this.internalRedBigNum, other.internalRedBigNum), this.mctx);
   }
 
   redIMul(other: RedBigNumber) {
-    this.internalRedBigNum.redIMul(other.internalRedBigNum);
+    redIMul.call(this.internalRedBigNum, other.internalRedBigNum);
     return this;
   }
 
   redShl(places: number) {
-    return new RedBigNumber(this.internalRedBigNum.redShl(places), this.mctx);
+    return new RedBigNumber(redShl.call(this.internalRedBigNum, places), this.mctx);
   }
 
   redSqrt() {
-    return new RedBigNumber(this.internalRedBigNum.redSqrt(), this.mctx);
+    return new RedBigNumber(redSqrt.call(this.internalRedBigNum), this.mctx);
   }
 
   redSqr() {
-    return new RedBigNumber(this.internalRedBigNum.redSqr(), this.mctx);
+    return new RedBigNumber(redSqr.call(this.internalRedBigNum), this.mctx);
   }
 
   redISqr() {
-    this.internalRedBigNum.redISqr();
+    redISqr.call(this.internalRedBigNum);
     return this;
   }
 
   redNeg() {
-    return new RedBigNumber(this.internalRedBigNum.redNeg(), this.mctx);
+    return new RedBigNumber(redNeg.call(this.internalRedBigNum), this.mctx);
   }
 
   redInvm() {
-    return new RedBigNumber(this.internalRedBigNum.redInvm(), this.mctx);
+    return new RedBigNumber(redInvm.call(this.internalRedBigNum), this.mctx);
   }
 
   redPow(other: BN) {
-    return new RedBigNumber(this.internalRedBigNum.redPow(other.internalBigNum), this.mctx);
+    return new RedBigNumber(redPow.call(this.internalRedBigNum, other.internalBigNum), this.mctx);
   }
 
   toString() {
@@ -120,6 +221,7 @@ export class BN {
       if (args[1] === 'hex') {
         args[1] = 16;
       }
+      const start = performance.now();
       this.internalBigNum = createFromString(args[0], args[1]);
       return this;
     }
@@ -209,266 +311,266 @@ export class BN {
   }
 
   toString(base: 2 | 10 | 16, len?: number) {
-    return this.internalBigNum.toString(base, len);
+    return toString.call(this.internalBigNum, base, len);
   }
 
   toNumber() {
-    return parseInt(this.internalBigNum.toString(10, 53));
+    return parseInt(toString.call(this.internalBigNum, 10, 53));
   }
 
   // add
   iadd(other: BN) {
-    this.internalBigNum.iadd(other.internalBigNum);
+    iadd.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   add(other: BN) {
-    return new BN(this.internalBigNum.add(other.internalBigNum));
+    return new BN(add.call(this.internalBigNum, other.internalBigNum));
   }
 
   iaddn(other: number) {
-    this.internalBigNum.iaddn(other);
+    iaddn.call(this.internalBigNum, other);
     return this;
   }
 
   addn(other: number) {
-    return new BN(this.internalBigNum.addn(other));
+    return new BN(addn.call(this.internalBigNum, other));
   }
 
   // sub
   isub(other: BN) {
-    this.internalBigNum.isub(other.internalBigNum);
+    isub.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   sub(other: BN) {
-    return new BN(this.internalBigNum.sub(other.internalBigNum));
+    return new BN(sub.call(this.internalBigNum, other.internalBigNum));
   }
 
   isubn(other: number) {
-    this.internalBigNum.isubn(other);
+    isubn.call(this.internalBigNum, other);
     return this;
   }
 
   subn(other: number) {
-    return new BN(this.internalBigNum.subn(other));
+    return new BN(subn.call(this.internalBigNum, other));
   }
 
   // mul
   imul(other: BN) {
-    this.internalBigNum.imul(other.internalBigNum);
+    imul.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   mul(other: BN) {
-    return new BN(this.internalBigNum.mul(other.internalBigNum));
+    return new BN(mul.call(this.internalBigNum, other.internalBigNum));
   }
 
   mulf(other: BN) {
-    return new BN(this.internalBigNum.mul(other.internalBigNum));
+    return new BN(mul.call(this.internalBigNum, other.internalBigNum));
   }
 
   imuln(other: number) {
-    this.internalBigNum.imuln(other);
+    imuln.call(this.internalBigNum, other);
     return this;
   }
 
   muln(other: number) {
-    return new BN(this.internalBigNum.muln(other));
+    return new BN(muln.call(this.internalBigNum, other));
   }
 
   // div
   idiv(other: BN) {
-    this.internalBigNum.idiv(other.internalBigNum);
+    idiv.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   div(other: BN) {
-    return new BN(this.internalBigNum.div(other.internalBigNum));
+    return new BN(div.call(this.internalBigNum, other.internalBigNum));
   }
 
   idivn(other: number) {
-    this.internalBigNum.idivn(other);
+    idivn.call(this.internalBigNum, other);
     return this;
   }
 
   divn(other: number) {
-    return new BN(this.internalBigNum.divn(other));
+    return new BN(divn.call(this.internalBigNum, other));
   }
 
   divmod(m: BN) {
-    return new BN(this.internalBigNum.divmod(m.internalBigNum));
+    return new BN(divmod.call(this.internalBigNum, m.internalBigNum));
   }
 
   divRound(m: BN) {
-    return new BN(this.internalBigNum.divRound(m.internalBigNum));
+    return new BN(divRound.call(this.internalBigNum, m.internalBigNum));
   }
 
   // mod
   imod(other: BN) {
-    this.internalBigNum.imod(other.internalBigNum);
+    imod.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   mod(other: BN) {
-    return new BN(this.internalBigNum.mod(other.internalBigNum));
+    return new BN(mod.call(this.internalBigNum, other.internalBigNum));
   }
 
   umod(other: BN) {
-    return new BN(this.internalBigNum.umod(other.internalBigNum));
+    return new BN(umod.call(this.internalBigNum, other.internalBigNum));
   }
 
   imodn(other: number) {
-    this.internalBigNum.imodn(other);
+    imodn.call(this.internalBigNum, other);
     return this;
   }
 
   modn(other: number) {
-    return new BN(this.internalBigNum.modn(other));
+    return new BN(modn.call(this.internalBigNum, other));
   }
 
   modrn(other: number) {
-    return new BN(this.internalBigNum.modn(other));
+    return new BN(modn.call(this.internalBigNum, other));
   }
 
   // pow
   ipow(other: BN) {
-    this.internalBigNum.ipow(other.internalBigNum);
+    ipow.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   pow(other: BN) {
-    return new BN(this.internalBigNum.pow(other.internalBigNum));
+    return new BN(pow.call(this.internalBigNum, other.internalBigNum));
   }
 
   // bit manipulation
   setn(bit: number, value: boolean) {
-    this.internalBigNum.setn(bit, value ? 1 : 0);
+    setn.call(this.internalBigNum, bit, value ? 1 : 0);
     return this;
   }
 
   testn(bit: number) {
-    return this.internalBigNum.testn(bit);
+    return testn.call(this.internalBigNum, bit);
   }
 
   bincn(bit: number) {
-    this.internalBigNum.bincn(bit);
+    bincn.call(this.internalBigNum, bit);
     return this;
   }
 
   notn(width: number) {
-    return new BN(this.internalBigNum.notn(width));
+    return new BN(notn.call(this.internalBigNum, width));
   }
 
   inotn(width: number) {
-    this.internalBigNum.inotn(width);
+    inotn.call(this.internalBigNum, width);
     return this;
   }
 
   maskn(width: number) {
-    return new BN(this.internalBigNum.maskn(width));
+    return new BN(maskn.call(this.internalBigNum, width));
   }
 
   imaskn(width: number) {
-    this.internalBigNum.imaskn(width);
+    imaskn.call(this.internalBigNum, width);
     return this;
   }
 
   shln(width: number) {
-    return new BN(this.internalBigNum.shln(width));
+    return new BN(shln.call(this.internalBigNum, width));
   }
 
   ushln(width: number) {
-    return new BN(this.internalBigNum.shln(width));
+    return new BN(shln.call(this.internalBigNum, width));
   }
 
   ishln(width: number) {
-    this.internalBigNum.ishln(width);
+    ishln.call(this.internalBigNum, width);
     return this;
   }
 
   iushln(width: number) {
-    this.internalBigNum.ishln(width);
+    ishln.call(this.internalBigNum, width);
     return this;
   }
 
   shrn(width: number) {
-    return new BN(this.internalBigNum.shrn(width));
+    return new BN(shrn.call(this.internalBigNum, width));
   }
 
   ushrn(width: number) {
-    return new BN(this.internalBigNum.shrn(width));
+    return new BN(shrn.call(this.internalBigNum, width));
   }
 
   ishrn(width: number) {
-    this.internalBigNum.ishrn(width);
+    ishrn.call(this.internalBigNum, width);
     return this;
   }
 
   iushrn(width: number) {
-    this.internalBigNum.ishrn(width);
+    ishrn.call(this.internalBigNum, width);
     return this;
   }
 
   // no arg operations
   sqr() {
-    return new BN(this.internalBigNum.sqr());
+    return new BN(sqr.call(this.internalBigNum, ));
   }
 
   isqr() {
-    this.internalBigNum.isqr();
+    isqr.call(this.internalBigNum, );
     return this;
   }
 
   abs() {
-    return new BN(this.internalBigNum.abs());
+    return new BN(abs.call(this.internalBigNum, ));
   }
 
   iabs() {
-    this.internalBigNum.iabs();
+    iabs.call(this.internalBigNum, );
     return this;
   }
 
   neg() {
-    return new BN(this.internalBigNum.neg());
+    return new BN(neg.call(this.internalBigNum, ));
   }
 
   ineg() {
-    this.internalBigNum.ineg();
+    ineg.call(this.internalBigNum, );
     return this;
   }
 
   clone() {
-    return new BN(this.internalBigNum.clone());
+    return new BN(clone.call(this.internalBigNum, ));
   }
 
   // get info
   isZero() {
-    return this.internalBigNum.isZero();
+    return isZero.call(this.internalBigNum, );
   }
 
   isOne() {
-    return this.internalBigNum.isOne();
+    return isOne.call(this.internalBigNum, );
   }
 
   bitLength() {
-    return this.internalBigNum.bitLength();
+    return bitLength.call(this.internalBigNum, );
   }
 
   byteLength() {
-    return this.internalBigNum.byteLength();
+    return byteLength.call(this.internalBigNum, );
   }
 
   isEven() {
-    return this.internalBigNum.isEven();
+    return isEven.call(this.internalBigNum, );
   }
 
   isOdd() {
-    return this.internalBigNum.isOdd();
+    return isOdd.call(this.internalBigNum, );
   }
 
   isNeg() {
-    return this.internalBigNum.isNeg();
+    return isNeg.call(this.internalBigNum, );
   }
 
   get negative() {
@@ -477,49 +579,49 @@ export class BN {
 
   // compare methods
   cmp(other: BN) {
-    return this.internalBigNum.cmp(other.internalBigNum);
+    return cmp.call(this.internalBigNum, other.internalBigNum);
   }
 
   cmpn(other: number) {
-    return this.internalBigNum.cmp(new BN(other).internalBigNum);
+    return cmp.call(this.internalBigNum, new BN(other).internalBigNum);
   }
 
   ucmp(other: BN) {
-    return this.internalBigNum.ucmp(other.internalBigNum);
+    return ucmp.call(this.internalBigNum, other.internalBigNum);
   }
 
   lt(other: BN) {
-    return this.internalBigNum.lt(other.internalBigNum);
+    return lt.call(this.internalBigNum, other.internalBigNum);
   }
 
   lte(other: BN) {
-    return this.internalBigNum.lte(other.internalBigNum);
+    return lte.call(this.internalBigNum, other.internalBigNum);
   }
 
   gt(other: BN) {
-    return this.internalBigNum.gt(other.internalBigNum);
+    return gt.call(this.internalBigNum, other.internalBigNum);
   }
 
   gte(other: BN) {
-    return this.internalBigNum.gte(other.internalBigNum);
+    return gte.call(this.internalBigNum, other.internalBigNum);
   }
 
   eq(other: BN) {
-    return this.internalBigNum.eq(other.internalBigNum);
+    return eq.call(this.internalBigNum, other.internalBigNum);
   }
 
   // Field helpers
   invm(other: BN) {
-    return new BN(this.internalBigNum.invm(other.internalBigNum));
+    return new BN(invm.call(this.internalBigNum, other.internalBigNum));
   }
 
   igcd(other: BN) {
-    this.internalBigNum.igcd(other.internalBigNum);
+    igcd.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   gcd(other: BN) {
-    return new BN(this.internalBigNum.gcd(other.internalBigNum));
+    return new BN(gcd.call(this.internalBigNum, other.internalBigNum));
   }
 
   egcd(other: BN): { a: BN, b: BN, gcd: BN } {
@@ -528,29 +630,29 @@ export class BN {
 
   // bitwise
   or(other: BN) {
-    return new BN(this.internalBigNum.or(other.internalBigNum));
+    return new BN(or.call(this.internalBigNum, other.internalBigNum));
   }
 
   ior(other: BN) {
-    this.internalBigNum.ior(other.internalBigNum);
+    ior.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   and(other: BN) {
-    return new BN(this.internalBigNum.and(other.internalBigNum));
+    return new BN(and.call(this.internalBigNum, other.internalBigNum));
   }
 
   iand(other: BN) {
-    this.internalBigNum.iand(other.internalBigNum);
+    iand.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 
   xor(other: BN) {
-    return new BN(this.internalBigNum.xor(other.internalBigNum));
+    return new BN(xor.call(this.internalBigNum, other.internalBigNum));
   }
 
   ixor(other: BN) {
-    this.internalBigNum.ixor(other.internalBigNum);
+    ixor.call(this.internalBigNum, other.internalBigNum);
     return this;
   }
 

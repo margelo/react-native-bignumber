@@ -1,106 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 
 export interface InternalNumber {
-  toString: (base: 2 | 10 | 16, len?: number) => string;
-
-  add: (other: InternalNumber) => InternalNumber;
-  iadd: (other: InternalNumber) => void;
-  iaddn: (other: number) => void;
-  addn: (other: number) => InternalNumber;
-
-  sub: (other: InternalNumber) => InternalNumber;
-  isub: (other: InternalNumber) => void;
-  isubn: (other: number) => void;
-  subn: (other: number) => InternalNumber;
-
-  mul: (other: InternalNumber) => InternalNumber;
-  imul: (other: InternalNumber) => void;
-  imuln: (other: number) => void;
-  muln: (other: number) => InternalNumber;
-
-  div: (other: InternalNumber) => InternalNumber;
-  idiv: (other: InternalNumber) => void;
-  idivn: (other: number) => void;
-  divn: (other: number) => InternalNumber;
-
-  mod: (other: InternalNumber) => InternalNumber;
-  umod: (other: InternalNumber) => InternalNumber;
-  imod: (other: InternalNumber) => void;
-  imodn: (other: number) => void;
-  modn: (other: number) => InternalNumber;
-
-  pow: (other: InternalNumber) => InternalNumber;
-  ipow: (other: InternalNumber) => void;
-
-  setn: (other: number, value: number) => void;
-  testn: (bit: number) => boolean;
-  bincn: (bit: number) => void;
-  inotn: (width: number) => void;
-  notn: (width: number) => InternalNumber;
-  imaskn: (bit: number) => void;
-  maskn: (bit: number) => InternalNumber;
-  ishln: (places: number) => void;
-  shln: (places: number) => InternalNumber;
-  ishrn: (places: number) => void;
-  shrn: (places: number) => InternalNumber;
-
-  divmod: (m: InternalNumber) => { div: InternalNumber; mod: InternalNumber };
-  divRound: (other: InternalNumber) => InternalNumber;
-
-  sqr: () => InternalNumber;
-  isqr: () => void;
-  abs: () => InternalNumber;
-  iabs: () => void;
-  neg: () => InternalNumber;
-  ineg: () => void;
-
-  isZero: () => boolean;
-  isOne: () => boolean;
-  clone: () => InternalNumber;
-  bitLength: () => number;
-  byteLength: () => number;
-  isNeg: () => boolean;
-  isOdd: () => boolean;
-  isEven: () => boolean;
-
-  cmp: (other: InternalNumber) => -1 | 0 | 1;
-  ucmp: (other: InternalNumber) => -1 | 0 | 1;
-  lt: (other: InternalNumber) => boolean;
-  lte: (other: InternalNumber) => boolean;
-  gt: (other: InternalNumber) => boolean;
-  gte: (other: InternalNumber) => boolean;
-  eq: (other: InternalNumber) => boolean;
-
-  invm: (other: InternalNumber) => InternalNumber;
-  gcd: (other: InternalNumber) => InternalNumber;
-  igcd: (other: InternalNumber) => boolean;
-
-  ior: (other: InternalNumber) => void;
-  or: (other: InternalNumber) => InternalNumber;
-  iand: (other: InternalNumber) => void;
-  and: (other: InternalNumber) => InternalNumber;
-  ixor: (other: InternalNumber) => void;
-  xor: (other: InternalNumber) => InternalNumber;
-
-  isInternalBigNum: true;
-}
-
-export interface InternalRedNumber {
-  redAdd: (other: InternalRedNumber) => InternalRedNumber;
-  redIAdd: (other: InternalRedNumber) => void;
-  redSub: (other: InternalRedNumber) => InternalRedNumber;
-  redISub: (other: InternalRedNumber) => void;
-  redShl: (places: number) => InternalRedNumber;
-  redMul: (other: InternalRedNumber) => InternalRedNumber;
-  redIMul: (other: InternalRedNumber) => void;
-  redSqr: () => InternalRedNumber;
-  redISqr: () => void;
-  redSqrt: () => InternalRedNumber;
-  redInvm: () => InternalRedNumber;
-  redNeg: () => InternalRedNumber;
-  redPow: (other: InternalNumber) => InternalRedNumber;
-  clone: () => InternalRedNumber;
-  isZero: () => boolean;
   isInternalRedBigNum: true;
 }
 
@@ -117,6 +17,121 @@ interface NativeBigNumberSpec {
   ) => InternalRedNumber;
   mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
   getPrimeContext: (primeType: string) => InternalModContext;
+
+  //bigNumber
+  toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
+
+  add: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  iadd: (this: InternalNumber, other: InternalNumber) => void;
+  iaddn: (this: InternalNumber, other: number) => void;
+  addn: (this: InternalNumber, other: number) => InternalNumber;
+
+  sub: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  isub: (this: InternalNumber, other: InternalNumber) => void;
+  isubn: (this: InternalNumber, other: number) => void;
+  subn: (this: InternalNumber, other: number) => InternalNumber;
+
+  mul: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  imul: (this: InternalNumber, other: InternalNumber) => void;
+  imuln: (this: InternalNumber, other: number) => void;
+  muln: (this: InternalNumber, other: number) => InternalNumber;
+
+  div: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  idiv: (this: InternalNumber, other: InternalNumber) => void;
+  idivn: (this: InternalNumber, other: number) => void;
+  divn: (this: InternalNumber, other: number) => InternalNumber;
+
+  mod: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  umod: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  imod: (this: InternalNumber, other: InternalNumber) => void;
+  imodn: (this: InternalNumber, other: number) => void;
+  modn: (this: InternalNumber, other: number) => InternalNumber;
+
+  pow: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  ipow: (this: InternalNumber, other: InternalNumber) => void;
+
+  setn: (this: InternalNumber, other: number, value: number) => void;
+  testn: (this: InternalNumber, bit: number) => boolean;
+  bincn: (this: InternalNumber, bit: number) => void;
+  inotn: (this: InternalNumber, width: number) => void;
+  notn: (this: InternalNumber, width: number) => InternalNumber;
+  imaskn: (this: InternalNumber, bit: number) => void;
+  maskn: (this: InternalNumber, bit: number) => InternalNumber;
+  ishln: (this: InternalNumber, places: number) => void;
+  shln: (this: InternalNumber, places: number) => InternalNumber;
+  ishrn: (this: InternalNumber, places: number) => void;
+  shrn: (this: InternalNumber, places: number) => InternalNumber;
+
+  divmod: (
+    this: InternalNumber,
+    m: InternalNumber
+  ) => { div: InternalNumber; mod: InternalNumber };
+  divRound: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+
+  sqr: (this: InternalNumber) => InternalNumber;
+  isqr: (this: InternalNumber) => void;
+  abs: (this: InternalNumber) => InternalNumber;
+  iabs: (this: InternalNumber) => void;
+  neg: (this: InternalNumber) => InternalNumber;
+  ineg: (this: InternalNumber) => void;
+
+  isZero: (this: InternalNumber) => boolean;
+  isOne: (this: InternalNumber) => boolean;
+  clone: (this: InternalNumber) => InternalNumber;
+  bitLength: (this: InternalNumber) => number;
+  byteLength: (this: InternalNumber) => number;
+  isNeg: (this: InternalNumber) => boolean;
+  isOdd: (this: InternalNumber) => boolean;
+  isEven: (this: InternalNumber) => boolean;
+
+  cmp: (this: InternalNumber, other: InternalNumber) => -1 | 0 | 1;
+  ucmp: (this: InternalNumber, other: InternalNumber) => -1 | 0 | 1;
+  lt: (this: InternalNumber, other: InternalNumber) => boolean;
+  lte: (this: InternalNumber, other: InternalNumber) => boolean;
+  gt: (this: InternalNumber, other: InternalNumber) => boolean;
+  gte: (this: InternalNumber, other: InternalNumber) => boolean;
+  eq: (this: InternalNumber, other: InternalNumber) => boolean;
+
+  invm: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  gcd: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  igcd: (this: InternalNumber, other: InternalNumber) => boolean;
+
+  ior: (this: InternalNumber, other: InternalNumber) => void;
+  or: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  iand: (this: InternalNumber, other: InternalNumber) => void;
+  and: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+  ixor: (this: InternalNumber, other: InternalNumber) => void;
+  xor: (this: InternalNumber, other: InternalNumber) => InternalNumber;
+
+  // InternalRedNumber
+  redAdd: (
+    this: InternalRedNumber,
+    other: InternalRedNumber
+  ) => InternalRedNumber;
+  redIAdd: (this: InternalRedNumber, other: InternalRedNumber) => void;
+  redSub: (
+    this: InternalRedNumber,
+    other: InternalRedNumber
+  ) => InternalRedNumber;
+  redISub: (this: InternalRedNumber, other: InternalRedNumber) => void;
+  redShl: (this: InternalRedNumber, places: number) => InternalRedNumber;
+  redMul: (
+    this: InternalRedNumber,
+    other: InternalRedNumber
+  ) => InternalRedNumber;
+  redIMul: (this: InternalRedNumber, other: InternalRedNumber) => void;
+  redSqr: (this: InternalRedNumber) => InternalRedNumber;
+  redISqr: (this: InternalRedNumber) => void;
+  redSqrt: (this: InternalRedNumber) => InternalRedNumber;
+  redInvm: (this: InternalRedNumber) => InternalRedNumber;
+  redNeg: (this: InternalRedNumber) => InternalRedNumber;
+  redPow: (this: InternalRedNumber, other: InternalNumber) => InternalRedNumber;
+  cloneRed: (this: InternalRedNumber) => InternalRedNumber;
+  isRedZero: (this: InternalRedNumber) => boolean;
+}
+
+export interface InternalRedNumber {
+  isInternalRedBigNum: true;
 }
 
 // global func declaration for JSI functions

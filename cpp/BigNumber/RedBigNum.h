@@ -10,24 +10,22 @@
 namespace margelo {
 namespace jsi = facebook::jsi;
 
-class RedBigNum : public SmartHostObject {
+class RedBigNum : public jsi::HostObject {
 public:
-    explicit RedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m, std::shared_ptr<react::CallInvoker> jsCallInvoker,
-            std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
+explicit RedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
 
-    explicit RedBigNum(BIGNUM * bign, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m, std::shared_ptr<react::CallInvoker> jsCallInvoker,
-            std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
+explicit RedBigNum(BIGNUM * bign, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
 
-    explicit RedBigNum(const RedBigNum&);
+explicit RedBigNum(const RedBigNum&);
 
-    virtual ~RedBigNum();
+virtual ~RedBigNum();
 
-    BN_CTX * ctx;
-    BN_MONT_CTX * mctx;
-    BIGNUM * bign;
-    BIGNUM * m;
+jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
 
-    void installMethods();
+BN_CTX * ctx;
+BN_MONT_CTX * mctx;
+BIGNUM * bign;
+BIGNUM * m;
 };
 
 } // namespace margelo
