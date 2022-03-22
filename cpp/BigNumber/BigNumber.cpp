@@ -131,9 +131,9 @@ void BigNumber::installMethods() {
             }
 
             for (int i = 0; i < hexRepLen; ++i) {
+                int hexVal = static_cast<int>(hexRep[i] >= 'A' ? hexRep[i] - 'A' + 10 : hexRep[i] - '0');
                 for (int bit = 0; bit < 4; ++bit) {
-                    int hexVal = static_cast<int>(hexRep[i] >= 'a' ? hexRep[i] - 'a' : hexRep[i] - '0');
-                    char val = ((hexRep[i] & (1 << bit)) > 0) ? '1' : '0';
+                    char val = ((hexVal & (1 << bit)) > 0) ? '1' : '0';
                     strRep[offset + i * 4 + (4 - bit - 1)] = val;
                 }
             }
@@ -152,6 +152,9 @@ void BigNumber::installMethods() {
         std::string res(len, '0');
         for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
             char dig = strRep[sizeOfRep - 1 - i];
+            if (dig >= 'A' and dig <= 'F') {
+                dig = dig - 'A' + 'a';
+            }
             if (dig == '-') {
                 res = "-" + res;
                 break;
@@ -353,6 +356,7 @@ void BigNumber::installMethods() {
         if (value) {
             BN_set_bit(this->bign, index);
         } else {
+            BN_set_bit(this->bign, index); // to expand if needed
             BN_clear_bit(this->bign, index);
         }
         return jsi::Value::undefined();

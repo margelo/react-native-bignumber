@@ -3,6 +3,7 @@ import chai from 'chai';
 import { describe, it, itOnly } from '../MochaRNAdapter';
 var fixtures = require('./fixtures');
 const assert = chai.assert;
+import { Buffer } from '@craftzdog/react-native-buffer';
 
 export function registerRedTests() {
   describe('BN.js/Reduction context', function () {
@@ -38,6 +39,11 @@ export function registerRedTests() {
             a.toRed(m).redPow(new BN(0)).fromRed().cmp(new BN(1)),
             0
           );
+          assert.equal(
+            a.toRed(m).redPow(new BN(3)).fromRed().toString(),
+            '1860867'
+          );
+          assert.equal(a.sqr().mul(a).toString(), '1860867');
           assert.equal(
             a.toRed(m).redPow(new BN(3)).fromRed().cmp(a.sqr().mul(a)),
             0
@@ -149,7 +155,7 @@ export function registerRedTests() {
           var base = new BN(256).toRed(BN.red('k256'));
           var exponent = new BN(0);
           var result = base.redPow(exponent);
-          assert.equal(result.toString(), '1');
+          assert.equal(result.fromRed().toString(), '1');
         });
 
         it('should shl numbers', function () {
@@ -320,6 +326,13 @@ export function registerRedTests() {
       var c = a.redIMul(b);
       assert.equal(a.toNumber(), 1);
       assert.equal(c.toNumber(), 1);
+    });
+
+    it('to red from red', function () {
+      var red = BN.red(new BN(13));
+      var a = new BN(2).toRed(red);
+      var b = a.fromRed();
+      assert.equal(b.toNumber(), 2);
     });
   });
 }

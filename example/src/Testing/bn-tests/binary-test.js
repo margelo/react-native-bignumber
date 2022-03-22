@@ -265,10 +265,10 @@ export function registerBinaryTests() {
     });
 
     describe('.notn()', function () {
-      itOnly('should allow bitwise negation', function () {
-        //assert.equal(new BN('111000111', 2).notn(9).toString(2), '111000');
+      it('should allow bitwise negation', function () {
+        assert.equal(new BN('111000111', 2).notn(9).toString(2), '111000');
         assert.equal(new BN('000111000', 2).notn(9).toString(2), '111000111');
-        /*assert.equal(new BN('111000111', 2).notn(9).toString(2), '111000');
+        assert.equal(new BN('111000111', 2).notn(9).toString(2), '111000');
         assert.equal(new BN('000111000', 2).notn(9).toString(2), '111000111');
         assert.equal(
           new BN('111000111', 2).notn(32).toString(2),
@@ -287,7 +287,7 @@ export function registerBinaryTests() {
           new BN('000111000', 2).notn(68).toString(2),
           '11111111111111111111111111111111' +
             '111111111111111111111111111111000111'
-        );*/
+        );
       });
     });
   });

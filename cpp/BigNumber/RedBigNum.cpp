@@ -3,6 +3,8 @@
 //
 
 #include "RedBigNum.h"
+#include <android/log.h>
+#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -24,6 +26,7 @@ RedBigNum::RedBigNum(BIGNUM * bign, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m
     SmartHostObject(jsCallInvoker, workerQueue) {
 
     this->bign = BN_dup(bign);
+    BN_to_montgomery(this->bign, this->bign, mctx, ctx);
     this->ctx = ctx;
     this->mctx = mctx;
     this->m = m;
@@ -129,6 +132,16 @@ void RedBigNum::installMethods() { // TODO
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
+    this->fields.push_back(HOST_LAMBDA("clone", {
+        std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
+        BN_copy(res->bign, this->bign);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("isZero", {
+        return jsi::Value(runtime, BN_is_zero(this->bign) ? true : false );
+    }));
+
     this->fields.push_back(HOST_LAMBDA("redIMul", {
         const jsi::Value & otherValue = arguments[0];
         if (!otherValue.isObject()) {
@@ -140,6 +153,7 @@ void RedBigNum::installMethods() { // TODO
         }
 
         std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
+
         BN_mod_mul_montgomery(this->bign, this->bign, other->bign, this->mctx, this->ctx);
         return jsi::Value::undefined();
     }));
@@ -156,14 +170,42 @@ void RedBigNum::installMethods() { // TODO
 
         std::shared_ptr<BigNumber> other = obj.getHostObject<BigNumber>(runtime);
 
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of other %s", BN_bn2dec(other->bign));
+
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
-        BN_mod_exp_mont(res->bign, this->bign, other->bign, this->m, this->ctx, this->mctx);
+
+        BN_one(res->bign);
+        BN_to_montgomery(res->bign, res->bign, this->mctx, this->ctx);
+        BIGNUM * y = BN_dup(other->bign);
+
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of y %s", BN_bn2dec(y));
+
+        BIGNUM * temp = BN_dup(this->bign);
+
+        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa is y 0 %d", BN_is_zero(y));
+
+        while (!BN_is_zero(y)) {
+            __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of y %s", BN_bn2dec(y));
+            if (BN_is_odd(y)) {
+                BN_mod_mul_montgomery(res->bign, res->bign, temp, this->mctx, this->ctx);
+                if (BN_is_one(y)) {
+                    break;
+                }
+            }
+            BN_mod_mul_montgomery(temp, temp, temp, this->mctx, this->ctx);
+            BN_rshift1(y, y);
+        }
+
+        BN_free(y);
+        BN_free(temp);
+
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
     this->fields.push_back(HOST_LAMBDA("redInvm", {
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
         BN_mod_inverse(res->bign, this->bign, this->m, this->ctx);
+        BN_to_montgomery(res->bign, res->bign, this->mctx, this->ctx);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -175,17 +217,25 @@ void RedBigNum::installMethods() { // TODO
 
     this->fields.push_back(HOST_LAMBDA("redSqr", {
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
-        BN_mod_sqr(res->bign, this->bign, this->m, this->ctx);
+        BN_mod_mul_montgomery(res->bign, this->bign, this->bign, this->mctx, this->ctx);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
     this->fields.push_back(HOST_LAMBDA("redISqr", {
-        BN_mod_sqr(this->bign, this->bign, this->m, this->ctx);
+        BN_mod_mul_montgomery(this->bign, this->bign, this->bign, this->mctx, this->ctx);
+        return jsi::Value::undefined();
     }));
 
-    this->fields.push_back(HOST_LAMBDA("redSqrt", {
+    this->fields.push_back(HOST_LAMBDA("redSqrt", { // unfortunatelly may be slow
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
-        BN_mod_sqrt(res->bign, this->bign, this->m, this->ctx);
+
+        BIGNUM * temp = BN_new();
+        BN_from_montgomery(temp, this->bign, this->mctx, this->ctx);
+
+        BN_mod_sqrt(temp, temp, this->m, this->ctx);
+        BN_to_montgomery(res->bign, temp, this->mctx, this->ctx);
+
+        BN_free(temp);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 

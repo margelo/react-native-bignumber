@@ -32,7 +32,7 @@ export interface InternalNumber {
   pow: (other: InternalNumber) => InternalNumber;
   ipow: (other: InternalNumber) => void;
 
-  setn: (other: number) => void;
+  setn: (other: number, value: number) => void;
   testn: (bit: number) => boolean;
   bincn: (bit: number) => void;
   inotn: (width: number) => void;
@@ -99,6 +99,8 @@ export interface InternalRedNumber {
   redInvm: () => InternalRedNumber;
   redNeg: () => InternalRedNumber;
   redPow: (other: InternalNumber) => InternalRedNumber;
+  clone: () => InternalRedNumber;
+  isZero: () => boolean;
   isInternalRedBigNum: true;
 }
 
@@ -108,11 +110,13 @@ interface NativeBigNumberSpec {
   createFromString: (strRep: string, base: number) => InternalNumber;
   createFromNumber: (number: number) => InternalNumber;
   createModCtx: (internalNumber: InternalNumber) => InternalModContext;
+  createModCtxFromNumber: (mod: number) => InternalModContext;
   bn2Mod: (
     internalNumber: InternalNumber,
     mctx: InternalModContext
   ) => InternalRedNumber;
   mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
+  getPrimeContext: (primeType: string) => InternalModContext;
 }
 
 // global func declaration for JSI functions

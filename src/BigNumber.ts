@@ -10,6 +10,8 @@ const createFromNumber = NativeBigNumber.createFromNumber;
 const mod2bn = NativeBigNumber.mod2bn;
 const bn2Mod = NativeBigNumber.bn2Mod;
 const createModCtx = NativeBigNumber.createModCtx;
+const createModCtxFromNumber = NativeBigNumber.createModCtxFromNumber;
+const getPrimeContext = NativeBigNumber.getPrimeContext;
 
 export class RedBigNumber {
   private internalRedBigNum: InternalRedNumber;
@@ -24,6 +26,14 @@ export class RedBigNumber {
     }
    
     this.mctx = modCtx;
+  }
+
+  clone() {
+    return new RedBigNumber(this.internalRedBigNum.clone(), this.mctx);
+  }
+
+  isZero() {
+    return this.internalRedBigNum.isZero();
   }
 
   fromRed() {
@@ -85,6 +95,18 @@ export class RedBigNumber {
   redPow(other: BN) {
     return new RedBigNumber(this.internalRedBigNum.redPow(other.internalBigNum), this.mctx);
   }
+
+  toString() {
+    return this.fromRed().toString(10);
+  }
+
+  toNumber() {
+    return parseInt(this.fromRed().toString(10, 53));
+  }
+
+  cmp(other: RedBigNumber) {
+    return this.fromRed().cmp(other.fromRed());
+  }
 }
 
 export class BN {
@@ -112,15 +134,70 @@ export class BN {
     throw 'BN constructor got wrong params :(';
   }
 
-  static red(num: 'string' | InternalNumber): InternalModContext {
-    if (typeof num === 'string') { // TODO (Szymon)
-      throw "not implemented yet :("
+  static _k256: InternalModContext | null = null;
+  static _p225: InternalModContext | null = null;
+  static _p192: InternalModContext | null = null;
+  static _p25519: InternalModContext | null = null;
+
+  static get k256(): InternalModContext  { // It it faster than simple prime map?
+    if (!BN._k256) {
+      BN._k256 = getPrimeContext('k256');
     }
-    return createModCtx(num);
+    return BN._k256;
   }
 
-  static mont(num: InternalNumber): InternalModContext {
-    return createModCtx(num);
+  static get p225(): InternalModContext {
+    if (!BN._p225) {
+      BN._p225 = getPrimeContext('p225');
+    }
+    return BN._p225;
+  }
+
+  static get p192(): InternalModContext {
+    if (!BN._p192) {
+      BN._p192 = getPrimeContext('p192');
+    }
+    return BN._p192;
+  }
+
+  static get p25519(): InternalModContext {
+    if (!BN._p25519) {
+      BN._p25519 = getPrimeContext('p25519');
+    }
+    return BN._p25519;
+  }
+
+  static _prime(prime: string) {
+    return BN.red(prime);
+  }
+
+  static red(num: string | BN | number): InternalModContext {
+    if (typeof num === 'string') { // TODO (Szymon)
+      switch(num) {
+        case 'k256':
+          return BN.k256;
+          break;
+        case 'p224':
+          return BN.p225;
+          break;
+        case 'p192':
+          return BN.p192;
+          break;
+        case 'p25519':
+          return BN.p25519;
+          break;
+        default:
+          throw new Error("Unknown prime number!");
+      }
+    }
+    if (typeof num === 'number') {
+      return createModCtxFromNumber(num);
+    }
+    return createModCtx(num.internalBigNum);
+  }
+
+  static mont(num: string | BN | number): InternalModContext {
+    return BN.red(num);
   }
 
   static isBN(obj: any): boolean {
@@ -265,8 +342,8 @@ export class BN {
   }
 
   // bit manipulation
-  setn(bit: number) {
-    this.internalBigNum.setn(bit);
+  setn(bit: number, value: boolean) {
+    this.internalBigNum.setn(bit, value ? 1 : 0);
     return this;
   }
 
@@ -301,7 +378,16 @@ export class BN {
     return new BN(this.internalBigNum.shln(width));
   }
 
+  ushln(width: number) {
+    return new BN(this.internalBigNum.shln(width));
+  }
+
   ishln(width: number) {
+    this.internalBigNum.ishln(width);
+    return this;
+  }
+
+  iushln(width: number) {
     this.internalBigNum.ishln(width);
     return this;
   }
@@ -310,7 +396,16 @@ export class BN {
     return new BN(this.internalBigNum.shrn(width));
   }
 
+  ushrn(width: number) {
+    return new BN(this.internalBigNum.shrn(width));
+  }
+
   ishrn(width: number) {
+    this.internalBigNum.ishrn(width);
+    return this;
+  }
+
+  iushrn(width: number) {
     this.internalBigNum.ishrn(width);
     return this;
   }

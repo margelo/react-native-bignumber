@@ -1,6 +1,7 @@
 import type { TestItemType } from '../navigators/children/Entry/TestItemType';
-import { registerArythmeticTests } from './bn-tests/arithmetic-test.js';
-import { registerBinaryTests } from './bn-tests/binary-test.js';
+import { registerArythmeticTests } from './bn-tests/arithmetic-test';
+import { registerBinaryTests } from './bn-tests/binary-test';
+import { registerRedTests } from './bn-tests/res-test';
 import { BN } from 'react-native-bignumber';
 import { describe, it } from './MochaRNAdapter';
 import chai from 'chai';
@@ -43,5 +44,10 @@ export const TEST_LIST: Array<TestItemType> = [
     description: 'Binary tests',
     value: false,
     registrator: registerBinaryTests,
+  },
+  {
+    description: 'Mod tests',
+    value: false,
+    registrator: registerRedTests,
   },
 ];
