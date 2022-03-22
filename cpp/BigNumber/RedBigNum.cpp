@@ -170,7 +170,6 @@ void RedBigNum::installMethods() { // TODO
 
         std::shared_ptr<BigNumber> other = obj.getHostObject<BigNumber>(runtime);
 
-        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of other %s", BN_bn2dec(other->bign));
 
         std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(this->ctx, this->mctx, this->m, this->weakJsCallInvoker.lock(), this->dispatchQueue);
 
@@ -178,14 +177,9 @@ void RedBigNum::installMethods() { // TODO
         BN_to_montgomery(res->bign, res->bign, this->mctx, this->ctx);
         BIGNUM * y = BN_dup(other->bign);
 
-        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of y %s", BN_bn2dec(y));
-
         BIGNUM * temp = BN_dup(this->bign);
 
-        __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa is y 0 %d", BN_is_zero(y));
-
         while (!BN_is_zero(y)) {
-            __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value of y %s", BN_bn2dec(y));
             if (BN_is_odd(y)) {
                 BN_mod_mul_montgomery(res->bign, res->bign, temp, this->mctx, this->ctx);
                 if (BN_is_one(y)) {
