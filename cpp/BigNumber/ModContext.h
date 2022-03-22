@@ -16,8 +16,6 @@ struct ModContext : jsi::HostObject {
     ModContext(BIGNUM * bign, BN_CTX * ctx);
     virtual ~ModContext();
 
-    jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
-
     static std::string k256;
     static std::string p224;
     static std::string p192;

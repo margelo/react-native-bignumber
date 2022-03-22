@@ -168,7 +168,7 @@ export class BN {
   }
 
   static _prime(prime: string) {
-    return BN.red(prime);
+    throw new Error("Not implemented yet");
   }
 
   static red(num: string | BN | number): InternalModContext {
