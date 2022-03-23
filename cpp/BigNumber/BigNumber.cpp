@@ -22,8 +22,7 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
 
   if (base == 10) {
     BN_dec2bn(&(this->bign), numberAsString.c_str());
-  }
-  if (base == 2) {
+  } else if (base == 2) {
     bool negative = false;
     if (numberAsString.front() == '-') {
       negative = true;
@@ -33,8 +32,8 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
     while (needToAdd--) {
       numberAsString = "0" + numberAsString;
     }
-    int n = numberAsString.size()/4 + 1;
-    char * inHex = new char[n];
+    int n = numberAsString.size() / 4 + 1;
+    char *inHex = new char[n];
     inHex[n - 1] = '\0';
     for (int i = 0; i < n - 1; ++i) {
       int value = 0;
@@ -58,9 +57,8 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
       BN_set_negative(this->bign, 1);
     }
 
-    delete [] inHex;
-  }
-  if (base == 16) {
+    delete[] inHex;
+  } else if (base == 16) {
     BN_hex2bn(&(this->bign), numberAsString.c_str());
   }
 }

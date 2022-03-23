@@ -23,6 +23,7 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
   SmartHostObject(jsCallInvoker, workerQueue) {
   this->fields.push_back(HOST_LAMBDA("createFromString", {
       std::string strRep = arguments[0].getString(runtime).utf8(runtime);
+      strRep.erase(std::remove_if(strRep.begin(), strRep.end(), std::isspace), strRep.end());
       int base = 10;
       if (!arguments[1].isUndefined()) {
 	base = arguments[1].asNumber();
@@ -31,6 +32,52 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(strRep, base, BigNumberHostObject::bn_ctx);
 
       return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+  this->fields.push_back(HOST_LAMBDA("createFromArray", {
+      const jsi::Array & array = arguments[0].asObject(runtime).asArray(runtime);
+      bool le = arguments[2].getBool();
+      std::string strRep(array.size(runtime), '0');
+      for (int i = 0; i < strRep.size(); ++i) {
+	int ind = (le) ? strRep.size() - 1 - i : i;
+	int val = array.getValueAtIndex(runtime, ind).asNumber();
+	if (val <= 9) {
+	  strRep[i] = '0' + val;
+	} else {
+	  strRep[i] = 'A' + val;
+	}
+      }
+      strRep.erase(std::remove_if(strRep.begin(), strRep.end(), std::isspace), strRep.end());
+      int base = 10;
+      if (!arguments[1].isUndefined()) {
+	base = arguments[1].asNumber();
+      }
+
+      std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(strRep, base, BigNumberHostObject::bn_ctx);
+
+      return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+  this->fields.push_back(HOST_LAMBDA("toArray", {
+      std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
+      int len = -1;
+
+      bool le = arguments[0].getBool();
+
+      if (arguments[1].isNumber()) {
+	len = arguments[1].asNumber();
+      }
+      std::string str = BigNumHelper::bn2Str(thiz->bign, 16, len);
+
+      jsi::Array res(runtime, str.size());
+
+      for (int i = 0; i < str.size(); ++i) {
+	int ind = le ? str.size() - 1 - i : i;
+	int val = (str[ind] >= 'A') ? str[ind] - 'A' : str[ind] - '0';
+	res.setValueAtIndex(runtime, i, jsi::Value(runtime, val));
+      }
+
+      return res;
     }));
 
   this->fields.push_back(HOST_LAMBDA("createFromNumber", {
@@ -168,65 +215,7 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 	len = (int) arguments[1].asNumber();
       }
 
-      char *strRep = nullptr;
-      if (base == 2) {
-	bool negative = BN_is_negative(thiz->bign);
-	BN_set_negative(thiz->bign, 0);
-	char * hexRep = BN_bn2hex(thiz->bign);
-	if (negative) {
-	  BN_set_negative(thiz->bign, 1);
-	}
-	int hexRepLen = strlen(hexRep);
-	const int strRepLen = (negative) ? hexRepLen * 4 + 2 : hexRepLen * 4 + 1;
-	strRep = new char[strRepLen];
-	int offset = (int) negative;
-
-	strRep[strRepLen - 1] = '\0';
-	if (negative) {
-	  strRep[0] = '-';
-	}
-
-	for (int i = 0; i < hexRepLen; ++i) {
-	  int hexVal = static_cast<int>(hexRep[i] >= 'A' ? hexRep[i] - 'A' + 10 : hexRep[i] - '0');
-	  for (int bit = 0; bit < 4; ++bit) {
-	    char val = ((hexVal & (1 << bit)) > 0) ? '1' : '0';
-	    strRep[offset + i * 4 + (4 - bit - 1)] = val;
-	  }
-	}
-	delete [] hexRep;
-      }
-      if (base == 10) {
-	strRep = BN_bn2dec(thiz->bign);
-      }
-      if (base == 16) {
-	strRep = BN_bn2hex(thiz->bign);
-      }
-      int sizeOfRep = strlen(strRep);
-      if (len == -1) {
-	len = sizeOfRep;
-      }
-      std::string res(len, '0');
-      for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
-	char dig = strRep[sizeOfRep - 1 - i];
-	if (dig >= 'A' and dig <= 'F') {
-	  dig = dig - 'A' + 'a';
-	}
-	if (dig == '-') {
-	  res = "-" + res;
-	  break;
-	}
-	res[len - 1 - i] = dig;
-      }
-
-      int start = 0;
-      if (res[0] == '-') {
-	start = 1;
-      }
-      int ptr = start;
-      while (ptr < len && res[ptr] == '0') ptr++;
-      res.erase(start, ptr-start);
-
-      delete [] strRep;
+      std::string res = BigNumHelper::bn2Str(thiz->bign, base, len);
       return jsi::String::createFromAscii(runtime, res.c_str());
     }));
 

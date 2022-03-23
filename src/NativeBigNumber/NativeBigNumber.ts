@@ -9,6 +9,11 @@ export interface InternalModContext {}
 interface NativeBigNumberSpec {
   createFromString: (strRep: string, base: number) => InternalNumber;
   createFromNumber: (number: number) => InternalNumber;
+  createFromArray: (
+    array: Array<number>,
+    base: number,
+    le: boolean
+  ) => InternalNumber;
   createModCtx: (internalNumber: InternalNumber) => InternalModContext;
   createModCtxFromNumber: (mod: number) => InternalModContext;
   bn2Mod: (
@@ -20,6 +25,7 @@ interface NativeBigNumberSpec {
 
   //bigNumber
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
+  toArray: (this: InternalNumber, le: boolean, len: number) => Array<number>;
 
   add: (this: InternalNumber, other: InternalNumber) => InternalNumber;
   iadd: (this: InternalNumber, other: InternalNumber) => void;

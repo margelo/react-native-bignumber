@@ -1,0 +1,111 @@
+diff --git a/node_modules/elliptic/lib/elliptic/curve/base.js b/node_modules/elliptic/lib/elliptic/curve/base.js
+index 8543fa8..3bb90c6 100644
+--- a/node_modules/elliptic/lib/elliptic/curve/base.js
++++ b/node_modules/elliptic/lib/elliptic/curve/base.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var utils = require('../utils');
+ var getNAF = utils.getNAF;
+ var getJSF = utils.getJSF;
+diff --git a/node_modules/elliptic/lib/elliptic/curve/edwards.js b/node_modules/elliptic/lib/elliptic/curve/edwards.js
+index 6e757c6..94e3662 100644
+--- a/node_modules/elliptic/lib/elliptic/curve/edwards.js
++++ b/node_modules/elliptic/lib/elliptic/curve/edwards.js
+@@ -1,7 +1,7 @@
+ 'use strict';
+ 
+ var utils = require('../utils');
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var inherits = require('inherits');
+ var Base = require('./base');
+ 
+diff --git a/node_modules/elliptic/lib/elliptic/curve/mont.js b/node_modules/elliptic/lib/elliptic/curve/mont.js
+index 4b9f80f..31aba54 100644
+--- a/node_modules/elliptic/lib/elliptic/curve/mont.js
++++ b/node_modules/elliptic/lib/elliptic/curve/mont.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var inherits = require('inherits');
+ var Base = require('./base');
+ 
+diff --git a/node_modules/elliptic/lib/elliptic/curve/short.js b/node_modules/elliptic/lib/elliptic/curve/short.js
+index eec36ec..c716766 100644
+--- a/node_modules/elliptic/lib/elliptic/curve/short.js
++++ b/node_modules/elliptic/lib/elliptic/curve/short.js
+@@ -1,7 +1,7 @@
+ 'use strict';
+ 
+ var utils = require('../utils');
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var inherits = require('inherits');
+ var Base = require('./base');
+ 
+diff --git a/node_modules/elliptic/lib/elliptic/ec/index.js b/node_modules/elliptic/lib/elliptic/ec/index.js
+index 8b58781..199b79f 100644
+--- a/node_modules/elliptic/lib/elliptic/ec/index.js
++++ b/node_modules/elliptic/lib/elliptic/ec/index.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var HmacDRBG = require('hmac-drbg');
+ var utils = require('../utils');
+ var curves = require('../curves');
+diff --git a/node_modules/elliptic/lib/elliptic/ec/key.js b/node_modules/elliptic/lib/elliptic/ec/key.js
+index 55bf299..fd245ec 100644
+--- a/node_modules/elliptic/lib/elliptic/ec/key.js
++++ b/node_modules/elliptic/lib/elliptic/ec/key.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var utils = require('../utils');
+ var assert = utils.assert;
+ 
+diff --git a/node_modules/elliptic/lib/elliptic/ec/signature.js b/node_modules/elliptic/lib/elliptic/ec/signature.js
+index 539df6a..d23f9d6 100644
+--- a/node_modules/elliptic/lib/elliptic/ec/signature.js
++++ b/node_modules/elliptic/lib/elliptic/ec/signature.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ 
+ var utils = require('../utils');
+ var assert = utils.assert;
+diff --git a/node_modules/elliptic/lib/elliptic/eddsa/signature.js b/node_modules/elliptic/lib/elliptic/eddsa/signature.js
+index 30ebc92..b9d7efe 100644
+--- a/node_modules/elliptic/lib/elliptic/eddsa/signature.js
++++ b/node_modules/elliptic/lib/elliptic/eddsa/signature.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var utils = require('../utils');
+ var assert = utils.assert;
+ var cachedProperty = utils.cachedProperty;
+diff --git a/node_modules/elliptic/lib/elliptic/utils.js b/node_modules/elliptic/lib/elliptic/utils.js
+index 627a9f1..39aa514 100644
+--- a/node_modules/elliptic/lib/elliptic/utils.js
++++ b/node_modules/elliptic/lib/elliptic/utils.js
+@@ -1,7 +1,7 @@
+ 'use strict';
+ 
+ var utils = exports;
+-var BN = require('bn.js');
++var BN = require('react-native-bignumber');
+ var minAssert = require('minimalistic-assert');
+ var minUtils = require('minimalistic-crypto-utils');
+ 

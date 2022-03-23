@@ -7,6 +7,7 @@ import {
 
 const createFromString = NativeBigNumber.createFromString;
 const createFromNumber = NativeBigNumber.createFromNumber;
+const createFromArray = NativeBigNumber.createFromArray;
 const mod2bn = NativeBigNumber.mod2bn;
 const bn2Mod = NativeBigNumber.bn2Mod;
 const createModCtx = NativeBigNumber.createModCtx;
@@ -15,6 +16,7 @@ const getPrimeContext = NativeBigNumber.getPrimeContext;
 
 //bignumber
 const {
+  toArray,
   toString,
   add,
   iadd,
@@ -205,6 +207,10 @@ export class RedBigNumber {
     return parseInt(this.fromRed().toString(10, 53));
   }
 
+  toArray() {
+    return this.fromRed().toArray();
+  }
+
   cmp(other: RedBigNumber) {
     return this.fromRed().cmp(other.fromRed());
   }
@@ -213,7 +219,8 @@ export class RedBigNumber {
 export class BN {
   internalBigNum: InternalNumber;
 
-  constructor(asString: string, base: 2 | 10 | 16);
+  constructor(asString: string, base: 2 | 10 | 16, endian?: 'le' | 'be');
+  constructor(asString: Array<number>, base?: 2 | 10 | 16, endian?: 'le' | 'be');
   constructor(value: number);
   constructor(in: InternalNumber);
   constructor(...args: any[]) {
@@ -231,6 +238,18 @@ export class BN {
     }
     if ((typeof args[0] === 'object') && args[0].isInternalBigNum) {
       this.internalBigNum = args[0];
+      return this;
+    }
+    if (Array.isArray(args[0])) {
+      let base = 16;
+      if (typeof args[1] == 'number') {
+        base = args[1];
+      }
+      let endian = false;
+      if (args[2] === 'le') {
+        endian = true;
+      }
+      this.internalBigNum = createFromArray(args[0], base, endian);
       return this;
     }
     throw 'BN constructor got wrong params :(';
@@ -316,6 +335,10 @@ export class BN {
 
   toNumber() {
     return parseInt(toString.call(this.internalBigNum, 10, 53));
+  }
+
+  toArray(endian?: 'le' | 'be', len?: number) {
+    return toArray.call(this.internalBigNum, endian === 'le', len || -1);
   }
 
   // add
@@ -679,4 +702,6 @@ export class BN {
     return a.min(b);
   }
 }
+
+export default BN;
 
