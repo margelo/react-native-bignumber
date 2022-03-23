@@ -36,24 +36,18 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 
   this->fields.push_back(HOST_LAMBDA("createFromArray", {
       const jsi::Array & array = arguments[0].asObject(runtime).asArray(runtime);
+      int size = array.size(runtime);
       bool le = arguments[2].getBool();
-      std::string strRep(array.size(runtime), '0');
-      for (int i = 0; i < strRep.size(); ++i) {
-	int ind = (le) ? strRep.size() - 1 - i : i;
-	int val = array.getValueAtIndex(runtime, ind).asNumber();
-	if (val <= 9) {
-	  strRep[i] = '0' + val;
-	} else {
-	  strRep[i] = 'A' + val;
-	}
-      }
-      strRep.erase(std::remove_if(strRep.begin(), strRep.end(), std::isspace), strRep.end());
-      int base = 10;
-      if (!arguments[1].isUndefined()) {
-	base = arguments[1].asNumber();
+
+      unsigned char * s = new unsigned char[size];
+
+      for (int i = 0; i < size; ++i) {
+        int val = array.getValueAtIndex(runtime, i).asNumber();
+        s[i] = val;
       }
 
-      std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(strRep, base, BigNumberHostObject::bn_ctx);
+      std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(s, size, le, BigNumberHostObject::bn_ctx);
+      delete [] s;
 
       return jsi::Object::createFromHostObject(runtime, res);
     }));
@@ -67,14 +61,23 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       if (arguments[1].isNumber()) {
 	len = arguments[1].asNumber();
       }
-      std::string str = BigNumHelper::bn2Str(thiz->bign, 16, len);
+      int numberLen = BN_num_bytes(thiz->bign);
+      if (len == -1) {
+          len = numberLen;
+      }
+      unsigned char * to = new unsigned char[len];
+      if (le) {
+          BN_bn2lebinpad(thiz->bign, to, len);
+      } else {
+          BN_bn2binpad(thiz->bign, to, len);
+      }
 
-      jsi::Array res(runtime, str.size());
 
-      for (int i = 0; i < str.size(); ++i) {
-	int ind = le ? str.size() - 1 - i : i;
-	int val = (str[ind] >= 'A') ? str[ind] - 'A' : str[ind] - '0';
-	res.setValueAtIndex(runtime, i, jsi::Value(runtime, val));
+      jsi::Array res(runtime, len);
+      delete [] to;
+
+      for (int i = 0; i < len; ++i) {
+	    res.setValueAtIndex(runtime, i, jsi::Value(runtime, (int)to[i]));
       }
 
       return res;

@@ -16,6 +16,16 @@ BigNumber::BigNumber(BN_CTX * ctx) {
   BN_zero(this->bign);
 }
 
+BigNumber::BigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx) {
+  this->ctx = ctx;
+  this->bign = BN_new();
+  if (le) {
+    BN_lebin2bn(s, len, this->bign);
+  } else {
+    BN_bin2bn(s, len, this->bign);
+  }
+}
+
 BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
   this->ctx = ctx;
   this->bign = BN_new();

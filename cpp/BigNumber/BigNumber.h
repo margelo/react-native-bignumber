@@ -22,6 +22,8 @@ explicit BigNumber(BN_CTX * ctx);
 
 explicit BigNumber(std::string, int base, BN_CTX * ctx);
 
+explicit BigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx);
+
 explicit BigNumber(int value, BN_CTX * ctx);
 
 explicit BigNumber(const BigNumber&);

@@ -249,7 +249,14 @@ export class BN {
       if (args[2] === 'le') {
         endian = true;
       }
+      if (args[1] === 'le') {
+        endian = true;
+      }
       this.internalBigNum = createFromArray(args[0], base, endian);
+      return this;
+    }
+    if (args[0] instanceof BN) {
+      this.internalBigNum = clone.call(args[0].internalBigNum);
       return this;
     }
     throw 'BN constructor got wrong params :(';
