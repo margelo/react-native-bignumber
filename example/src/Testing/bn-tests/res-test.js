@@ -229,7 +229,7 @@ export function registerRedTests() {
         assert.equal(p.ireduce(regr).toString(16), exp);
       });
 
-      itOnly('should not fail to invm number mod k256', function () {
+      it('should not fail to invm number mod k256', function () {
         var regr2 = new BN(
           '6c150c4aa9a8cf1934485d40674d4a7cd494675537bda36d49405c5d2c6f496f',
           16

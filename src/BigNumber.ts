@@ -229,6 +229,22 @@ export class BN {
   constructor(value: number);
   constructor(in: InternalNumber);
   constructor(...args: any[]) {
+    let base = 16;
+    if (typeof args[1] == 'number') {
+      base = args[1];
+    }
+    let endian = false;
+    if (args[2] === 'le') {
+      endian = true;
+    }
+    if (args[1] === 'le') {
+      endian = true;
+    }
+
+    if (base === 36) {
+      throw new Error("The library doesn't support base-36!");
+    }
+
     if (args[0] == null) {
       this.internalBigNum = createFromNumber(0);
       return this;
@@ -257,18 +273,6 @@ export class BN {
     if (args[0] instanceof BN) {
       this.internalBigNum = clone.call(args[0].internalBigNum);
       return this;
-    }
-
-    let base = 16;
-    if (typeof args[1] == 'number') {
-      base = args[1];
-    }
-    let endian = false;
-    if (args[2] === 'le') {
-      endian = true;
-    }
-    if (args[1] === 'le') {
-      endian = true;
     }
 
     if (args[0] instanceof ArrayBuffer) {
