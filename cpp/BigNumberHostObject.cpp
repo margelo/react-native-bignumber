@@ -52,6 +52,19 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       return jsi::Object::createFromHostObject(runtime, res);
     }));
 
+    this->fields.push_back(HOST_LAMBDA("createFromArrayBuffer", {
+        jsi::ArrayBuffer array = arguments[0].asObject(
+                runtime).getArrayBuffer(runtime);
+        int size = array.size(runtime);
+        bool le = arguments[2].getBool();
+
+        const unsigned char * s = array.data(runtime);
+
+        std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(s, size, le, BigNumberHostObject::bn_ctx);
+
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
   this->fields.push_back(HOST_LAMBDA("toArray", {
       std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
       int len = -1;
@@ -71,7 +84,6 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       } else {
           BN_bn2binpad(thiz->bign, to, len);
       }
-
 
       jsi::Array res(runtime, len);
       delete [] to;
@@ -204,10 +216,6 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
   // BigNumber.cpp
   this->fields.push_back(HOST_LAMBDA("toString", {
       std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
-
-      if (BN_is_zero(thiz->bign)) {
-	return jsi::String::createFromAscii(runtime, "0");
-      }
 
       int base = 10;
       if (!arguments[0].isUndefined() && arguments[0].isNumber()) {
@@ -740,7 +748,7 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 
   this->fields.push_back(HOST_LAMBDA("isZero", {
       std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
-      if (BN_zero(thiz->bign)) {
+      if (BN_is_zero(thiz->bign)) {
 	return jsi::Value(runtime, true);
       } else {
 	return jsi::Value(runtime, false);
@@ -756,7 +764,7 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 
   this->fields.push_back(HOST_LAMBDA("isOne", {
       std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
-      if (BN_one(thiz->bign)) {
+      if (BN_is_one(thiz->bign)) {
 	return jsi::Value(runtime, true);
       } else {
 	return jsi::Value(runtime, false);
@@ -874,6 +882,26 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       std::shared_ptr<BigNumber> other = otherObject.getHostObject<BigNumber>(runtime);
 
       return jsi::Value(runtime, BN_cmp(thiz->bign, other->bign));
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("cmpn", {
+        std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isNumber()) {
+            throw jsi::JSError(runtime, "cmpn expects number");
+        }
+        int other = otherValue.asNumber();
+
+        BIGNUM * temp = BN_new();
+        BN_set_word(temp, abs(other));
+        if (other < 0) {
+            BN_set_negative(temp, 1);
+        }
+
+        int res = BN_cmp(thiz->bign, temp);
+        BN_free(temp);
+
+        return jsi::Value(runtime, res);
     }));
 
   this->fields.push_back(HOST_LAMBDA("lt", {

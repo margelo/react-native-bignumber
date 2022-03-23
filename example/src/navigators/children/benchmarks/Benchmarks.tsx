@@ -168,6 +168,9 @@ function startBenchmarking() {
     );
     console.log('test red sqrt BN - result: ' + time);
   }
+  {
+    require("elliptic/lib/elliptic/")
+  }
 }
 
 type BenchmarksProps = NativeStackScreenProps<RootStackParamList, 'Benchmarks'>;

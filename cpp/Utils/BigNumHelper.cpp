@@ -5,6 +5,9 @@
 #include <algorithm>
 #include "BigNumHelper.h"
 #include <string>
+#include <algorithm>
+#include <android/log.h>
+#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -253,9 +256,6 @@ void BigNumHelper::BN_smart_neg(BIGNUM *pSt) {
 
 std::string BigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   char *strRep = nullptr;
-  if (BN_is_zero(num)) {
-    return std::string("0");
-  }
   if (base == 2) {
     bool negative = BN_is_negative(num);
     BN_set_negative(num, 0);
@@ -289,9 +289,16 @@ std::string BigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
     strRep = BN_bn2hex(num);
   }
   int sizeOfRep = strlen(strRep);
+  bool reduce = false;
   if (len == -1) {
+    reduce = true;
     len = sizeOfRep;
   }
+
+  if (BN_is_zero(num) && reduce) {
+    return std::string("0");
+  }
+
   std::string res(len, '0');
   for (int i = 0; i < std::min(len, sizeOfRep); ++i) {
     char dig = strRep[sizeOfRep - 1 - i];
@@ -309,9 +316,12 @@ std::string BigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   if (res[0] == '-') {
     start = 1;
   }
-  int ptr = start;
-  while (ptr < len && res[ptr] == '0') ptr++;
-  res.erase(start, ptr-start);
+
+  if (reduce) {
+    int ptr = start;
+    while (ptr < len && res[ptr] == '0') ptr++;
+    res.erase(start, ptr - start);
+  }
 
   delete [] strRep;
   return res;

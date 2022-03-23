@@ -14,6 +14,11 @@ interface NativeBigNumberSpec {
     base: number,
     le: boolean
   ) => InternalNumber;
+  createFromArrayBuffer: (
+    array: ArrayBuffer,
+    base: number,
+    le: boolean
+  ) => InternalNumber;
   createModCtx: (internalNumber: InternalNumber) => InternalModContext;
   createModCtxFromNumber: (mod: number) => InternalModContext;
   bn2Mod: (
@@ -91,6 +96,7 @@ interface NativeBigNumberSpec {
   isEven: (this: InternalNumber) => boolean;
 
   cmp: (this: InternalNumber, other: InternalNumber) => -1 | 0 | 1;
+  cmpn: (this: InternalNumber, other: number) => -1 | 0 | 1;
   ucmp: (this: InternalNumber, other: InternalNumber) => -1 | 0 | 1;
   lt: (this: InternalNumber, other: InternalNumber) => boolean;
   lte: (this: InternalNumber, other: InternalNumber) => boolean;

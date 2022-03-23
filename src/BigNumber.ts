@@ -8,6 +8,7 @@ import {
 const createFromString = NativeBigNumber.createFromString;
 const createFromNumber = NativeBigNumber.createFromNumber;
 const createFromArray = NativeBigNumber.createFromArray;
+const createFromArrayBuffer = NativeBigNumber.createFromArrayBuffer;
 const mod2bn = NativeBigNumber.mod2bn;
 const bn2Mod = NativeBigNumber.bn2Mod;
 const createModCtx = NativeBigNumber.createModCtx;
@@ -78,6 +79,7 @@ const {
   isOdd,
   isEven,
 
+  cmpn,
   cmp,
   ucmp,
   lt,
@@ -219,11 +221,18 @@ export class RedBigNumber {
 export class BN {
   internalBigNum: InternalNumber;
 
+  constructor();
   constructor(asString: string, base: 2 | 10 | 16, endian?: 'le' | 'be');
   constructor(asString: Array<number>, base?: 2 | 10 | 16, endian?: 'le' | 'be');
+  constructor(asString: ArrayBuffer, base?: 2 | 10 | 16, endian?: 'le' | 'be');
+  constructor(asString: Buffer, base?: 2 | 10 | 16, endian?: 'le' | 'be');
   constructor(value: number);
   constructor(in: InternalNumber);
   constructor(...args: any[]) {
+    if (args[0] == null) {
+      this.internalBigNum = createFromNumber(0);
+      return this;
+    }
     if (typeof args[0] === 'string') {
       if (args[1] === 'hex') {
         args[1] = 16;
@@ -233,30 +242,51 @@ export class BN {
       return this;
     }
     if (typeof args[0] === 'number') {
-      this.internalBigNum = createFromNumber(args[0]);
+      if (Math.abs(args[0]) > 1e9) {
+        this.internalBigNum = createFromString(args[0].toString(), args[1]);
+      } else {
+        this.internalBigNum = createFromNumber(args[0]);
+      }
       return this;
     }
     if ((typeof args[0] === 'object') && args[0].isInternalBigNum) {
       this.internalBigNum = args[0];
       return this;
     }
-    if (Array.isArray(args[0])) {
-      let base = 16;
-      if (typeof args[1] == 'number') {
-        base = args[1];
-      }
-      let endian = false;
-      if (args[2] === 'le') {
-        endian = true;
-      }
-      if (args[1] === 'le') {
-        endian = true;
-      }
-      this.internalBigNum = createFromArray(args[0], base, endian);
-      return this;
-    }
+
     if (args[0] instanceof BN) {
       this.internalBigNum = clone.call(args[0].internalBigNum);
+      return this;
+    }
+
+    let base = 16;
+    if (typeof args[1] == 'number') {
+      base = args[1];
+    }
+    let endian = false;
+    if (args[2] === 'le') {
+      endian = true;
+    }
+    if (args[1] === 'le') {
+      endian = true;
+    }
+
+    if (args[0] instanceof ArrayBuffer) {
+      this.internalBigNum = createFromArrayBuffer(args[0], base, endian);
+      return this;
+    }
+
+    if ((typeof args[0] === 'object') && args[0].buffer) { // Buffer
+      var arrayBuffer = args[0].buffer.slice(
+        args[0].byteOffset,
+        args[0].byteOffset + args[0].byteLength
+      );
+      this.internalBigNum = createFromArrayBuffer(arrayBuffer, base, endian);
+      return this;
+    }
+
+    if (Array.isArray(args[0])) {
+      this.internalBigNum = createFromArray(args[0], base, endian);
       return this;
     }
     throw 'BN constructor got wrong params :(';
@@ -346,6 +376,10 @@ export class BN {
 
   toArray(endian?: 'le' | 'be', len?: number) {
     return toArray.call(this.internalBigNum, endian === 'le', len || -1);
+  }
+
+  toBuffer(endian?: 'le' | 'be', len?: number) {
+    return Buffer.from(this.toArray(endian || 'be', len));
   }
 
   // add
@@ -544,63 +578,63 @@ export class BN {
 
   // no arg operations
   sqr() {
-    return new BN(sqr.call(this.internalBigNum, ));
+    return new BN(sqr.call(this.internalBigNum));
   }
 
   isqr() {
-    isqr.call(this.internalBigNum, );
+    isqr.call(this.internalBigNum);
     return this;
   }
 
   abs() {
-    return new BN(abs.call(this.internalBigNum, ));
+    return new BN(abs.call(this.internalBigNum));
   }
 
   iabs() {
-    iabs.call(this.internalBigNum, );
+    iabs.call(this.internalBigNum);
     return this;
   }
 
   neg() {
-    return new BN(neg.call(this.internalBigNum, ));
+    return new BN(neg.call(this.internalBigNum));
   }
 
   ineg() {
-    ineg.call(this.internalBigNum, );
+    ineg.call(this.internalBigNum);
     return this;
   }
 
   clone() {
-    return new BN(clone.call(this.internalBigNum, ));
+    return new BN(clone.call(this.internalBigNum));
   }
 
   // get info
   isZero() {
-    return isZero.call(this.internalBigNum, );
+    return isZero.call(this.internalBigNum);
   }
 
   isOne() {
-    return isOne.call(this.internalBigNum, );
+    return isOne.call(this.internalBigNum);
   }
 
   bitLength() {
-    return bitLength.call(this.internalBigNum, );
+    return bitLength.call(this.internalBigNum);
   }
 
   byteLength() {
-    return byteLength.call(this.internalBigNum, );
+    return byteLength.call(this.internalBigNum);
   }
 
   isEven() {
-    return isEven.call(this.internalBigNum, );
+    return isEven.call(this.internalBigNum);
   }
 
   isOdd() {
-    return isOdd.call(this.internalBigNum, );
+    return isOdd.call(this.internalBigNum);
   }
 
   isNeg() {
-    return isNeg.call(this.internalBigNum, );
+    return isNeg.call(this.internalBigNum);
   }
 
   get negative() {
@@ -613,11 +647,27 @@ export class BN {
   }
 
   cmpn(other: number) {
-    return cmp.call(this.internalBigNum, new BN(other).internalBigNum);
+    return cmpn.call(this.internalBigNum, other);
   }
 
   ucmp(other: BN) {
     return ucmp.call(this.internalBigNum, other.internalBigNum);
+  }
+
+  ltn(other: number) {
+    return cmpn.call(this.internalBigNum, other) < 0;
+  }
+
+  lten(other: number) {
+    return cmpn.call(this.internalBigNum, other) <= 0;
+  }
+
+  gtn(other: number) {
+    return cmpn.call(this.internalBigNum, other) > 0;
+  }
+
+  gten(other: number) {
+    return cmpn.call(this.internalBigNum, other) >= 0;
   }
 
   lt(other: BN) {
@@ -638,6 +688,10 @@ export class BN {
 
   eq(other: BN) {
     return eq.call(this.internalBigNum, other.internalBigNum);
+  }
+
+  eqn(other: number) {
+    return cmpn.call(this.internalBigNum, other) === 0;
   }
 
   // Field helpers

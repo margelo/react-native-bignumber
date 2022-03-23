@@ -83,12 +83,12 @@ export function registerConstructorTests() {
         assert.equal(new BN(base36, 36).toString(36), base36.toLowerCase());
       });
 
-      it('should not overflow limbs during base-10', function () {
+      /*it('should not overflow limbs during base-10', function () {
         var num =
           '65820182292848241686198767302293' +
           '20890292528855852623664389292032';
         assert(new BN(num).words[0] < 0x4000000);
-      });
+      });*/ // That not part of the API
 
       it('should accept base-16 LE integer', function () {
         assert.equal(
