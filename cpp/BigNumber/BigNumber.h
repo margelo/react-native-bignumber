@@ -30,7 +30,7 @@ explicit BigNumber(const BigNumber&);
 
 virtual ~BigNumber();
 
-jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+virtual jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
 
 BIGNUM * bign;
 BN_CTX * ctx;

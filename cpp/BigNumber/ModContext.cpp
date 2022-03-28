@@ -24,6 +24,14 @@ namespace margelo {
         BN_MONT_CTX_set(this->mctx, this->m, ctx);
     }
 
+    jsi::Value ModContext::get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId) {
+        std::string name = propNameId.utf8(runtime);
+        if (name == "isModContext") {
+            return jsi::Value(runtime, true);
+        }
+        return jsi::Value::undefined();
+    }
+
     ModContext::~ModContext() {
         BN_MONT_CTX_free(this->mctx);
         BN_free(this->m);

@@ -22,9 +22,7 @@ virtual ~RedBigNum();
 
 jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
 
-BN_CTX * ctx;
 BN_MONT_CTX * mctx;
-BIGNUM * bign;
 BIGNUM * m;
 };
 

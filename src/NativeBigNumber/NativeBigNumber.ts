@@ -1,10 +1,14 @@
 import { NativeModules, Platform } from 'react-native';
 
-export interface InternalNumber {
+export interface InternalNumber {}
+
+export interface InternalRedNumber extends InternalNumber {
   isInternalRedBigNum: true;
 }
 
-export interface InternalModContext {}
+export interface InternalModContext {
+  isModContext: true;
+}
 
 interface NativeBigNumberSpec {
   createFromString: (strRep: string, base: number) => InternalNumber;
@@ -146,10 +150,6 @@ interface NativeBigNumberSpec {
   redCmp: (this: InternalRedNumber, other: InternalNumber) => 0 | 1 | -1;
   cloneRed: (this: InternalRedNumber) => InternalRedNumber;
   isRedZero: (this: InternalRedNumber) => boolean;
-}
-
-export interface InternalRedNumber {
-  isInternalRedBigNum: true;
 }
 
 // global func declaration for JSI functions

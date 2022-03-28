@@ -117,137 +117,38 @@ const {
   redNeg,
   redPow,
   cloneRed,
-  isRedZero,
-  redCmp,
 } = NativeBigNumber;
-
-export class RedBigNumber {
-  private internalRedBigNum: InternalRedNumber;
-  private mctx: InternalModContext;
-
-
-  constructor(bign: InternalNumber | InternalRedNumber, modCtx: InternalModContext) {
-    if (bign?.isInternalBigNum) {
-      this.internalRedBigNum = bn2Mod(bign, modCtx);
-    } else {
-      this.internalRedBigNum = bign as InternalRedNumber;
-    }
-   
-    this.mctx = modCtx;
-  }
-
-  clone() {
-    return new RedBigNumber(cloneRed.call(this.internalRedBigNum), this.mctx);
-  }
-
-  isZero() {
-    return isRedZero.call(this.internalRedBigNum);
-  }
-
-  fromRed() {
-    return new BN(mod2bn(this.internalRedBigNum));
-  }
-
-  redAdd(other: RedBigNumber) {
-    return new RedBigNumber(redAdd.call(this.internalRedBigNum,other.internalRedBigNum), this.mctx);
-  }
-
-  redIAdd(other: RedBigNumber) {
-    redIAdd.call(this.internalRedBigNum, other.internalRedBigNum);
-    return this;
-  }
-
-  redSub(other: RedBigNumber) {
-    return new RedBigNumber(redSub.call(this.internalRedBigNum, other.internalRedBigNum), this.mctx);
-  }
-
-  redISub(other: RedBigNumber) {
-    redISub.call(this.internalRedBigNum, other.internalRedBigNum);
-    return this;
-  }
-
-  redMul(other: RedBigNumber) {
-    return new RedBigNumber(redMul.call(this.internalRedBigNum, other.internalRedBigNum), this.mctx);
-  }
-
-  redIMul(other: RedBigNumber) {
-    redIMul.call(this.internalRedBigNum, other.internalRedBigNum);
-    return this;
-  }
-
-  redShl(places: number) {
-    return new RedBigNumber(redShl.call(this.internalRedBigNum, places), this.mctx);
-  }
-
-  redSqrt() {
-    return new RedBigNumber(redSqrt.call(this.internalRedBigNum), this.mctx);
-  }
-
-  redSqr() {
-    return new RedBigNumber(redSqr.call(this.internalRedBigNum), this.mctx);
-  }
-
-  redISqr() {
-    redISqr.call(this.internalRedBigNum);
-    return this;
-  }
-
-  redNeg() {
-    return new RedBigNumber(redNeg.call(this.internalRedBigNum), this.mctx);
-  }
-
-  redInvm() {
-    return new RedBigNumber(redInvm.call(this.internalRedBigNum), this.mctx);
-  }
-
-  redPow(other: BN) {
-    return new RedBigNumber(redPow.call(this.internalRedBigNum, other.internalBigNum), this.mctx);
-  }
-
-  toString() {
-    return this.fromRed().toString(10);
-  }
-
-  toNumber() {
-    return parseInt(this.fromRed().toString(10, 53));
-  }
-
-  toArray() {
-    return this.fromRed().toArray();
-  }
-
-  cmp(other: RedBigNumber) {
-    return redCmp.call(this.internalRedBigNum, other.internalRedBigNum);
-  }
-
-  cmpn(other: number) {
-    if (other == 0) {
-      if (this.isZero()) {
-        return 0;
-      }
-      return 1;
-    }
-    throw new Error('cmpn only supports 0 as an argument');
-  }
-
-  get red() {
-    return true;
-  }
-}
 
 export class BN {
   internalBigNum: InternalNumber;
+  _mctx?: InternalModContext;
 
   constructor();
   constructor(asString: string, base: 2 | 10 | 16, endian?: 'le' | 'be');
-  constructor(asString: Array<number>, base?: 2 | 10 | 16, endian?: 'le' | 'be');
+  constructor(
+    asString: Array<number>,
+    base?: 2 | 10 | 16,
+    endian?: 'le' | 'be'
+  );
   constructor(asString: ArrayBuffer, base?: 2 | 10 | 16, endian?: 'le' | 'be');
   constructor(asString: Buffer, base?: 2 | 10 | 16, endian?: 'le' | 'be');
   constructor(value: number);
-  constructor(in: InternalNumber);
+  constructor(inInternalNumber: InternalNumber);
+  constructor(inRedNumber: InternalRedNumber, modctx: InternalModContext);
+  constructor(inInternalNumber: InternalNumber, modctx: InternalModContext);
   constructor(...args: any[]) {
+    if (args[1]?.isModContext) {
+      if (!args[0]?.isInternalRedBigNum) {
+        this.internalBigNum = bn2Mod(args[0], args[1]);
+      } else {
+        this.internalBigNum = args[0] as InternalRedNumber;
+      }
+      this._mctx = args[1];
+      return;
+    }
+
     let base = 16;
-    if (typeof args[1] == 'number') {
+    if (typeof args[1] === 'number') {
       base = args[1];
     }
     let endian = false;
@@ -270,7 +171,6 @@ export class BN {
       if (args[1] === 'hex') {
         args[1] = 16;
       }
-      const start = performance.now();
       this.internalBigNum = createFromString(args[0], args[1]);
       return this;
     }
@@ -282,7 +182,7 @@ export class BN {
       }
       return this;
     }
-    if ((typeof args[0] === 'object') && args[0].isInternalBigNum) {
+    if (typeof args[0] === 'object' && args[0].isInternalBigNum) {
       this.internalBigNum = args[0];
       return this;
     }
@@ -297,7 +197,8 @@ export class BN {
       return this;
     }
 
-    if ((typeof args[0] === 'object') && args[0].buffer) { // Buffer
+    if (typeof args[0] === 'object' && args[0].buffer) {
+      // Buffer
       var arrayBuffer = args[0].buffer.slice(
         args[0].byteOffset,
         args[0].byteOffset + args[0].byteLength
@@ -313,12 +214,17 @@ export class BN {
     throw 'BN constructor got wrong params :(';
   }
 
+  get red() {
+    return this._mctx != null;
+  }
+
   static _k256: InternalModContext | null = null;
   static _p225: InternalModContext | null = null;
   static _p192: InternalModContext | null = null;
   static _p25519: InternalModContext | null = null;
 
-  static get k256(): InternalModContext  { // It it faster than simple prime map?
+  static get k256(): InternalModContext {
+    // It it faster than simple prime map?
     if (!BN._k256) {
       BN._k256 = getPrimeContext('k256');
     }
@@ -347,20 +253,21 @@ export class BN {
   }
 
   static _prime(prime: string) {
-    switch(prime) {
+    switch (prime) {
       case 'k256':
       case 'p224':
       case 'p192':
       case 'p25519':
-        return {p: new BN(getPrime(prime))};
+        return { p: new BN(getPrime(prime)) };
       default:
-        throw new Error("Unknown prime number!");
+        throw new Error('Unknown prime number!');
     }
   }
 
   static red(num: string | BN | number): InternalModContext {
-    if (typeof num === 'string') { // TODO (Szymon)
-      switch(num) {
+    if (typeof num === 'string') {
+      // TODO (Szymon)
+      switch (num) {
         case 'k256':
           return BN.k256;
         case 'p224':
@@ -370,7 +277,7 @@ export class BN {
         case 'p25519':
           return BN.p25519;
         default:
-          throw new Error("Unknown prime number!");
+          throw new Error('Unknown prime number!');
       }
     }
     if (typeof num === 'number') {
@@ -388,7 +295,7 @@ export class BN {
   }
 
   toRed(mctx: InternalModContext) {
-    return new RedBigNumber(this.internalBigNum, mctx);
+    return new BN(this.internalBigNum, mctx);
   }
 
   toString(base: 2 | 10 | 16, len?: number) {
@@ -630,6 +537,9 @@ export class BN {
   }
 
   clone() {
+    if (this.red) {
+      return new BN(cloneRed.call(this.internalRedBigNum), this.mctx);
+    }
     return new BN(clone.call(this.internalBigNum));
   }
 
@@ -733,7 +643,7 @@ export class BN {
     return new BN(gcd.call(this.internalBigNum, other.internalBigNum));
   }
 
-  egcd(other: BN): { a: BN, b: BN, gcd: BN } {
+  egcd(other: BN): { a: BN; b: BN; gcd: BN } {
     throw 'not implemented yet :(';
   }
 
@@ -756,7 +666,7 @@ export class BN {
   }
 
   andln(other: number) {
-    return this.andn(other);
+    return this.andn(other).toNumber();
   }
 
   iand(other: BN) {
@@ -796,10 +706,97 @@ export class BN {
     return a.min(b);
   }
 
+  // RedBigNum
   forceRed(mctx: InternalModContext) {
-    return new RedBigNumber(forceCreateRed.call(this.internalBigNum, mctx), mctx);
+    this.internalBigNum = forceCreateRed.call(this.internalBigNum, mctx);
+    this.mctx = mctx;
+  }
+
+  get internalRedBigNum(): InternalRedNumber {
+    if (this.red) {
+      return this.internalBigNum as InternalRedNumber;
+    }
+    throw new Error('This BN is not RedNumber');
+  }
+
+  get mctx(): InternalModContext {
+    if (this.red) {
+      return this._mctx as InternalModContext;
+    }
+    throw new Error('This BN is not RedNumber');
+  }
+
+  fromRed() {
+    return new BN(mod2bn(this.internalRedBigNum));
+  }
+
+  redAdd(other: BN) {
+    return new BN(
+      redAdd.call(this.internalRedBigNum, other.internalRedBigNum),
+      this.mctx
+    );
+  }
+
+  redIAdd(other: BN) {
+    redIAdd.call(this.internalRedBigNum, other.internalRedBigNum);
+    return this;
+  }
+
+  redSub(other: BN) {
+    return new BN(
+      redSub.call(this.internalRedBigNum, other.internalRedBigNum),
+      this.mctx
+    );
+  }
+
+  redISub(other: BN) {
+    redISub.call(this.internalRedBigNum, other.internalRedBigNum);
+    return this;
+  }
+
+  redMul(other: BN) {
+    return new BN(
+      redMul.call(this.internalRedBigNum, other.internalRedBigNum),
+      this.mctx
+    );
+  }
+
+  redIMul(other: BN) {
+    redIMul.call(this.internalRedBigNum, other.internalRedBigNum);
+    return this;
+  }
+
+  redShl(places: number) {
+    return new BN(redShl.call(this.internalRedBigNum, places), this.mctx);
+  }
+
+  redSqrt() {
+    return new BN(redSqrt.call(this.internalRedBigNum), this.mctx);
+  }
+
+  redSqr() {
+    return new BN(redSqr.call(this.internalRedBigNum), this.mctx);
+  }
+
+  redISqr() {
+    redISqr.call(this.internalRedBigNum);
+    return this;
+  }
+
+  redNeg() {
+    return new BN(redNeg.call(this.internalRedBigNum), this.mctx);
+  }
+
+  redInvm() {
+    return new BN(redInvm.call(this.internalRedBigNum), this.mctx);
+  }
+
+  redPow(other: BN) {
+    return new BN(
+      redPow.call(this.internalRedBigNum, other.internalBigNum),
+      this.mctx
+    );
   }
 }
 
 export default BN;
-
