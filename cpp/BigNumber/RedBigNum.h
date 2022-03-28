@@ -10,7 +10,7 @@
 namespace margelo {
 namespace jsi = facebook::jsi;
 
-class RedBigNum : public jsi::HostObject {
+class RedBigNum : public BigNumber {
 public:
 explicit RedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
 

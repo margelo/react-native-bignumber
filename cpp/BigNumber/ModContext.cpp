@@ -6,7 +6,6 @@
 #include <BigNumber/BigNumber.h>
 
 namespace margelo {
-
     std::string ModContext::k256 = std::string("fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f");
     std::string ModContext::p224 = std::string("ffffffffffffffffffffffffffffffff000000000000000000000001");
     std::string ModContext::p192 = std::string("fffffffffffffffffffffffffffffffeffffffffffffffff");

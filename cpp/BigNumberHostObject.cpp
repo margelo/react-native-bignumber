@@ -225,16 +225,8 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
             constant = std::make_shared<BigNumber>(ModContext::p25519.c_str(), 16, BigNumberHostObject::bn_ctx);
         }
 
-        int bitLen = BN_num_bits(constant->bign);
+        std::shared_ptr<ModContext> res = std::make_shared<ModContext>(constant->bign, constant->ctx);
 
-        BIGNUM * temp = BN_new();
-        BN_zero(temp);
-        BN_set_bit(temp, bitLen + 1);
-
-        BN_sub(temp, temp, constant->bign);
-        std::shared_ptr<ModContext> res = std::make_shared<ModContext>(temp, constant->ctx);
-
-        BN_free(temp);
         return jsi::Object::createFromHostObject(runtime, res);
     }));
 
@@ -260,17 +252,6 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
             constant = std::make_shared<BigNumber>(ModContext::p25519.c_str(), 16, BigNumberHostObject::bn_ctx);
         }
 
-        int bitLen = BN_num_bits(constant->bign);
-
-        BIGNUM * temp = BN_new();
-        BN_zero(temp);
-        BN_set_bit(temp, bitLen + 1);
-
-        BN_sub(temp, temp, constant->bign);
-
-        BN_copy(constant->bign, temp);
-
-        BN_free(temp);
         return jsi::Object::createFromHostObject(runtime, constant);
     }));
 
