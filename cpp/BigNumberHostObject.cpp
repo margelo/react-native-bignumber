@@ -1407,8 +1407,11 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
   this->fields.push_back(HOST_LAMBDA("redInvm", {
       std::shared_ptr<RedBigNum> thiz = thisValue.getObject(runtime).getHostObject<RedBigNum>(runtime);
       std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(thiz->ctx, thiz->mctx, thiz->m);
+
       BN_mod_inverse(res->bign, thiz->bign, thiz->m, thiz->ctx);
       BN_to_montgomery(res->bign, res->bign, thiz->mctx, thiz->ctx);
+      BN_to_montgomery(res->bign, res->bign, thiz->mctx, thiz->ctx);
+
       return jsi::Object::createFromHostObject(runtime, res);
     }));
 
