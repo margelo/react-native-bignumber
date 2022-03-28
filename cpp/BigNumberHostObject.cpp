@@ -156,8 +156,33 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 
       std::shared_ptr<ModContext> modCtx = obj2.getHostObject<ModContext>(runtime);
 
-      std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(number->bign, BigNumberHostObject::bn_ctx, modCtx->mctx, modCtx->m);
+      std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(number->bign, false, BigNumberHostObject::bn_ctx, modCtx->mctx, modCtx->m);
       return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("forceCreateRed", {
+        jsi::Object obj = thisValue.getObject(runtime);
+
+        if (!obj.isHostObject<BigNumber>(runtime)) {
+            throw jsi::JSError(runtime, "forceCreateRed expects first arg to be a bignumber");
+        }
+
+        std::shared_ptr<BigNumber> number = obj.getHostObject<BigNumber>(runtime);
+
+        const jsi::Value & val2 = arguments[0];
+        if (!val2.isObject()) {
+            throw jsi::JSError(runtime, "forceCreateRed expects second arg to be a ModContext");
+        }
+        jsi::Object obj2 = val2.asObject(runtime);
+
+        if (!obj2.isHostObject<ModContext>(runtime)) {
+            throw jsi::JSError(runtime, "forceCreateRed expects second arg to be a ModContext");
+        }
+
+        std::shared_ptr<ModContext> modCtx = obj2.getHostObject<ModContext>(runtime);
+
+        std::shared_ptr<RedBigNum> res = std::make_shared<RedBigNum>(number->bign, true, BigNumberHostObject::bn_ctx, modCtx->mctx, modCtx->m);
+        return jsi::Object::createFromHostObject(runtime, res);
     }));
 
   this->fields.push_back(HOST_LAMBDA("mod2bn", {
@@ -178,39 +203,75 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       return jsi::Object::createFromHostObject(runtime, res);
     }));
 
-  this->fields.push_back(HOST_LAMBDA("getPrimeContext", {
-      const jsi::Value & val = arguments[0];
-      if (!val.isString()) {
-	throw jsi::JSError(runtime, "getPrimeContext expects first arg to be a string");
-      }
-      std::string prime = val.asString(runtime).utf8(runtime);
+    this->fields.push_back(HOST_LAMBDA("getPrimeContext", {
+        const jsi::Value & val = arguments[0];
+        if (!val.isString()) {
+            throw jsi::JSError(runtime, "getPrimeContext expects first arg to be a string");
+        }
+        std::string prime = val.asString(runtime).utf8(runtime);
 
-      std::shared_ptr<BigNumber> constant;
+        std::shared_ptr<BigNumber> constant;
 
-      if (prime == "k256") {
-	constant = std::make_shared<BigNumber>(ModContext::k256.c_str(), 16, BigNumberHostObject::bn_ctx);
-      }
-      if (prime == "p224") {
-	constant = std::make_shared<BigNumber>(ModContext::p224.c_str(), 16, BigNumberHostObject::bn_ctx);
-      }
-      if (prime == "p192") {
-	constant = std::make_shared<BigNumber>(ModContext::p192.c_str(), 16, BigNumberHostObject::bn_ctx);
-      }
-      if (prime == "p25519") {
-	constant = std::make_shared<BigNumber>(ModContext::p25519.c_str(), 16, BigNumberHostObject::bn_ctx);
-      }
+        if (prime == "k256") {
+            constant = std::make_shared<BigNumber>(ModContext::k256.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p224") {
+            constant = std::make_shared<BigNumber>(ModContext::p224.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p192") {
+            constant = std::make_shared<BigNumber>(ModContext::p192.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p25519") {
+            constant = std::make_shared<BigNumber>(ModContext::p25519.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
 
-      int bitLen = BN_num_bits(constant->bign);
+        int bitLen = BN_num_bits(constant->bign);
 
-      BIGNUM * temp = BN_new();
-      BN_zero(temp);
-      BN_set_bit(temp, bitLen);
+        BIGNUM * temp = BN_new();
+        BN_zero(temp);
+        BN_set_bit(temp, bitLen + 1);
 
-      BN_sub(temp, temp, constant->bign);
-      std::shared_ptr<ModContext> res = std::make_shared<ModContext>(temp, constant->ctx);
+        BN_sub(temp, temp, constant->bign);
+        std::shared_ptr<ModContext> res = std::make_shared<ModContext>(temp, constant->ctx);
 
-      BN_free(temp);
-      return jsi::Object::createFromHostObject(runtime, res);
+        BN_free(temp);
+        return jsi::Object::createFromHostObject(runtime, res);
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("getPrime", {
+        const jsi::Value & val = arguments[0];
+        if (!val.isString()) {
+            throw jsi::JSError(runtime, "getPrime expects first arg to be a string");
+        }
+        std::string prime = val.asString(runtime).utf8(runtime);
+
+        std::shared_ptr<BigNumber> constant;
+
+        if (prime == "k256") {
+            constant = std::make_shared<BigNumber>(ModContext::k256.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p224") {
+            constant = std::make_shared<BigNumber>(ModContext::p224.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p192") {
+            constant = std::make_shared<BigNumber>(ModContext::p192.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+        if (prime == "p25519") {
+            constant = std::make_shared<BigNumber>(ModContext::p25519.c_str(), 16, BigNumberHostObject::bn_ctx);
+        }
+
+        int bitLen = BN_num_bits(constant->bign);
+
+        BIGNUM * temp = BN_new();
+        BN_zero(temp);
+        BN_set_bit(temp, bitLen + 1);
+
+        BN_sub(temp, temp, constant->bign);
+
+        BN_copy(constant->bign, temp);
+
+        BN_free(temp);
+        return jsi::Object::createFromHostObject(runtime, constant);
     }));
 
   // BigNumber.cpp
@@ -1307,6 +1368,21 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 
       BN_mod_mul_montgomery(thiz->bign, thiz->bign, other->bign, thiz->mctx, thiz->ctx);
       return jsi::Value::undefined();
+    }));
+
+    this->fields.push_back(HOST_LAMBDA("redCmp", {
+        std::shared_ptr<RedBigNum> thiz = thisValue.getObject(runtime).getHostObject<RedBigNum>(runtime);
+        const jsi::Value & otherValue = arguments[0];
+        if (!otherValue.isObject()) {
+            throw jsi::JSError(runtime, "redIMul expects RedBigNum");
+        }
+        jsi::Object obj = otherValue.getObject(runtime);
+        if (!obj.isHostObject<RedBigNum>(runtime)) {
+            throw jsi::JSError(runtime, "redIMul expects RedBigNum");
+        }
+
+        std::shared_ptr<RedBigNum> other = obj.getHostObject<RedBigNum>(runtime);
+        return jsi::Value(runtime, (int)BN_cmp(thiz->bign, other->bign));
     }));
 
   this->fields.push_back(HOST_LAMBDA("redPow", {

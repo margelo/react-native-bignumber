@@ -14,6 +14,8 @@ const bn2Mod = NativeBigNumber.bn2Mod;
 const createModCtx = NativeBigNumber.createModCtx;
 const createModCtxFromNumber = NativeBigNumber.createModCtxFromNumber;
 const getPrimeContext = NativeBigNumber.getPrimeContext;
+const forceCreateRed = NativeBigNumber.forceCreateRed;
+const getPrime = NativeBigNumber.getPrime;
 
 //bignumber
 const {
@@ -116,6 +118,7 @@ const {
   redPow,
   cloneRed,
   isRedZero,
+  redCmp,
 } = NativeBigNumber;
 
 export class RedBigNumber {
@@ -214,7 +217,21 @@ export class RedBigNumber {
   }
 
   cmp(other: RedBigNumber) {
-    return this.fromRed().cmp(other.fromRed());
+    return redCmp.call(this.internalRedBigNum, other.internalRedBigNum);
+  }
+
+  cmpn(other: number) {
+    if (other == 0) {
+      if (this.isZero()) {
+        return 0;
+      }
+      return 1;
+    }
+    throw new Error('cmpn only supports 0 as an argument');
+  }
+
+  get red() {
+    return true;
   }
 }
 
@@ -330,7 +347,15 @@ export class BN {
   }
 
   static _prime(prime: string) {
-    throw new Error("Not implemented yet");
+    switch(prime) {
+      case 'k256':
+      case 'p224':
+      case 'p192':
+      case 'p25519':
+        return {p: new BN(getPrime(prime))};
+      default:
+        throw new Error("Unknown prime number!");
+    }
   }
 
   static red(num: string | BN | number): InternalModContext {
@@ -338,16 +363,12 @@ export class BN {
       switch(num) {
         case 'k256':
           return BN.k256;
-          break;
         case 'p224':
           return BN.p225;
-          break;
         case 'p192':
           return BN.p192;
-          break;
         case 'p25519':
           return BN.p25519;
-          break;
         default:
           throw new Error("Unknown prime number!");
       }
@@ -730,6 +751,14 @@ export class BN {
     return new BN(and.call(this.internalBigNum, other.internalBigNum));
   }
 
+  andn(other: number) {
+    return this.and(new BN(other));
+  }
+
+  andln(other: number) {
+    return this.andn(other);
+  }
+
   iand(other: BN) {
     iand.call(this.internalBigNum, other.internalBigNum);
     return this;
@@ -765,6 +794,10 @@ export class BN {
 
   static min(a: BN, b: BN) {
     return a.min(b);
+  }
+
+  forceRed(mctx: InternalModContext) {
+    return new RedBigNumber(forceCreateRed.call(this.internalBigNum, mctx), mctx);
   }
 }
 

@@ -16,12 +16,15 @@ RedBigNum::RedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m) {
   this->m = m;
 }
 
-RedBigNum::RedBigNum(BIGNUM * bign, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m) {
+RedBigNum::RedBigNum(BIGNUM * bign, bool force, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m) {
   this->bign = BN_dup(bign);
-  BN_to_montgomery(this->bign, this->bign, mctx, ctx);
+  if (!force) {
+      BN_to_montgomery(this->bign, this->bign, mctx, ctx);
+  }
   this->ctx = ctx;
   this->mctx = mctx;
   this->m = m;
+  __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value m is %s", BN_bn2dec(this->m));
 }
 
 RedBigNum::RedBigNum(const RedBigNum & other) {

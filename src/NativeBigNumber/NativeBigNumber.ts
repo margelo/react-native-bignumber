@@ -21,12 +21,17 @@ interface NativeBigNumberSpec {
   ) => InternalNumber;
   createModCtx: (internalNumber: InternalNumber) => InternalModContext;
   createModCtxFromNumber: (mod: number) => InternalModContext;
+  forceCreateRed: (
+    this: InternalNumber,
+    mctx: InternalModContext
+  ) => InternalRedNumber;
   bn2Mod: (
     internalNumber: InternalNumber,
     mctx: InternalModContext
   ) => InternalRedNumber;
   mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
   getPrimeContext: (primeType: string) => InternalModContext;
+  getPrime: (primeType: string) => InternalNumber;
 
   //bigNumber
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
@@ -138,6 +143,7 @@ interface NativeBigNumberSpec {
   redInvm: (this: InternalRedNumber) => InternalRedNumber;
   redNeg: (this: InternalRedNumber) => InternalRedNumber;
   redPow: (this: InternalRedNumber, other: InternalNumber) => InternalRedNumber;
+  redCmp: (this: InternalRedNumber, other: InternalNumber) => 0 | 1 | -1;
   cloneRed: (this: InternalRedNumber) => InternalRedNumber;
   isRedZero: (this: InternalRedNumber) => boolean;
 }

@@ -14,7 +14,7 @@ class RedBigNum : public jsi::HostObject {
 public:
 explicit RedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
 
-explicit RedBigNum(BIGNUM * bign, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
+explicit RedBigNum(BIGNUM * bign, bool force, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
 
 explicit RedBigNum(const RedBigNum&);
 
