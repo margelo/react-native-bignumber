@@ -6,7 +6,7 @@ The fastest Big Number library for React Native.
 * ⚡️ Lightning fast implementation with pure C++ and JSI
 * 🧪 Well tested in JS and C++ (OpenSSL)
 * 💰 Made for crypto apps and Wallets
-* 🔁 Easy drop-in-replacement for [BN.js](https://github.com/indutny/bn.js/) to speed up existing libraries
+* 🔁 Easy drop-in replacement for [BN.js](https://github.com/indutny/bn.js/)
 
 ## Installation
 
@@ -25,6 +25,44 @@ expo prebuild
 ```
 
 ## Usage
+
+### ..as a normal library
+
+The exposed `BigNumber` class is used to create new BigNumber instances from strings (binary, hex, decimal), ArrayBuffers, Buffers, numbers, or other BigNumber instances.
+
+```ts
+import { BigNumber } from 'react-native-bignumber'
+
+const a = new BigNumber(25)
+const b = a.mul(8932579832)
+```
+
+Refer to [BN.js' documentation](https://github.com/indutny/bn.js/#instructions) for a full API reference and usage guide.
+
+For example, this is how you calculate large Fibonacci numbers:
+
+```ts
+function fibonacci(n: number): BigNumber {
+  let prev = new BigNumber(0)
+  let prevPrev = new BigNumber(1)
+  let number = new BigNumber(1)
+
+
+  for (let i = 1; i < n; i++) {
+    prevPrev = prev
+    prev = number
+    number = prevPrev.add(prev)
+  }
+
+  return number
+}
+
+console.log(fibonacci(9999).toString(10))
+```
+
+### ..as a drop-in replacement
+
+Since popular libraries like [ethers.js](https://github.com/ethers-io/ethers.js/) use [BN.js](https://github.com/indutny/bn.js/) under the hood, react-native-bignumber exposes exactly the same API as [BN.js](https://github.com/indutny/bn.js/) so it can be used as a drop-in replacement and promises much greater speed at common crypto operations.
 
 In your `metro.config.js`, add a module resolver to replace `crypto` with `react-native-bignumber`:
 
