@@ -15,7 +15,9 @@ function getTime(f: () => void): number {
 }
 
 function cmp(f: () => void, g: () => void) {
-  return getTime(g) - getTime(f);
+  const a = getTime(g);
+  const b = getTime(f);
+  return `${a / b} times faster`;
 }
 
 function startBenchmarking() {
