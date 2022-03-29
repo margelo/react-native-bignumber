@@ -58,7 +58,7 @@ function fibonacci(n: number): BigNumber {
   return number
 }
 
-console.log(fibonacci(9999).toString(10))
+console.log(fibonacci(50).toString(10)) // 12.586.269.025
 ```
 
 ### ..as a drop-in replacement
