@@ -24,7 +24,7 @@
   "scripts": {
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
+    "build": "bob build",
     "release": "release-it",
     "pods": "cd example && pod-install --quiet"
   },
