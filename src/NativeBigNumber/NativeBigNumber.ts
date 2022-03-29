@@ -43,6 +43,7 @@ interface NativeBigNumberSpec {
 
   //bigNumber
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
+  toNumber: (this: InternalNumber) => number;
   toArray: (this: InternalNumber, le: boolean, len: number) => Array<number>;
 
   add: (this: InternalNumber, other: InternalNumber) => InternalNumber;

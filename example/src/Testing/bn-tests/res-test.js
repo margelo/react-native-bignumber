@@ -1,4 +1,4 @@
-import { BN } from 'react-native-bignumber';
+import BN from 'react-native-bignumber';
 import chai from 'chai';
 import { describe, it, itOnly } from '../MochaRNAdapter';
 var fixtures = require('./fixtures');

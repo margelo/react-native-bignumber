@@ -4,7 +4,8 @@ import { registerBinaryTests } from './bn-tests/binary-test';
 import { registerRedTests } from './bn-tests/res-test';
 import { registerConstructorTests } from './bn-tests/constructor-test';
 import { registerUtilsTests } from './bn-tests/utils-test';
-import { BN } from 'react-native-bignumber';
+import { registerCurvedTests } from './elliptic-tests/curves';
+import BN from 'react-native-bignumber';
 import { describe, it } from './MochaRNAdapter';
 import chai from 'chai';
 
@@ -68,5 +69,10 @@ export const TEST_LIST: Array<TestItemType> = [
     description: 'Utils tests',
     value: false,
     registrator: registerUtilsTests,
+  },
+  {
+    description: 'Curves tests',
+    value: false,
+    registrator: registerCurvedTests,
   },
 ];

@@ -3,7 +3,7 @@ import { rootSuite, describe, it, clearTests } from './MochaRNAdapter';
 import 'mocha';
 import type * as MochaTypes from 'mocha';
 import chai from 'chai';
-import { BN } from 'react-native-bignumber';
+import BN from 'react-native-bignumber';
 
 export function testLib(
   addTestResult: (testResult: RowItemType) => void,

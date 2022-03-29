@@ -19,6 +19,7 @@ const getPrime = NativeBigNumber.getPrime;
 
 //bignumber
 const {
+  toNumber,
   toArray,
   toString,
   add,
@@ -315,7 +316,7 @@ export class BN {
   }
 
   toNumber() {
-    return parseInt(this.toString(10, 53), 10);
+    return toNumber.call(this.internalBigNum);
   }
 
   toArray(endian?: 'le' | 'be', len?: number) {
@@ -434,7 +435,7 @@ export class BN {
   }
 
   modn(other: number) {
-    return new BN(modn.call(this.internalBigNum, other));
+    return new BN(modn.call(this.internalBigNum, other)).toNumber();
   }
 
   modrn(other: number) {

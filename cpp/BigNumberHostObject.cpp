@@ -279,6 +279,19 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
       return jsi::String::createFromAscii(runtime, res.c_str());
     }));
 
+    this->fields.push_back(HOST_LAMBDA("toNumber", {
+        std::shared_ptr<BigNumber> thiz = thisValue.getObject(runtime).getHostObject<BigNumber>(runtime);
+
+        bool neg = false;
+        if (BN_is_negative(thiz->bign)) {
+            neg = true;
+        }
+        unsigned long temp = BN_get_word(thiz->bign);
+        long long value = temp;
+        value *= (neg) ? -1 : 1;
+        return jsi::Value(runtime, (double)value);
+    }));
+
   // with number
 
   this->fields.push_back(HOST_LAMBDA("iaddn", {
