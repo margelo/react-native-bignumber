@@ -2,7 +2,7 @@
 
 The fastest Big Number library for React Native.
 
-* 🏎️ Up to 200x faster than all other solutions
+* 🏎️ Up to 300x faster than all other solutions
 * ⚡️ Lightning fast implementation with pure C++ and JSI
 * 🧪 Well tested in JS and C++ (OpenSSL)
 * 💰 Made for crypto apps and Wallets
