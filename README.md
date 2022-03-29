@@ -49,7 +49,6 @@ function fibonacci(n: number): BigNumber {
   let prevPrev = new BigNumber(1)
   let number = new BigNumber(1)
 
-
   for (let i = 1; i < n; i++) {
     prevPrev = prev
     prev = number
