@@ -1,10 +1,13 @@
 # ⚡️ react-native-bignumber
 
-A fast implementation of bignumber module written in C/C++ JSI.
+The fastest Big Number library for React Native.
 
-BigNumber can be used as a drop-in replacement for your bn.js library.
-
----
+* 🏎️ Up to 10x faster than all other solutions
+* ⚡️ Lightning fast implementation with pure C++ and JSI
+* 🧪 Well tested in JS and C++ (OpenSSL)
+* 🔢 Store numbers up to the size of your Phone's RAM
+* 💰 Made for crypto apps and Wallets
+* 🔁 Easy drop-in replacement for [BN.js](https://github.com/indutny/bn.js/)
 
 ## Installation
 
@@ -24,6 +27,44 @@ expo prebuild
 
 ## Usage
 
+### ..as a normal library
+
+The exposed `BigNumber` class is used to create new BigNumber instances from strings (binary, hex, decimal), ArrayBuffers, Buffers, numbers, or other BigNumber instances.
+
+```ts
+import { BigNumber } from 'react-native-bignumber'
+
+const a = new BigNumber(3274556)
+const b = new BigNumber(9856712)
+const c = a.mul(b) // 32.276.355.419.872
+```
+
+Refer to [BN.js' documentation](https://github.com/indutny/bn.js/#instructions) for a full API reference and usage guide.
+
+For example, this is how you calculate large Fibonacci numbers:
+
+```ts
+function fibonacci(n: number): BigNumber {
+  let prev = new BigNumber(0)
+  let prevPrev = new BigNumber(1)
+  let number = new BigNumber(1)
+
+  for (let i = 1; i < n; i++) {
+    prevPrev = prev
+    prev = number
+    number = prevPrev.add(prev)
+  }
+
+  return number
+}
+
+console.log(fibonacci(50).toString(10)) // 12.586.269.025
+```
+
+### ..as a drop-in replacement
+
+Since popular libraries like [ethers.js](https://github.com/ethers-io/ethers.js/) use [BN.js](https://github.com/indutny/bn.js/) under the hood, react-native-bignumber exposes exactly the same API as [BN.js](https://github.com/indutny/bn.js/) so it can be used as a drop-in replacement and promises much greater speed at common crypto operations.
+
 In your `metro.config.js`, add a module resolver to replace `crypto` with `react-native-bignumber`:
 
 ```diff
@@ -40,24 +81,10 @@ In your `metro.config.js`, add a module resolver to replace `crypto` with `react
 
 Now, all imports for `bn` will be resolved as `react-native-bignumber` instead.
 
----
-
 ## Sponsors
 
 - TODO: List sponsors here
 
-## Limitations
-
-As the library uses JSI for synchronous native methods access, remote debugging (e.g. with Chrome) is no longer possible. Instead, you should use [Flipper](https://fbflipper.com).
-
 ## Adopting at scale
 
 react-native-bignumber was built at Margelo, an elite app development agency. For enterprise support or other business inquiries, contact us at <a href="mailto:hello@margelo.io?subject=Adopting react-native-bignumber at scale">hello@margelo.io</a>!
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT

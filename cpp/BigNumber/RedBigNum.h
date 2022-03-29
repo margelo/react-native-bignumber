@@ -5,7 +5,7 @@
 #ifndef BIGNUMBEREXAMPLE_REDBIGNUM_H
 #define BIGNUMBEREXAMPLE_REDBIGNUM_H
 
-#import <BigNumber/BigNumber.h>
+#include <BigNumber/BigNumber.h>
 
 namespace margelo {
 namespace jsi = facebook::jsi;

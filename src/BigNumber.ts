@@ -316,6 +316,10 @@ export class BN {
     return toString.call(this.internalBigNum, base, len);
   }
 
+  toJSON(): string {
+    return `BigNumber (${this.toString(10)})`;
+  }
+
   toNumber() {
     return toNumber.call(this.internalBigNum);
   }
