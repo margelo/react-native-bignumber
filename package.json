@@ -9,11 +9,21 @@
   "source": "src/index",
   "files": [
     "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "react-native-bignumber.podspec"
+    "lib/commonjs",
+    "lib/module",
+    "lib/typescript",
+    "android/src",
+    "android/build.gradle",
+    "android/CMakeLists.txt",
+    "android/gradle.properties",
+    "ios/**/*.h",
+    "ios/**/*.m",
+    "ios/**/*.mm",
+    "ios/**/*.cpp",
+    "cpp/**/*.h",
+    "cpp/**/*.cpp",
+    "react-native-bignumber.podspec",
+    "README.md"
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
