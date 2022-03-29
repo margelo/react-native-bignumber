@@ -83,7 +83,14 @@ Now, all imports for `bn` will be resolved as `react-native-bignumber` instead.
 
 ## Sponsors
 
-- TODO: List sponsors here
+This library is supported by [**Exodus**](https://exodus.com).
+Send, receive, and exchange Bitcoin and 160+ cryptocurrencies with ease on the world's leading Desktop, Mobile and Hardware crypto wallets
+
+<div align="center">
+  <a href="https://exodus.com">
+    <img src="img/exodus.svg" height="70" alt="Exodus" />
+  </a>
+</div>
 
 ## Adopting at scale
 
