@@ -11,14 +11,18 @@ The fastest Big Number library for React Native.
 
 ## Installation
 
-<h3>React Native  <img src="./img/react-native.png" height="15"></h3>
+<h3>
+  React Native  <a href=""><img src="./img/react-native.png" height="15" /></a>
+</h3>
 
 ```sh
 yarn add react-native-bignumber
 cd ios && pod install
 ```
 
-<h3>Expo  <img src="./img/expo.png" height="12"></h3>
+<h3>
+  Expo  <a href=""><img src="./img/expo.png" height="12" /></a>
+</h3>
 
 ```sh
 expo install react-native-bignumber
