@@ -665,7 +665,7 @@ export class BN {
   }
 
   egcd(other: BN): { a: BN; b: BN; gcd: BN } {
-    throw 'not implemented yet :(';
+    throw new Error(`egcd(${other}) is not yet implemented!`);
   }
 
   // bitwise
