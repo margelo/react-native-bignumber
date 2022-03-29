@@ -5,6 +5,7 @@ The fastest Big Number library for React Native.
 * 🏎️ Up to 10x faster than all other solutions
 * ⚡️ Lightning fast implementation with pure C++ and JSI
 * 🧪 Well tested in JS and C++ (OpenSSL)
+* 🔢 Store numbers up to the size of your Phone's RAM
 * 💰 Made for crypto apps and Wallets
 * 🔁 Easy drop-in replacement for [BN.js](https://github.com/indutny/bn.js/)
 
