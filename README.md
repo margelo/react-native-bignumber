@@ -34,8 +34,9 @@ The exposed `BigNumber` class is used to create new BigNumber instances from str
 ```ts
 import { BigNumber } from 'react-native-bignumber'
 
-const a = new BigNumber(25)
-const b = a.mul(8932579832)
+const a = new BigNumber(3274556)
+const b = new BigNumber(9856712)
+const c = a.mul(b) // 32.276.355.419.872
 ```
 
 Refer to [BN.js' documentation](https://github.com/indutny/bn.js/#instructions) for a full API reference and usage guide.
