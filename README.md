@@ -12,7 +12,7 @@ The fastest Big Number library for React Native.
 ## Installation
 
 <h3>
-  React Native  <a href=""><img src="./img/react-native.png" height="15" /></a>
+  React Native  <a href="#"><img src="./img/react-native.png" height="15" /></a>
 </h3>
 
 ```sh
@@ -21,7 +21,7 @@ cd ios && pod install
 ```
 
 <h3>
-  Expo  <a href=""><img src="./img/expo.png" height="12" /></a>
+  Expo  <a href="#"><img src="./img/expo.png" height="12" /></a>
 </h3>
 
 ```sh
