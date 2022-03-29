@@ -1,4 +1,4 @@
-package com.example.reactnativeBigNumber;
+package com.example.reactnativebignumber;
 
 import android.app.Application;
 

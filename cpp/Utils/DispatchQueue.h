@@ -2,8 +2,8 @@
 // Created by Szymon on 23/02/2022.
 //
 
-#ifndef JSICRYPTOEXAMPLE_DISPATCHQUEUE_H
-#define JSICRYPTOEXAMPLE_DISPATCHQUEUE_H
+#ifndef BIGNUMBER_DISPATCHQUEUE_H
+#define BIGNUMBER_DISPATCHQUEUE_H
 
 #include <thread>
 #include <functional>
@@ -54,4 +54,4 @@ void dispatch_thread_handler(void);
 }  // namespace margelo
 
 
-#endif  // JSICRYPTOEXAMPLE_DISPATCHQUEUE_H
+#endif  // BIGNUMBER_DISPATCHQUEUE_H

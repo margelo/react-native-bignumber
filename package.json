@@ -1,7 +1,7 @@
 {
   "name": "react-native-bignumber",
-  "version": "0.1.0",
-  "description": "A fast implementation of Node's `crypto` module written in C/C++ JSI",
+  "version": "0.0.1",
+  "description": "⚡️ The fastest Big Number library for React Native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -36,7 +36,12 @@
     "crypto",
     "c++",
     "fast",
-    "web3"
+    "web3",
+    "number",
+    "bignumber",
+    "bn",
+    "big",
+    "math"
   ],
   "repository": "https://github.com/margelo/react-native-bignumber",
   "authors": "Szymon Kapała (szymon20000@gmail.com) & Marc Rousavy <me@mrousavy.com> (https://github.com/mrousavy)",

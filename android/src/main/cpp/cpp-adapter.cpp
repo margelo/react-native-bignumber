@@ -6,20 +6,20 @@
 
 using namespace facebook;
 
-class CryptoCppAdapter : public jni::HybridClass<CryptoCppAdapter> {
+class BigNumberCppAdapter : public jni::HybridClass<BigNumberCppAdapter> {
 public:
 static auto constexpr kJavaDescriptor = "Lcom/reactnativebignumber/BigNumberModule;";
 
-static jni::local_ref<jni::HybridClass<CryptoCppAdapter>::jhybriddata> initHybrid(
+static jni::local_ref<jni::HybridClass<BigNumberCppAdapter>::jhybriddata> initHybrid(
   jni::alias_ref<jhybridobject> jThis) {
   return makeCxxInstance();
 }
 
-explicit CryptoCppAdapter() {
+explicit BigNumberCppAdapter() {
 }
 
 void install(jsi::Runtime& runtime, std::shared_ptr<facebook::react::CallInvoker> jsCallInvoker) {
-  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo FastCrypto Thread");
+  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo BigNumber Thread");
   auto hostObject = std::make_shared<margelo::BigNumberHostObject>(jsCallInvoker, workerQueue);
   auto object = jsi::Object::createFromHostObject(runtime, hostObject);
   runtime.global().setProperty(runtime, "__BigNumberProxy", std::move(object));
@@ -37,8 +37,8 @@ void nativeInstall(jlong jsiPtr, jni::alias_ref<facebook::react::CallInvokerHold
 
 static void registerNatives() {
   registerHybrid({
-      makeNativeMethod("initHybrid", CryptoCppAdapter::initHybrid),
-      makeNativeMethod("nativeInstall", CryptoCppAdapter::nativeInstall)
+      makeNativeMethod("initHybrid", BigNumberCppAdapter::initHybrid),
+      makeNativeMethod("nativeInstall", BigNumberCppAdapter::nativeInstall)
     });
 }
 
@@ -48,6 +48,6 @@ friend HybridBase;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
   return facebook::jni::initialize(vm, [] {
-    CryptoCppAdapter::registerNatives();
+    BigNumberCppAdapter::registerNatives();
   });
 }
