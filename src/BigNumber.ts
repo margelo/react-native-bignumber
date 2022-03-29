@@ -811,4 +811,11 @@ export class BN {
   }
 }
 
+declare global {
+  function __createBN(internalNumber: InternalNumber): BN;
+}
+global.__createBN = (internalNumber: InternalNumber) => {
+  return new BN(internalNumber);
+};
+
 export default BN;
