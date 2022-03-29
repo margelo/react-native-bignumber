@@ -19,7 +19,7 @@ explicit CryptoCppAdapter() {
 }
 
 void install(jsi::Runtime& runtime, std::shared_ptr<facebook::react::CallInvoker> jsCallInvoker) {
-  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("margelo crypto worker thread");
+  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo FastCrypto Thread");
   auto hostObject = std::make_shared<margelo::BigNumberHostObject>(jsCallInvoker, workerQueue);
   auto object = jsi::Object::createFromHostObject(runtime, hostObject);
   runtime.global().setProperty(runtime, "__BigNumberProxy", std::move(object));
