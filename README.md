@@ -8,14 +8,14 @@ BigNumber can be used as a drop-in replacement for your bn.js library.
 
 ## Installation
 
-### React Native
+<h3>React Native  <img src="./img/react-native.png" height="15"></h3>
 
 ```sh
 yarn add react-native-bignumber
 cd ios && pod install
 ```
 
-### Expo
+<h3>Expo  <img src="./img/expo.png" height="12"></h3>
 
 ```sh
 expo install react-native-bignumber
