@@ -13,13 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-bignumber.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
+    "react-native-bignumber.podspec"
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
