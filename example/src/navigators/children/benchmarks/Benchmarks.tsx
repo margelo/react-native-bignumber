@@ -268,6 +268,29 @@ function startBenchmarking() {
     );
     console.log('test curve 2 - result: ' + time);
   }
+
+  {
+    const fastRed = FastBN.red('k256');
+    const fast = new FastBN(
+      '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798',
+      16
+    ).toRed(fastRed);
+    const slowRed = BN.red('k256');
+    const slow = new BN(
+      '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798',
+      16
+    ).toRed(slowRed);
+    console.log('redInvm');
+    let time = cmp(
+      () => {
+        fast.redInvm();
+      },
+      () => {
+        slow.redInvm();
+      }
+    );
+    console.log('redInvm - result: ' + time);
+  }
 }
 
 type BenchmarksProps = NativeStackScreenProps<RootStackParamList, 'Benchmarks'>;
