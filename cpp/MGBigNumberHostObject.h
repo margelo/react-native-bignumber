@@ -6,20 +6,20 @@
 #include <ReactCommon/CallInvoker.h>
 #include <memory>
 #include <openssl/ossl_typ.h>
-#include "Utils/DispatchQueue.h"
-#include "JSI Utils/SmartHostObject.h"
+#include "MGDispatchQueue.h"
+#include "MGSmartHostObject.h"
 
 namespace margelo {
 
 namespace jsi = facebook::jsi;
 namespace react = facebook::react;
 
-class JSI_EXPORT BigNumberHostObject : public SmartHostObject {
+class JSI_EXPORT MGBigNumberHostObject : public MGSmartHostObject {
 public:
-explicit BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
-                              std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
+explicit MGBigNumberHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
+                               std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue);
 
-virtual ~BigNumberHostObject() {
+virtual ~MGBigNumberHostObject() {
 
 }
 

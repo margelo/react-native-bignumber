@@ -7,7 +7,10 @@ file (GLOB LIBRN_SO "${BUILD_DIR}/react-native-0*/jni/${ANDROID_ABI}")
 set (CMAKE_CXX_STANDARD 17)
 
 include_directories(
-        ../cpp
+        "../cpp"
+        "../cpp/BigNumber"
+        "../cpp/JSI Utils"
+        "../cpp/Utils"
         "${NODE_MODULES_DIR}/react-native/React"
         "${NODE_MODULES_DIR}/react-native/React/Base"
         "${NODE_MODULES_DIR}/react-native/ReactAndroid/src/main/jni"
@@ -30,15 +33,15 @@ endif()
 add_library(reactnativeBigNumber  # <-- Library name
         SHARED
         "src/main/cpp/cpp-adapter.cpp"
-        "../cpp/BigNumberHostObject.cpp"
+        "../cpp/MGBigNumberHostObject.cpp"
         "../cpp/JSI Utils/TypedArray.cpp"
-        "../cpp/Utils/DispatchQueue.cpp"
-        "../cpp/JSI Utils/ThreadAwareHostObject.cpp"
-        "../cpp/JSI Utils/SmartHostObject.cpp"
-        "../cpp/BigNumber/BigNumber.cpp"
-        "../cpp/Utils/BigNumHelper.cpp"
-        "../cpp/BigNumber/RedBigNum.cpp"
-        "../cpp/BigNumber/ModContext.cpp"
+        "../cpp/Utils/MGDispatchQueue.cpp"
+        "../cpp/JSI Utils/MGThreadAwareHostObject.cpp"
+        "../cpp/JSI Utils/MGSmartHostObject.cpp"
+        "../cpp/BigNumber/MGBigNumber.cpp"
+        "../cpp/Utils/MGBigNumHelper.cpp"
+        "../cpp/BigNumber/MGRedBigNum.cpp"
+        "../cpp/BigNumber/MGModContext.cpp"
         ${INCLUDE_JSI_CPP} # only on older RN versions
 )
 

@@ -2,8 +2,8 @@
 // Created by Szymon on 17/03/2022.
 //
 
-#ifndef BIGNUMBEREXAMPLE_MODCONTEXT_H
-#define BIGNUMBEREXAMPLE_MODCONTEXT_H
+#ifndef BIGNUMBEREXAMPLE_MGMODCONTEXT_H
+#define BIGNUMBEREXAMPLE_MGMODCONTEXT_H
 
 #include <openssl/ossl_typ.h>
 #include <openssl/bn.h>
@@ -11,10 +11,10 @@
 
 namespace margelo {
 namespace jsi = facebook::jsi;
-struct ModContext : jsi::HostObject {
-    ModContext(int number, BN_CTX * ctx);
-    ModContext(BIGNUM * bign, BN_CTX * ctx);
-    virtual ~ModContext();
+struct MGModContext : jsi::HostObject {
+    MGModContext(int number, BN_CTX * ctx);
+    MGModContext(BIGNUM * bign, BN_CTX * ctx);
+    virtual ~MGModContext();
 
     jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
 
@@ -29,4 +29,4 @@ struct ModContext : jsi::HostObject {
 } // namespace margelo
 
 
-#endif //BIGNUMBEREXAMPLE_MODCONTEXT_H
+#endif //BIGNUMBEREXAMPLE_MGMODCONTEXT_H

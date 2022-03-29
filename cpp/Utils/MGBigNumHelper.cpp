@@ -3,10 +3,9 @@
 //
 
 #include <algorithm>
-#include "BigNumHelper.h"
+#include "MGBigNumHelper.h"
 #include <string>
 #include <algorithm>
-#include <android/log.h>
 #define APPNAME "MyApp"
 
 namespace margelo {
@@ -22,7 +21,7 @@ namespace margelo {
     int flags;
    };
 
-   int BigNumHelper::BN_xor(BIGNUM *rr, const BIGNUM *aa, const BIGNUM *bb) {
+   int MGBigNumHelper::BN_xor(BIGNUM *rr, const BIGNUM *aa, const BIGNUM *bb) {
     int i;
     const bignum_st_hack *at, *bt, *r = (bignum_st_hack*)rr, *a = (bignum_st_hack*)aa, *b = (bignum_st_hack*)bb;
 
@@ -50,7 +49,7 @@ namespace margelo {
     return 1;
    }
 
-   int BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+   int MGBigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     int i;
     const BIGNUM *at, *bt;
 
@@ -78,7 +77,7 @@ namespace margelo {
     return 1;
    }
 
-   int BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+   int MGBigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
     int i;
     const BIGNUM *at, *bt;
 
@@ -106,7 +105,7 @@ namespace margelo {
     return 1;
    }
 
-   void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
+   void MGBigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
     if (len == 0) return;
     len = (len - 1) / 32 + 1;
     if (len > a->top) {
@@ -124,7 +123,7 @@ namespace margelo {
     bn_correct_top(a);
    }
 
-   void BigNumHelper::bn_correct_top(BIGNUM *a) { // looks like it's not exported :(
+   void MGBigNumHelper::bn_correct_top(BIGNUM *a) { // looks like it's not exported :(
         BN_ULONG *ftl;
         int tmp_top = a->top;
 
@@ -145,7 +144,7 @@ namespace margelo {
 //TODO try to do it more efficiently
 //TODO probably it's better to start from most significant bits to avoid unnecessary expanding of nums
 
-void BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void MGBigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   int sizeA = BN_num_bits(a);
   int sizeB = BN_num_bits(b);
   if (sizeA < sizeB) {
@@ -174,7 +173,7 @@ void BigNumHelper::BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   }
 }
 
-void BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void MGBigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   int sizeA = BN_num_bits(a);
   int sizeB = BN_num_bits(b);
   if (sizeA < sizeB) {
@@ -198,7 +197,7 @@ void BigNumHelper::BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   }
 }
 
-void BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
+void MGBigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   int sizeA = BN_num_bits(a);
   int sizeB = BN_num_bits(b);
   if (sizeA < sizeB) {
@@ -227,7 +226,7 @@ void BigNumHelper::BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b) {
   }
 }
 
-void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
+void MGBigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
   int sizeA = BN_num_bits(a);
 
   for (int i = 0; i < std::min(sizeA, (int)len); ++i) {
@@ -246,7 +245,7 @@ void BigNumHelper::BN_notn(BIGNUM *a, unsigned int len) {
   }
 }
 
-void BigNumHelper::BN_smart_neg(BIGNUM *pSt) {
+void MGBigNumHelper::BN_smart_neg(BIGNUM *pSt) {
   if (BN_is_negative(pSt)) {
     BN_set_negative(pSt, 0);
   } else {
@@ -254,7 +253,7 @@ void BigNumHelper::BN_smart_neg(BIGNUM *pSt) {
   }
 }
 
-std::string BigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
+std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   char *strRep = nullptr;
   if (base == 2) {
     bool negative = BN_is_negative(num);
@@ -327,7 +326,7 @@ std::string BigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   return res;
 }
 
-void BigNumHelper::EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b) {
+void MGBigNumHelper::EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b) {
   //TODO (Szymon)
 }
 

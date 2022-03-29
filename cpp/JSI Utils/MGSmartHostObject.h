@@ -5,8 +5,8 @@
 #ifndef BigNumberEXAMPLE_SMARTHOSTOBJECT_H
 #define BigNumberEXAMPLE_SMARTHOSTOBJECT_H
 
-#include "ThreadAwareHostObject.h"
-#include "JSIMacros.h"
+#include "MGThreadAwareHostObject.h"
+#include "MGJSIMacros.h"
 #include <ReactCommon/TurboModuleUtils.h>
 
 namespace margelo {
@@ -18,15 +18,15 @@ typedef std::function<jsi::Value (jsi::Runtime & runtime)> JSIValueBuilder;
 
 typedef std::pair<std::string, JSIValueBuilder> FieldDefinition;
 
-class JSI_EXPORT SmartHostObject : public ThreadAwareHostObject {
+class JSI_EXPORT MGSmartHostObject : public MGThreadAwareHostObject {
 
 public:
-SmartHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
-                std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue)
-  : ThreadAwareHostObject(jsCallInvoker, workerQueue) {
+MGSmartHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
+                  std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue)
+  : MGThreadAwareHostObject(jsCallInvoker, workerQueue) {
 }
 
-virtual ~SmartHostObject() {
+virtual ~MGSmartHostObject() {
 }
 
 std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);

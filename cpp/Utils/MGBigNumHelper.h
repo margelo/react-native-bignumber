@@ -2,8 +2,8 @@
 // Created by Szymon on 16/03/2022.
 //
 
-#ifndef BIGNUMBEREXAMPLE_BIGNUMHELPER_H
-#define BIGNUMBEREXAMPLE_BIGNUMHELPER_H
+#ifndef BIGNUMBEREXAMPLE_MGBIGNUMHELPER_H
+#define BIGNUMBEREXAMPLE_MGBIGNUMHELPER_H
 
 #include <openssl/ossl_typ.h>
 #include <openssl/bn.h>
@@ -15,7 +15,7 @@
 
 namespace margelo {
 
-class BigNumHelper {
+class MGBigNumHelper {
 public:
 static void BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
@@ -35,4 +35,4 @@ static std::string bn2Str(BIGNUM * num, int base, int len);
 };
 } // namespace margelo
 
-#endif //BIGNUMBEREXAMPLE_BIGNUMHELPER_H
+#endif //BIGNUMBEREXAMPLE_MGBIGNUMHELPER_H

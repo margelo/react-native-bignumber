@@ -9,26 +9,22 @@
 
 #include <jsi/jsi.h>
 #include <ReactCommon/CallInvoker.h>
+#include "MGDispatchQueue.h"
 
-#ifdef ONANDROID
-#include "Utils/DispatchQueue.h"
-#else
-#include "../Utils/DispatchQueue.h"
-#endif
 
 namespace margelo {
 
 namespace jsi = facebook::jsi;
 namespace react = facebook::react;
 
-class JSI_EXPORT ThreadAwareHostObject : public jsi::HostObject {
+class JSI_EXPORT MGThreadAwareHostObject : public jsi::HostObject {
 public:
-explicit ThreadAwareHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker, std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue) :
+explicit MGThreadAwareHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker, std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue) :
   weakJsCallInvoker(jsCallInvoker), dispatchQueue(workerQueue)
 {
 }
 
-virtual ~ThreadAwareHostObject() {
+virtual ~MGThreadAwareHostObject() {
 }
 
 void runOnWorkerThread(std::function<void(void)> && job);

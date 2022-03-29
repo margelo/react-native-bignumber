@@ -1,1 +1,2 @@
-export * from './BigNumber';
+import bn from './BigNumber';
+module.exports = bn;

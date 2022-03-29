@@ -7,6 +7,8 @@ import elliptic from 'elliptic';
 import bn_elliptic from 'bn_elliptic';
 import BN from 'bn.js';
 
+console.log('FastBN', FastBN.isBN);
+
 function getTime(f: () => void): number {
   const before = global.performance.now();
   f();

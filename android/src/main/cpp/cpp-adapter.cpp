@@ -2,7 +2,7 @@
 #include <ReactCommon/CallInvokerHolder.h>
 #include <jni.h>
 #include <jsi/jsi.h>
-#include "BigNumberHostObject.h"
+#include "MGBigNumberHostObject.h"
 
 using namespace facebook;
 
@@ -19,8 +19,8 @@ explicit BigNumberCppAdapter() {
 }
 
 void install(jsi::Runtime& runtime, std::shared_ptr<facebook::react::CallInvoker> jsCallInvoker) {
-  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo BigNumber Thread");
-  auto hostObject = std::make_shared<margelo::BigNumberHostObject>(jsCallInvoker, workerQueue);
+  auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo MGBigNumber Thread");
+  auto hostObject = std::make_shared<margelo::MGBigNumberHostObject>(jsCallInvoker, workerQueue);
   auto object = jsi::Object::createFromHostObject(runtime, hostObject);
   runtime.global().setProperty(runtime, "__BigNumberProxy", std::move(object));
 }
@@ -32,7 +32,7 @@ void nativeInstall(jlong jsiPtr, jni::alias_ref<facebook::react::CallInvokerHold
   if (runtime) {
     install(*runtime, jsCallInvoker);
   }
-  // if runtime was nullptr, BigNumber will not be installed. This should only happen while Remote Debugging (Chrome), but will be weird either way.
+  // if runtime was nullptr, MGBigNumber will not be installed. This should only happen while Remote Debugging (Chrome), but will be weird either way.
 }
 
 static void registerNatives() {
