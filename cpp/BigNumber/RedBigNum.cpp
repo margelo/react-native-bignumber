@@ -23,7 +23,6 @@ RedBigNum::RedBigNum(BIGNUM * bign, bool force, BN_CTX * ctx, BN_MONT_CTX * mctx
   this->ctx = ctx;
   this->mctx = mctx;
   this->m = m;
-  __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "aaa The value m is %s", BN_bn2dec(this->m));
 }
 
 RedBigNum::RedBigNum(const RedBigNum & other): BigNumber(ctx) {

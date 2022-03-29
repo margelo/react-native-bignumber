@@ -137,6 +137,11 @@ export class BN {
   constructor(inRedNumber: InternalRedNumber, modctx: InternalModContext);
   constructor(inInternalNumber: InternalNumber, modctx: InternalModContext);
   constructor(...args: any[]) {
+    if (args[0] instanceof BN && args[0].red) {
+      this.internalBigNum = cloneRed.call(args[0].internalRedBigNum);
+      this._mctx = args[0]._mctx;
+      return this;
+    }
     if (args[1]?.isModContext) {
       if (!args[0]?.isInternalRedBigNum) {
         this.internalBigNum = bn2Mod(args[0], args[1]);
@@ -298,12 +303,15 @@ export class BN {
     return new BN(this.internalBigNum, mctx);
   }
 
-  toString(base: 2 | 10 | 16, len?: number) {
+  toString(base: 2 | 10 | 16, len?: number): string {
+    if (this.red) {
+      return this.fromRed().toString(base, len);
+    }
     return toString.call(this.internalBigNum, base, len);
   }
 
   toNumber() {
-    return parseInt(toString.call(this.internalBigNum, 10, 53));
+    return parseInt(this.toString(10, 53), 10);
   }
 
   toArray(endian?: 'le' | 'be', len?: number) {
@@ -528,6 +536,9 @@ export class BN {
   }
 
   neg() {
+    if (this.red) {
+      return new BN(redNeg.call(this.internalRedBigNum), this.mctx);
+    }
     return new BN(neg.call(this.internalBigNum));
   }
 
@@ -666,6 +677,7 @@ export class BN {
   }
 
   andln(other: number) {
+    // probaby we can use getWord
     return this.andn(other).toNumber();
   }
 
@@ -709,7 +721,7 @@ export class BN {
   // RedBigNum
   forceRed(mctx: InternalModContext) {
     this.internalBigNum = forceCreateRed.call(this.internalBigNum, mctx);
-    this.mctx = mctx;
+    this._mctx = mctx;
   }
 
   get internalRedBigNum(): InternalRedNumber {
