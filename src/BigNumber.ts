@@ -176,12 +176,16 @@ export class BN {
       if (args[1] === 'hex') {
         args[1] = 16;
       }
-      this.internalBigNum = createFromString(args[0], args[1]);
+      this.internalBigNum = createFromString(args[0], args[1], endian);
       return this;
     }
     if (typeof args[0] === 'number') {
       if (Math.abs(args[0]) > 1e9) {
-        this.internalBigNum = createFromString(args[0].toString(), args[1]);
+        this.internalBigNum = createFromString(
+          args[0].toString(),
+          args[1],
+          false
+        );
       } else {
         this.internalBigNum = createFromNumber(args[0]);
       }

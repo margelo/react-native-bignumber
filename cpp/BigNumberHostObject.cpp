@@ -29,6 +29,13 @@ BigNumberHostObject::BigNumberHostObject(std::shared_ptr<react::CallInvoker> jsC
 	base = arguments[1].asNumber();
       }
 
+      if (!arguments[2].isUndefined() && arguments[2].getBool()) {
+          std::reverse(strRep.begin(), strRep.end());
+          for (int i = 1; i < strRep.size(); i += 2) {
+              std::swap(strRep[i], strRep[i-1]);
+          }
+      }
+
       std::shared_ptr<BigNumber> res = std::make_shared<BigNumber>(strRep, base, BigNumberHostObject::bn_ctx);
 
       return jsi::Object::createFromHostObject(runtime, res);

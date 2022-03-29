@@ -11,7 +11,11 @@ export interface InternalModContext {
 }
 
 interface NativeBigNumberSpec {
-  createFromString: (strRep: string, base: number) => InternalNumber;
+  createFromString: (
+    strRep: string,
+    base: number,
+    endian: boolean
+  ) => InternalNumber;
   createFromNumber: (number: number) => InternalNumber;
   createFromArray: (
     array: Array<number>,
