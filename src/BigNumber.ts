@@ -1,3 +1,4 @@
+/* global Buffer */
 import {
   NativeBigNumber,
   InternalNumber,
