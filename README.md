@@ -1,10 +1,12 @@
 # ⚡️ react-native-bignumber
 
-A fast implementation of bignumber module written in C/C++ JSI.
+The fastest Big Number library for React Native.
 
-BigNumber can be used as a drop-in replacement for your bn.js library.
-
----
+* 🏎️ Up to 10x faster than
+* ⚡️ Lightning fast implementation with pure C++ and JSI
+* 🧪 Well tested in JS and C++ (OpenSSL)
+* 💰 Made for crypto apps and Wallets
+* 🔁 Easy drop-in-replacement for [BN.js](https://github.com/indutny/bn.js/) to speed up existing libraries
 
 ## Installation
 
@@ -40,15 +42,9 @@ In your `metro.config.js`, add a module resolver to replace `crypto` with `react
 
 Now, all imports for `bn` will be resolved as `react-native-bignumber` instead.
 
----
-
 ## Sponsors
 
 - TODO: List sponsors here
-
-## Limitations
-
-As the library uses JSI for synchronous native methods access, remote debugging (e.g. with Chrome) is no longer possible. Instead, you should use [Flipper](https://fbflipper.com).
 
 ## Adopting at scale
 
