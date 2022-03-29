@@ -30,7 +30,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
   auto callInvoker = bridge.jsCallInvoker;
 
   auto workerQueue = std::make_shared<margelo::DispatchQueue::dispatch_queue>("Margelo FastCrypto Thread");
-  auto hostObject = std::static_pointer_cast<jsi::HostObject>( std::make_shared<margelo::BigNumberHostObject>(callInvoker, workerQueue));
+  auto hostObject = std::make_shared<margelo::BigNumberHostObject>(callInvoker, workerQueue);
   auto object = jsi::Object::createFromHostObject(runtime, hostObject);
   runtime.global().setProperty(runtime, "__BigNumberProxy", std::move(object));
 
