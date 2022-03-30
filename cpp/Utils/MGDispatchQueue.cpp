@@ -2,7 +2,7 @@
 // Created by Szymon on 23/02/2022.
 //
 
-#include "DispatchQueue.h"
+#include "MGDispatchQueue.h"
 
 namespace margelo {
 

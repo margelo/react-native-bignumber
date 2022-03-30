@@ -2,21 +2,20 @@
 // Created by Szymon on 08/03/2022.
 //
 
-#include "BigNumber.h"
-#include <android/log.h>
-#include "Utils/BigNumHelper.h"
+#include "MGBigNumber.h"
+#include "MGBigNumHelper.h"
 #include <cctype>
 #define APPNAME "MyApp"
 
 namespace margelo {
 
-BigNumber::BigNumber(BN_CTX * ctx) {
+MGBigNumber::MGBigNumber(BN_CTX * ctx) {
   this->ctx = ctx;
   this->bign = BN_new();
   BN_zero(this->bign);
 }
 
-BigNumber::BigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx) {
+MGBigNumber::MGBigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx) {
   this->ctx = ctx;
   this->bign = BN_new();
   if (le) {
@@ -26,7 +25,7 @@ BigNumber::BigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx) {
   }
 }
 
-BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
+MGBigNumber::MGBigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
   this->ctx = ctx;
   this->bign = BN_new();
 
@@ -73,7 +72,7 @@ BigNumber::BigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
   }
 }
 
-BigNumber::BigNumber(int value, BN_CTX * ctx) {
+MGBigNumber::MGBigNumber(int value, BN_CTX * ctx) {
 
   this->ctx = ctx;
   this->bign = BN_new();
@@ -83,14 +82,14 @@ BigNumber::BigNumber(int value, BN_CTX * ctx) {
   }
 }
 
-BigNumber::BigNumber(const BigNumber & other) {
+MGBigNumber::MGBigNumber(const MGBigNumber & other) {
   this->ctx = other.ctx;
   BN_copy(this->bign, other.bign);
 
   //installMethods();
 }
 
-jsi::Value BigNumber::get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId) {
+jsi::Value MGBigNumber::get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId) {
   std::string name = propNameId.utf8(runtime);
   if (name == "isInternalBigNum") {
     return jsi::Value(runtime, true);
@@ -98,7 +97,7 @@ jsi::Value BigNumber::get(jsi::Runtime &runtime, const jsi::PropNameID &propName
   return jsi::Value::undefined();
 }
 
-BigNumber::~BigNumber() {
+MGBigNumber::~MGBigNumber() {
   BN_free(this->bign);
 }
 
