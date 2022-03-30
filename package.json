@@ -20,6 +20,7 @@
     "ios/**/*.m",
     "ios/**/*.mm",
     "ios/**/*.cpp",
+    "ios/**/*.pbxproj",
     "cpp/**/*.h",
     "cpp/**/*.cpp",
     "react-native-bignumber.podspec",
