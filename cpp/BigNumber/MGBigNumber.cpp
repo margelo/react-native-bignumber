@@ -94,7 +94,35 @@ jsi::Value MGBigNumber::get(jsi::Runtime &runtime, const jsi::PropNameID &propNa
   if (name == "isInternalBigNum") {
     return jsi::Value(runtime, true);
   }
+  if (name == "toString") {
+    char * str = BN_bn2dec(this->bign);
+    std::string strRep(str);
+    delete [] str;
+    jsi::String res = jsi::String::createFromUtf8(runtime, strRep);
+    return jsi::Value(runtime, res);
+  }
+  if (name == "toStringTag") {
+    jsi::String res = jsi::String::createFromUtf8(runtime, "[object MGBigNumber]");
+    return jsi::Value(runtime, res);
+  }
+  if (name == "value") {
+      return jsi::Function::createFromHostFunction(runtime, propNameId, 0, [&](jsi::Runtime &runtime, const jsi::Value &thisValue,
+          const jsi::Value *arguments, size_t count)->jsi::Value{
+          return thisValue.getObject(runtime).getProperty(runtime, "toString");
+      });
+  }
   return jsi::Value::undefined();
+}
+
+std::vector <jsi::PropNameID> MGBigNumber::getPropertyNames(
+  jsi::Runtime &runtime) {
+  std::vector <jsi::PropNameID> propertyNames;
+  
+  propertyNames.push_back(jsi::PropNameID::forAscii(runtime, "isInternalBigNum"));
+  propertyNames.push_back(jsi::PropNameID::forAscii(runtime, "toString"));
+  propertyNames.push_back(jsi::PropNameID::forAscii(runtime, "toStringTag"));
+  propertyNames.push_back(jsi::PropNameID::forAscii(runtime, "value"));
+  return propertyNames;
 }
 
 MGBigNumber::~MGBigNumber() {

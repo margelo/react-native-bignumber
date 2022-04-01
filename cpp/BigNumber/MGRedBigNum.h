@@ -20,7 +20,8 @@ explicit MGRedBigNum(const MGRedBigNum&);
 
 virtual ~MGRedBigNum();
 
-jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+virtual jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+virtual std::vector <jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 
 BN_MONT_CTX * mctx;
 BIGNUM * m;

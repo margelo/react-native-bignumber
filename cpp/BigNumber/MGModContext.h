@@ -17,6 +17,7 @@ struct MGModContext : jsi::HostObject {
     virtual ~MGModContext();
 
     jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+    virtual std::vector <jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 
     static std::string k256;
     static std::string p224;
