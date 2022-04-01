@@ -819,6 +819,44 @@ export class BN {
       this.mctx
     );
   }
+
+  toTwos(width: number) {
+    // todo Can be optimised by adding one native call
+    if (this.isNeg() !== false) {
+      return this.abs().inotn(width).iaddn(1);
+    }
+    return this.clone();
+  }
+
+  fromTwos(width: number) {
+    // todo Can be optimised by adding one native call
+    if (this.testn(width - 1)) {
+      return this.notn(width).iaddn(1).ineg();
+    }
+    return this.clone();
+  }
+
+  mulTo(other: BN, res: BN) {
+    // todo memory allocation can be avoided here
+    res.internalBigNum = mul.call(this.internalBigNum, other.internalBigNum);
+    return res;
+  }
+
+  value() {
+    return this.toString(10);
+  }
+
+  static get BN() {
+    return BN;
+  }
+
+  static get default() {
+    return BN;
+  }
+
+  static get defaults() {
+    return { BN };
+  }
 }
 
 declare global {
