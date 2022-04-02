@@ -167,10 +167,6 @@ export class BN {
       endian = true;
     }
 
-    if (base === 36) {
-      throw new Error("The library doesn't support base-36!");
-    }
-
     if (args[0] == null) {
       this.internalBigNum = createFromNumber(0);
       return this;

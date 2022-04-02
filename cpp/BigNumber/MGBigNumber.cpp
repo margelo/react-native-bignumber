@@ -15,14 +15,36 @@ MGBigNumber::MGBigNumber(BN_CTX * ctx) {
   BN_zero(this->bign);
 }
 
-MGBigNumber::MGBigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx) {
+MGBigNumber::MGBigNumber(const unsigned char *s, int len, int base, bool le, BN_CTX * ctx) {
   this->ctx = ctx;
   this->bign = BN_new();
-  if (le) {
-    BN_lebin2bn(s, len, this->bign);
-  } else {
-    BN_bin2bn(s, len, this->bign);
-  }
+  
+    if (base == 36) {
+        if (le) {
+            BN_zero(this->bign);
+            for (int i = len - 1; i >= 0; --i) {
+                int value = s[i];
+                BN_mul_word(this->bign, 36);
+                BN_add_word(this->bign, value);
+            }
+        } else {
+            BN_zero(this->bign);
+            for (int i = 0; i < len; ++i) {
+                int value = s[i];
+                BN_mul_word(this->bign, 36);
+                BN_add_word(this->bign, value);
+            }
+        }
+    }
+    
+    if (base == 16) {
+        if (le) {
+          BN_lebin2bn(s, len, this->bign);
+        } else {
+          BN_bin2bn(s, len, this->bign);
+        }
+    }
+
 }
 
 MGBigNumber::MGBigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
@@ -69,6 +91,25 @@ MGBigNumber::MGBigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
     delete[] inHex;
   } else if (base == 16) {
     BN_hex2bn(&(this->bign), numberAsString.c_str());
+  } else if (base == 36) {
+      bool negative = false;
+      if (numberAsString.front() == '-') {
+        negative = true;
+        numberAsString.erase(0, 1);
+      }
+      BN_zero(this->bign);
+      for (char c : numberAsString) {
+          int value = c - '0';
+          if (c >= 'A' && c <= 'Z') {
+              value = c - 'A' + 10;
+          }
+          if (c >= 'a' && c <= 'z') {
+              value = c - 'a' + 10;
+          }
+          BN_mul_word(this->bign, 36);
+          BN_add_word(this->bign, value);
+      }
+      BN_set_negative(this->bign, negative);
   }
 }
 

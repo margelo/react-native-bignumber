@@ -6,6 +6,7 @@
 #include "MGBigNumHelper.h"
 #include <string>
 #include <algorithm>
+#include <vector>
 #define APPNAME "MyApp"
 
 namespace margelo {
@@ -286,6 +287,37 @@ std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   }
   if (base == 16) {
     strRep = BN_bn2hex(num);
+  }
+  if (base == 36) {
+      // TODO (Szymon)
+      if (BN_is_zero(num)) {
+          strRep = new char[2];
+          strRep[0] = '0';
+          strRep[1] = '\0';
+      } else {
+          int addDash = 0;
+          if (BN_is_negative(num)) {
+              addDash = 1;
+          }
+          std::vector<int> res;
+          BIGNUM * temp = BN_dup(num);
+          while (!BN_is_zero(temp)) {
+              int val = BN_div_word(temp, 36);
+              printf("aaa add digit %d \n", val);
+              res.push_back(val);
+          }
+          strRep = new char[res.size() + 1 + addDash];
+          strRep[res.size() + addDash] = '\0';
+          if (addDash) {
+              strRep[0] = '-';
+          }
+          int ind = addDash;
+          for (int i = res.size() - 1; i >= 0; --i) {
+              char c = (res[i] <= 9) ? res[i] + '0' : res[i] + 'a' - 10;
+              strRep[ind++] = c;
+          }
+          BN_free(temp);
+      }
   }
   int sizeOfRep = strlen(strRep);
   bool reduce = false;

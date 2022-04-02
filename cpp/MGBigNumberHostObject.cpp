@@ -45,6 +45,7 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
       const jsi::Array & array = arguments[0].asObject(runtime).asArray(runtime);
       int size = array.size(runtime);
       bool le = arguments[2].getBool();
+      int base = arguments[1].getNumber();
 
       unsigned char * s = new unsigned char[size];
 
@@ -53,7 +54,7 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
         s[i] = val;
       }
 
-      std::shared_ptr<MGBigNumber> res = std::make_shared<MGBigNumber>(s, size, le, MGBigNumberHostObject::bn_ctx);
+      std::shared_ptr<MGBigNumber> res = std::make_shared<MGBigNumber>(s, size, base, le, MGBigNumberHostObject::bn_ctx);
       delete [] s;
 
       return jsi::Object::createFromHostObject(runtime, res);
@@ -63,11 +64,12 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
         jsi::ArrayBuffer array = arguments[0].asObject(
                 runtime).getArrayBuffer(runtime);
         int size = array.size(runtime);
+        int base = arguments[1].getNumber();
         bool le = arguments[2].getBool();
 
         const unsigned char * s = array.data(runtime);
 
-        std::shared_ptr<MGBigNumber> res = std::make_shared<MGBigNumber>(s, size, le, MGBigNumberHostObject::bn_ctx);
+        std::shared_ptr<MGBigNumber> res = std::make_shared<MGBigNumber>(s, size, base, le, MGBigNumberHostObject::bn_ctx);
 
         return jsi::Object::createFromHostObject(runtime, res);
     }));
@@ -86,7 +88,6 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
       if (len == -1) {
           len = std::max(1, numberLen);
       }
-      printf("aaa len %d numberLen  %d", len, numberLen);
       unsigned char * to = new unsigned char[len];
       if (le) {
           BN_bn2lebinpad(thiz->bign, to, len);
@@ -120,7 +121,6 @@ this->fields.push_back(HOST_LAMBDA("toArrayLike", {
     if (len == -1) {
         len = std::max(1, numberLen);
     }
-    printf("aaa len %d numberLen  %d", len, numberLen);
 
     if (le) {
         BN_bn2lebinpad(thiz->bign, ab.data(runtime), len);

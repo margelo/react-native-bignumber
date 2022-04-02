@@ -22,7 +22,7 @@ explicit MGBigNumber(BN_CTX * ctx);
 
 explicit MGBigNumber(std::string, int base, BN_CTX * ctx);
 
-explicit MGBigNumber(const unsigned char *s, int len, bool le, BN_CTX * ctx);
+explicit MGBigNumber(const unsigned char *s, int len, int base, bool le, BN_CTX * ctx);
 
 explicit MGBigNumber(int value, BN_CTX * ctx);
 

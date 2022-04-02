@@ -79,6 +79,14 @@ export function registerConstructorTests() {
         assert.equal(new BN(base2, 2).toString(2), base2);
       });
 
+      it('should accept base-36 simple', function () {
+        var base36 = '0zzzzzZZZZazazaz';
+        assert.equal(
+          new BN(base36, 36).toString(10),
+          new SLOWBN(base36, 36).toString(10)
+        );
+      });
+
       it('should accept base-36', function () {
         var base36 = 'zzZzzzZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz';
         assert.equal(new BN(base36, 36).toString(36), base36.toLowerCase());
@@ -89,6 +97,14 @@ export function registerConstructorTests() {
         assert.equal(
           new BN(base36, 36, 'le').toString(36),
           new SLOWBN(base36, 36, 'le').toString(36)
+        );
+      });
+
+      it('should accept base-10 LE', function () {
+        var base10 = '234234';
+        assert.equal(
+          new BN(base10, 10, 'le').toString(10),
+          new SLOWBN(base10, 10, 'le').toString(10)
         );
       });
 
@@ -183,6 +199,10 @@ export function registerConstructorTests() {
 
     // the Array code is able to handle Buffer
     describe('with Buffer input', function () {
+      it('should not fail on empty Buffer', function () {
+        assert.equal(new BN(Buffer.alloc(0)).toString(16), '0');
+      });
+
       it('should not fail on empty Buffer', function () {
         assert.equal(new BN(Buffer.alloc(0)).toString(16), '0');
       });
