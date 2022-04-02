@@ -45,7 +45,12 @@ interface NativeBigNumberSpec {
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
   toNumber: (this: InternalNumber) => number;
   toArray: (this: InternalNumber, le: boolean, len: number) => Array<number>;
-
+  toArrayLike: (
+    this: InternalNumber,
+    ab: ArrayBuffer,
+    le: boolean,
+    len: number
+  ) => void;
   add: (this: InternalNumber, other: InternalNumber) => InternalNumber;
   iadd: (this: InternalNumber, other: InternalNumber) => void;
   iaddn: (this: InternalNumber, other: number) => void;

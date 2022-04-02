@@ -9,6 +9,7 @@
 #include "MGModContext.h"
 #include "MGRedBigNum.h"
 #include "MGBigNumHelper.h"
+#include <cstdio>
 #define APPNAME "MyApp"
 
 namespace margelo {
@@ -80,10 +81,12 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
       if (arguments[1].isNumber()) {
 	len = arguments[1].asNumber();
       }
+    
       int numberLen = BN_num_bytes(thiz->bign);
       if (len == -1) {
-          len = numberLen;
+          len = std::max(1, numberLen);
       }
+      printf("aaa len %d numberLen  %d", len, numberLen);
       unsigned char * to = new unsigned char[len];
       if (le) {
           BN_bn2lebinpad(thiz->bign, to, len);
@@ -92,14 +95,41 @@ MGBigNumberHostObject::MGBigNumberHostObject(std::shared_ptr<react::CallInvoker>
       }
 
       jsi::Array res(runtime, len);
-      delete [] to;
 
       for (int i = 0; i < len; ++i) {
-	    res.setValueAtIndex(runtime, i, jsi::Value(runtime, (int)to[i]));
+	    res.setValueAtIndex(runtime, i, jsi::Value(runtime, (double)to[i]));
       }
-
+      
+      delete [] to;
       return res;
     }));
+            
+this->fields.push_back(HOST_LAMBDA("toArrayLike", {
+    std::shared_ptr<MGBigNumber> thiz = thisValue.getObject(runtime).getHostObject<MGBigNumber>(runtime);
+    int len = -1;
+    
+    jsi::ArrayBuffer ab = arguments[0].getObject(runtime).getArrayBuffer(runtime);
+
+    bool le = arguments[1].getBool();
+
+    if (arguments[2].isNumber()) {
+  len = arguments[2].asNumber();
+    }
+  
+    int numberLen = BN_num_bytes(thiz->bign);
+    if (len == -1) {
+        len = std::max(1, numberLen);
+    }
+    printf("aaa len %d numberLen  %d", len, numberLen);
+
+    if (le) {
+        BN_bn2lebinpad(thiz->bign, ab.data(runtime), len);
+    } else {
+        BN_bn2binpad(thiz->bign, ab.data(runtime), len);
+    }
+
+    return jsi::Value::undefined();
+  }));
 
   this->fields.push_back(HOST_LAMBDA("createFromNumber", {
       int val = (int) arguments[0].asNumber();

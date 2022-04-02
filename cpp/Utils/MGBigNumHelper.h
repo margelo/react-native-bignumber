@@ -30,6 +30,8 @@ static void EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNU
 static void BN_smart_neg(BIGNUM *pSt);
 
 static std::string bn2Str(BIGNUM * num, int base, int len);
+    
+static int charToInt(char & a);
 
 // static void bn_correct_top(BIGNUM *pSt);
 };

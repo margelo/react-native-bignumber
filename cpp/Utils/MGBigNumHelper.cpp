@@ -326,6 +326,13 @@ std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
   return res;
 }
 
+int MGBigNumHelper::charToInt(char & a) {
+    if (a <= '9') {
+        return a - '0';
+    }
+    return a - 'A';
+}
+
 void MGBigNumHelper::EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b) {
   //TODO (Szymon)
 }

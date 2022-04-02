@@ -22,6 +22,7 @@ const getPrime = NativeBigNumber.getPrime;
 const {
   toNumber,
   toArray,
+  toArrayLike,
   toString,
   add,
   iadd,
@@ -317,7 +318,15 @@ export class BN {
   }
 
   toJSON(): string {
-    return `BigNumber (${this.toString(10)})`;
+    let str = this.toString(16);
+    let par = 0;
+    if (str[0] === '-') {
+      par = 1;
+    }
+    if (str.length % 2 !== par) {
+      str = str.slice(0, par) + '0' + str.slice(par);
+    }
+    return str;
   }
 
   toNumber() {
@@ -326,6 +335,20 @@ export class BN {
 
   toArray(endian?: 'le' | 'be', len?: number) {
     return toArray.call(this.internalBigNum, endian === 'le', len || -1);
+  }
+
+  toArrayLike<T extends { buffer: ArrayBuffer }>(
+    arrayLike: T,
+    endian?: 'le' | 'be',
+    len?: number
+  ) {
+    toArrayLike.call(
+      this.internalBigNum,
+      arrayLike.buffer,
+      endian === 'le',
+      len || -1
+    );
+    return arrayLike;
   }
 
   toBuffer(endian?: 'le' | 'be', len?: number) {
