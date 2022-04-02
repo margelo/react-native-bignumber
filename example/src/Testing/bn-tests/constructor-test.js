@@ -1,4 +1,5 @@
 import BN from 'react-native-bignumber';
+import SLOWBN from 'bn.js';
 import chai from 'chai';
 import { describe, it, itOnly } from '../MochaRNAdapter';
 var fixtures = require('./fixtures');
@@ -81,6 +82,14 @@ export function registerConstructorTests() {
       it('should accept base-36', function () {
         var base36 = 'zzZzzzZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz';
         assert.equal(new BN(base36, 36).toString(36), base36.toLowerCase());
+      });
+
+      it('should accept base-36 LE', function () {
+        var base36 = 'zzZzzzZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+        assert.equal(
+          new BN(base36, 36, 'le').toString(36),
+          new SLOWBN(base36, 36, 'le').toString(36)
+        );
       });
 
       /*it('should not overflow limbs during base-10', function () {
