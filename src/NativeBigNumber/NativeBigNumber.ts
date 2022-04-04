@@ -223,5 +223,10 @@ if (global.__BigNumberProxy == null) {
     );
 }
 
-const proxy = global.__BigNumberProxy;
-export const NativeBigNumber = proxy as any as NativeBigNumberSpec;
+// Hack alert! Object.assign doesn't work with jsi::HostObject out of the box
+const proxy = global.__BigNumberProxy as any;
+const native = {} as any;
+Object.keys(proxy).forEach((key: string) => {
+  native[key] = proxy[key];
+});
+export const NativeBigNumber = native as NativeBigNumberSpec;
