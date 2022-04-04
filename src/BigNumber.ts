@@ -333,18 +333,30 @@ export class BN {
     return toArray.call(this.internalBigNum, endian === 'le', len || -1);
   }
 
-  toArrayLike<T extends { buffer: ArrayBuffer }>(
+  // TODO(MARC ts magician )
+  toArrayLike<T extends (len: number) => { buffer: ArrayBuffer }>(
     arrayLike: T,
-    endian?: 'le' | 'be',
-    len?: number
+    endian: 'le' | 'be',
+    len: number
   ) {
+    if (typeof arrayLike !== 'function') {
+      console.log('toArrayLike exptects constructor');
+      throw new Error('toArrayLike exptects constructor');
+    }
+
+    if (arrayLike?.name === 'Array') {
+      return this.toArray(endian, len);
+    }
+
+    const res = new (arrayLike as any)(len);
+
     toArrayLike.call(
       this.internalBigNum,
-      arrayLike.buffer,
+      res.buffer,
       endian === 'le',
       len || -1
     );
-    return arrayLike;
+    return res;
   }
 
   toBuffer(endian?: 'le' | 'be', len?: number) {
