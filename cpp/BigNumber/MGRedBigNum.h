@@ -7,27 +7,28 @@
 
 #include "MGBigNumber.h"
 
-namespace margelo {
-namespace jsi = facebook::jsi;
+namespace margelo
+{
+    namespace jsi = facebook::jsi;
 
-class MGRedBigNum : public MGBigNumber {
-public:
-explicit MGRedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
+    class MGRedBigNum : public MGBigNumber
+    {
+    public:
+        explicit MGRedBigNum(BN_CTX *ctx, BN_MONT_CTX *mctx, BIGNUM *m);
 
-explicit MGRedBigNum(BIGNUM * bign, bool force, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m);
+        explicit MGRedBigNum(BIGNUM *bign, bool force, BN_CTX *ctx, BN_MONT_CTX *mctx, BIGNUM *m);
 
-explicit MGRedBigNum(const MGRedBigNum&);
+        explicit MGRedBigNum(const MGRedBigNum &);
 
-virtual ~MGRedBigNum();
+        virtual ~MGRedBigNum();
 
-virtual jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
-virtual std::vector <jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
+        virtual jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+        virtual std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 
-BN_MONT_CTX * mctx;
-BIGNUM * m;
-};
+        BN_MONT_CTX *mctx;
+        BIGNUM *m;
+    };
 
 } // namespace margelo
 
-
-#endif //BIGNUMBEREXAMPLE_MGREDBIGNUM_H
+#endif // BIGNUMBEREXAMPLE_MGREDBIGNUM_H

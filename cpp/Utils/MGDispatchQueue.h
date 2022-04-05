@@ -15,43 +15,43 @@
 #include <string>
 #include <condition_variable>
 
-namespace margelo {
-
-
-// taken from https://github.com/embeddedartistry/embedded-resources/blob/master/examples/cpp/dispatch.cpp
-namespace DispatchQueue {
-class dispatch_queue
+namespace margelo
 {
-typedef std::function<void (void)> fp_t;
 
-public:
-explicit dispatch_queue(std::string name, size_t thread_cnt = 1);
-~dispatch_queue();
+    // taken from https://github.com/embeddedartistry/embedded-resources/blob/master/examples/cpp/dispatch.cpp
+    namespace DispatchQueue
+    {
+        class dispatch_queue
+        {
+            typedef std::function<void(void)> fp_t;
 
-// dispatch and copy
-void dispatch(const fp_t& op);
-// dispatch and move
-void dispatch(fp_t&& op);
+        public:
+            explicit dispatch_queue(std::string name, size_t thread_cnt = 1);
+            ~dispatch_queue();
 
-// Deleted operations
-dispatch_queue(const dispatch_queue& rhs) = delete;
-dispatch_queue& operator=(const dispatch_queue& rhs) = delete;
-dispatch_queue(dispatch_queue&& rhs) = delete;
-dispatch_queue& operator=(dispatch_queue&& rhs) = delete;
+            // dispatch and copy
+            void dispatch(const fp_t &op);
+            // dispatch and move
+            void dispatch(fp_t &&op);
 
-private:
-std::string name_;
-std::mutex lock_;
-std::vector<std::thread> threads_;
-std::queue<fp_t> q_;
-std::condition_variable cv_;
-bool quit_ = false;
+            // Deleted operations
+            dispatch_queue(const dispatch_queue &rhs) = delete;
+            dispatch_queue &operator=(const dispatch_queue &rhs) = delete;
+            dispatch_queue(dispatch_queue &&rhs) = delete;
+            dispatch_queue &operator=(dispatch_queue &&rhs) = delete;
 
-void dispatch_thread_handler(void);
-};
-}  // namespace DispatchQueue
+        private:
+            std::string name_;
+            std::mutex lock_;
+            std::vector<std::thread> threads_;
+            std::queue<fp_t> q_;
+            std::condition_variable cv_;
+            bool quit_ = false;
 
-}  // namespace margelo
+            void dispatch_thread_handler(void);
+        };
+    } // namespace DispatchQueue
 
+} // namespace margelo
 
-#endif  // BIGNUMBER_DISPATCHQUEUE_H
+#endif // BIGNUMBER_DISPATCHQUEUE_H
