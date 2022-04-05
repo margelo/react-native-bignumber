@@ -41,10 +41,12 @@ namespace margelo {
         if (name == "isModContext") {
             return jsi::Value(runtime, true);
         }
+        //Why "m"? https://github.com/indutny/bn.js/blob/5d5532d9fb7192b5d2545bdb2aa024ca1822a313/lib/bn.js#L3244
         if (name == "m") {
             std::shared_ptr<MGBigNumber> res = std::make_shared<MGBigNumber>(MGBigNumberHostObject::bn_ctx);
             BN_copy(res->bign, this->m);
             jsi::Object obj = jsi::Object::createFromHostObject(runtime, res);
+            // not called often no need to cache
             return runtime.global().getPropertyAsFunction(runtime, "__createBN").call(runtime, obj);
         }
         if (name == "split") {

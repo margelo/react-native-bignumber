@@ -10,6 +10,8 @@ export interface InternalModContext {
   isModContext: true;
 }
 
+export type BigNumberPrimeType = 'k256' | 'p224' | 'p192' | 'p25519';
+
 interface NativeBigNumberSpec {
   createFromString: (
     strRep: string,
@@ -38,8 +40,8 @@ interface NativeBigNumberSpec {
     mctx: InternalModContext
   ) => InternalRedNumber;
   mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
-  getPrimeContext: (primeType: string) => InternalModContext;
-  getPrime: (primeType: string) => InternalNumber;
+  getPrimeContext: (primeType: BigNumberPrimeType) => InternalModContext;
+  getPrime: (primeType: BigNumberPrimeType) => InternalNumber;
 
   //bigNumber
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;

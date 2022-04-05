@@ -4,6 +4,7 @@ import {
   InternalNumber,
   InternalModContext,
   InternalRedNumber,
+  BigNumberPrimeType,
 } from './NativeBigNumber/NativeBigNumber';
 
 export class BN {
@@ -107,7 +108,7 @@ export class BN {
       this.internalBigNum = native.createFromArray(args[0], base, endian);
       return this;
     }
-    throw 'BN constructor got wrong params :(';
+    throw new Error('BN constructor got wrong params :(');
   }
 
   get red() {
@@ -115,7 +116,7 @@ export class BN {
   }
 
   static _k256: InternalModContext | null = null;
-  static _p225: InternalModContext | null = null;
+  static _p224: InternalModContext | null = null;
   static _p192: InternalModContext | null = null;
   static _p25519: InternalModContext | null = null;
 
@@ -127,11 +128,11 @@ export class BN {
     return BN._k256;
   }
 
-  static get p225(): InternalModContext {
-    if (!BN._p225) {
-      BN._p225 = native.getPrimeContext('p225');
+  static get p224(): InternalModContext {
+    if (!BN._p224) {
+      BN._p224 = native.getPrimeContext('p224');
     }
-    return BN._p225;
+    return BN._p224;
   }
 
   static get p192(): InternalModContext {
@@ -148,7 +149,7 @@ export class BN {
     return BN._p25519;
   }
 
-  static _prime(prime: string) {
+  static _prime(prime: BigNumberPrimeType) {
     switch (prime) {
       case 'k256':
       case 'p224':
@@ -160,14 +161,14 @@ export class BN {
     }
   }
 
-  static red(num: string | BN | number): InternalModContext {
+  static red(num: BigNumberPrimeType | BN | number): InternalModContext {
     if (typeof num === 'string') {
       // TODO (Szymon)
       switch (num) {
         case 'k256':
           return BN.k256;
         case 'p224':
-          return BN.p225;
+          return BN.p224;
         case 'p192':
           return BN.p192;
         case 'p25519':
@@ -182,7 +183,7 @@ export class BN {
     return native.createModCtx(num.internalBigNum);
   }
 
-  static mont(num: string | BN | number): InternalModContext {
+  static mont(num: BigNumberPrimeType | BN | number): InternalModContext {
     return BN.red(num);
   }
 

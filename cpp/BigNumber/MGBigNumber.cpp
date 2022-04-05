@@ -5,7 +5,6 @@
 #include "MGBigNumber.h"
 #include "MGBigNumHelper.h"
 #include <cctype>
-#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -54,11 +53,15 @@ MGBigNumber::MGBigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
   if (base == 10) {
     BN_dec2bn(&(this->bign), numberAsString.c_str());
   } else if (base == 2) {
+    // openSSL doesnt have method that can parse '010110'(binary) format
+    // so I first change binary to hex then use BN_hex2bn to parse it
+    // changing binary to hex is simple just simply concatenate the adjacent 4 bits and change to hex  |0010|1100 = 2C
     bool negative = false;
     if (numberAsString.front() == '-') {
       negative = true;
       numberAsString.erase(0, 1);
     }
+    // Adding leading 0 so that it equals 0 mod 4
     int needToAdd = (4 - (numberAsString.size() % 4)) % 4;
     while (needToAdd--) {
       numberAsString = "0" + numberAsString;
@@ -84,6 +87,7 @@ MGBigNumber::MGBigNumber(std::string numberAsString, int base, BN_CTX * ctx) {
 
     BN_hex2bn(&(this->bign), inHex);
 
+    // set negative if input string had '-' at the beginning 
     if (negative) {
       BN_set_negative(this->bign, 1);
     }
@@ -126,8 +130,6 @@ MGBigNumber::MGBigNumber(int value, BN_CTX * ctx) {
 MGBigNumber::MGBigNumber(const MGBigNumber & other) {
   this->ctx = other.ctx;
   BN_copy(this->bign, other.bign);
-
-  //installMethods();
 }
 
 jsi::Value MGBigNumber::get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId) {

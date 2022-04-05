@@ -7,7 +7,6 @@
 #include <string>
 #include <algorithm>
 #include <vector>
-#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -255,6 +254,9 @@ void MGBigNumHelper::BN_smart_neg(BIGNUM *pSt) {
 }
 
 std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
+  // changing hex to bin as there is no method in openSSL that returns
+  // base-2 format
+  // 2C = |0010|1100|
   char *strRep = nullptr;
   if (base == 2) {
     bool negative = BN_is_negative(num);
@@ -289,7 +291,6 @@ std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
     strRep = BN_bn2hex(num);
   }
   if (base == 36) {
-      // TODO (Szymon)
       if (BN_is_zero(num)) {
           strRep = new char[2];
           strRep[0] = '0';
@@ -303,7 +304,6 @@ std::string MGBigNumHelper::bn2Str(BIGNUM * num, int base, int len) {
           BIGNUM * temp = BN_dup(num);
           while (!BN_is_zero(temp)) {
               int val = BN_div_word(temp, 36);
-              printf("aaa add digit %d \n", val);
               res.push_back(val);
           }
           strRep = new char[res.size() + 1 + addDash];

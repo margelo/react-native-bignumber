@@ -10,7 +10,6 @@
 #include "MGRedBigNum.h"
 #include "MGBigNumHelper.h"
 #include <cstdio>
-#define APPNAME "MyApp"
 
 namespace margelo {
 

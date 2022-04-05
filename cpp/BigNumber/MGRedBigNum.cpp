@@ -3,7 +3,6 @@
 //
 
 #include "MGRedBigNum.h"
-#define APPNAME "MyApp"
 
 namespace margelo {
 
@@ -16,6 +15,8 @@ MGRedBigNum::MGRedBigNum(BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m): MGBigNum
 
 MGRedBigNum::MGRedBigNum(BIGNUM * bign, bool force, BN_CTX * ctx, BN_MONT_CTX * mctx, BIGNUM * m): MGBigNumber(ctx) {
   this->bign = BN_copy(this->bign, bign);
+    // Sometimes we already have montgomery form so we force that format without
+    // convertion.
   if (!force) {
       BN_to_montgomery(this->bign, this->bign, mctx, ctx);
   }

@@ -10,8 +10,6 @@ namespace DispatchQueue {
 
 dispatch_queue::dispatch_queue(std::string name, size_t thread_cnt) :
   name_{std::move(name)}, threads_(thread_cnt) {
-  printf("Creating dispatch queue: %s\n", name_.c_str());
-  printf("Dispatch threads: %zu\n", thread_cnt);
 
   for (size_t i = 0; i < threads_.size(); i++) {
     threads_[i] = std::thread(&dispatch_queue::dispatch_thread_handler, this);
@@ -19,7 +17,6 @@ dispatch_queue::dispatch_queue(std::string name, size_t thread_cnt) :
 }
 
 dispatch_queue::~dispatch_queue() {
-  printf("Destructor: Destroying dispatch threads...\n");
 
   // Signal to dispatch threads that it's time to wrap up
   std::unique_lock <std::mutex> lock(lock_);
@@ -30,7 +27,6 @@ dispatch_queue::~dispatch_queue() {
   // Wait for threads to finish before we exit
   for (size_t i = 0; i < threads_.size(); i++) {
     if (threads_[i].joinable()) {
-      printf("Destructor: Joining thread %zu until completion\n", i);
       threads_[i].join();
     }
   }
