@@ -10,6 +10,8 @@ export interface InternalModContext {
   isModContext: true;
 }
 
+export type BigNumberPrimeType = 'k256' | 'p224' | 'p192' | 'p25519';
+
 interface NativeBigNumberSpec {
   createFromString: (
     strRep: string,
@@ -38,14 +40,19 @@ interface NativeBigNumberSpec {
     mctx: InternalModContext
   ) => InternalRedNumber;
   mod2bn: (redNumber: InternalRedNumber) => InternalNumber;
-  getPrimeContext: (primeType: string) => InternalModContext;
-  getPrime: (primeType: string) => InternalNumber;
+  getPrimeContext: (primeType: BigNumberPrimeType) => InternalModContext;
+  getPrime: (primeType: BigNumberPrimeType) => InternalNumber;
 
   //bigNumber
   toString: (this: InternalNumber, base: 2 | 10 | 16, len?: number) => string;
   toNumber: (this: InternalNumber) => number;
   toArray: (this: InternalNumber, le: boolean, len: number) => Array<number>;
-
+  toArrayLike: (
+    this: InternalNumber,
+    ab: ArrayBuffer,
+    le: boolean,
+    len: number
+  ) => void;
   add: (this: InternalNumber, other: InternalNumber) => InternalNumber;
   iadd: (this: InternalNumber, other: InternalNumber) => void;
   iaddn: (this: InternalNumber, other: number) => void;
@@ -218,5 +225,10 @@ if (global.__BigNumberProxy == null) {
     );
 }
 
-const proxy = global.__BigNumberProxy;
-export const NativeBigNumber = proxy as any as NativeBigNumberSpec;
+// Hack alert! Object.assign doesn't work with jsi::HostObject out of the box
+const proxy = global.__BigNumberProxy as any;
+const native = {} as any;
+Object.keys(proxy).forEach((key: string) => {
+  native[key] = proxy[key];
+});
+export const NativeBigNumber = native as NativeBigNumberSpec;

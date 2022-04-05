@@ -9,33 +9,37 @@
 #include "MGJSIMacros.h"
 #include <ReactCommon/TurboModuleUtils.h>
 
-namespace margelo {
+namespace margelo
+{
 
-namespace jsi = facebook::jsi;
-namespace react = facebook::react;
+    namespace jsi = facebook::jsi;
+    namespace react = facebook::react;
 
-typedef std::function<jsi::Value (jsi::Runtime & runtime)> JSIValueBuilder;
+    typedef std::function<jsi::Value(jsi::Runtime &runtime)> JSIValueBuilder;
 
-typedef std::pair<std::string, JSIValueBuilder> FieldDefinition;
+    typedef std::pair<std::string, JSIValueBuilder> FieldDefinition;
 
-class JSI_EXPORT MGSmartHostObject : public MGThreadAwareHostObject {
+    class JSI_EXPORT MGSmartHostObject : public MGThreadAwareHostObject
+    {
 
-public:
-MGSmartHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
-                  std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue)
-  : MGThreadAwareHostObject(jsCallInvoker, workerQueue) {
-}
+    public:
+        MGSmartHostObject(std::shared_ptr<react::CallInvoker> jsCallInvoker,
+                          std::shared_ptr<DispatchQueue::dispatch_queue> workerQueue)
+            : MGThreadAwareHostObject(jsCallInvoker, workerQueue)
+        {
+        }
 
-virtual ~MGSmartHostObject() {
-}
+        virtual ~MGSmartHostObject()
+        {
+        }
 
-std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
+        std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 
-jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+        jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
 
-std::vector<std::pair<std::string, JSIValueBuilder> > fields;
-};
+        std::vector<std::pair<std::string, JSIValueBuilder>> fields;
+    };
 
-}  // namespace margelo
+} // namespace margelo
 
-#endif //BigNumberEXAMPLE_SMARTHOSTOBJECT_H
+#endif // BigNumberEXAMPLE_SMARTHOSTOBJECT_H

@@ -9,24 +9,26 @@
 #include <openssl/bn.h>
 #include <jsi/jsi.h>
 
-namespace margelo {
-namespace jsi = facebook::jsi;
-struct MGModContext : jsi::HostObject {
-    MGModContext(int number, BN_CTX * ctx);
-    MGModContext(BIGNUM * bign, BN_CTX * ctx);
-    virtual ~MGModContext();
+namespace margelo
+{
+    namespace jsi = facebook::jsi;
+    struct MGModContext : jsi::HostObject
+    {
+        MGModContext(int number, BN_CTX *ctx);
+        MGModContext(BIGNUM *bign, BN_CTX *ctx);
+        virtual ~MGModContext();
 
-    jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+        jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
+        virtual std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 
-    static std::string k256;
-    static std::string p224;
-    static std::string p192;
-    static std::string p25519;
+        static std::string k256;
+        static std::string p224;
+        static std::string p192;
+        static std::string p25519;
 
-    BN_MONT_CTX * mctx;
-    BIGNUM * m;
-};
+        BN_MONT_CTX *mctx;
+        BIGNUM *m;
+    };
 } // namespace margelo
 
-
-#endif //BIGNUMBEREXAMPLE_MGMODCONTEXT_H
+#endif // BIGNUMBEREXAMPLE_MGMODCONTEXT_H

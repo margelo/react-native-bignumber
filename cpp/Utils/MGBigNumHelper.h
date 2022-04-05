@@ -13,26 +13,30 @@
 #include <openssl/opensslconf.h>
 #include <openssl/crypto.h>
 
-namespace margelo {
+namespace margelo
+{
 
-class MGBigNumHelper {
-public:
-static void BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+    class MGBigNumHelper
+    {
+    public:
+        static void BN_xor(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
-static void BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+        static void BN_and(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
-static void BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
+        static void BN_or(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 
-static void BN_notn(BIGNUM *pSt, unsigned int len);
+        static void BN_notn(BIGNUM *pSt, unsigned int len);
 
-static void EGDC(BIGNUM * x, BIGNUM * y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b);
+        static void EGDC(BIGNUM *x, BIGNUM *y, BIGNUM *g, const BIGNUM *a, const BIGNUM *b);
 
-static void BN_smart_neg(BIGNUM *pSt);
+        static void BN_smart_neg(BIGNUM *pSt);
 
-static std::string bn2Str(BIGNUM * num, int base, int len);
+        static std::string bn2Str(BIGNUM *num, int base, int len);
 
-// static void bn_correct_top(BIGNUM *pSt);
-};
+        static int charToInt(char &a);
+
+        // static void bn_correct_top(BIGNUM *pSt);
+    };
 } // namespace margelo
 
-#endif //BIGNUMBEREXAMPLE_MGBIGNUMHELPER_H
+#endif // BIGNUMBEREXAMPLE_MGBIGNUMHELPER_H
