@@ -1,0 +1,3 @@
+[submodule "example/src/elliptic"]
+	path = example/src/elliptic
+	url = https://github.com/indutny/elliptic

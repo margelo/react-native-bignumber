@@ -9,7 +9,7 @@ module.exports = {
       {
         alias: {
           [pak.name]: path.join(__dirname, '..', pak.source),
-          bn_elliptic: path.join(__dirname, 'src', 'bn-elliptic', 'lib'),
+          bn_elliptic: path.join(__dirname, 'src', 'elliptic', 'lib'),
           stream: 'stream-browserify',
         },
       },
