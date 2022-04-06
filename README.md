@@ -86,6 +86,8 @@ In your `metro.config.js`, add a module resolver to replace `bn` with `react-nat
 
 Now, all imports for `bn` will be resolved as `react-native-bignumber` instead.
 
+In the Exodus app, this single line change reduced app launch time by **4 seconds**! 🚀
+
 ## Sponsors
 
 <a href="https://exodus.com">
