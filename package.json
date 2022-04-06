@@ -31,7 +31,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build",
     "release": "release-it",
-    "pods": "cd example && pod-install --quiet"
+    "pods": "cd example && pod-install --quiet",
+    "postinstall": "git submodule update --recursive"
   },
   "keywords": [
     "react-native",
