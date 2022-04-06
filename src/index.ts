@@ -1,2 +1,4 @@
-import bn from './BigNumber';
-module.exports = bn;
+export * from './BigNumber';
+
+import BN from './BigNumber';
+module.exports = BN;
