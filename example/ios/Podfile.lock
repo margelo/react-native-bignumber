@@ -210,7 +210,7 @@ PODS:
   - React-jsinspector (0.66.0)
   - React-logger (0.66.0):
     - glog
-  - react-native-bignumber (0.1.0):
+  - react-native-bignumber (0.1.2):
     - OpenSSL-Universal (~> 1.1.180)
     - React
     - React-callinvoker
@@ -431,7 +431,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 6a05173dc0142abc582bd4edd2d23146b8cc218a
   React-jsinspector: be95ad424ba9f7b817aff22732eb9b1b810a000a
   React-logger: 9a9cd87d4ea681ae929b32ef580638ff1b50fb24
-  react-native-bignumber: ba257c65dcf593dbe97b764a4c738985376ea1c1
+  react-native-bignumber: d5d89dce0f9cae3310036da3deb2f66da156e4b9
   react-native-quick-base64: 5b0692872a9456fb4723f7b2a0083d51485baa95
   react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
   React-perflogger: 1f554c2b684e2f484f9edcdfdaeedab039fbaca8
@@ -452,4 +452,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 0cc715eb9ebd99cbd442acf654597793c71c7a5d
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2
