@@ -1,2 +1,4 @@
-import * as BN from './BigNumber';
-export default BN;
+export * from './BigNumber';
+
+import BN from './BigNumber';
+module.exports = BN;
