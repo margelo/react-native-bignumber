@@ -99,7 +99,7 @@ In the Exodus app, this single line change reduced app launch time by **4 second
 </a>
 
 This library is supported by [**Exodus**](https://exodus.com).
-Send, receive, and exchange Bitcoin and 160+ cryptocurrencies with ease on the world's leading Desktop, Mobile and Hardware crypto wallets
+Send, receive, and exchange Bitcoin and 160+ cryptocurrencies with ease on the world's leading Desktop, Mobile and Hardware crypto wallets: [exodus.com](https://www.exodus.com/)
 
 ## Adopting at scale
 
