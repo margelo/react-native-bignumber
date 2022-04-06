@@ -34,13 +34,13 @@ expo prebuild
 
 ### ..as a normal library
 
-The exposed `BigNumber` class is used to create new BigNumber instances from strings (binary, hex, decimal), ArrayBuffers, Buffers, numbers, or other BigNumber instances.
+The exposed `BN` class is used to create new BigNumber instances from strings (binary, hex, decimal), ArrayBuffers, Buffers, numbers, or other BigNumber instances.
 
 ```ts
-import { BigNumber } from 'react-native-bignumber'
+import { BN } from 'react-native-bignumber'
 
-const a = new BigNumber(3274556)
-const b = new BigNumber(9856712)
+const a = new BN(3274556)
+const b = new BN(9856712)
 const c = a.mul(b) // 32.276.355.419.872
 ```
 
@@ -49,10 +49,10 @@ Refer to [BN.js' documentation](https://github.com/indutny/bn.js/#instructions) 
 For example, this is how you calculate large Fibonacci numbers:
 
 ```ts
-function fibonacci(n: number): BigNumber {
-  let prev = new BigNumber(0)
-  let prevPrev = new BigNumber(1)
-  let number = new BigNumber(1)
+function fibonacci(n: number): BN {
+  let prev = new BN(0)
+  let prevPrev = new BN(1)
+  let number = new BN(1)
 
   for (let i = 1; i < n; i++) {
     prevPrev = prev

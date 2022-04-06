@@ -7,6 +7,9 @@ import {
   BigNumberPrimeType,
 } from './NativeBigNumber/NativeBigNumber';
 
+/**
+ * A number instance that can store numbers with virtually infinite size.
+ */
 export class BN {
   internalBigNum: InternalNumber;
   _mctx?: InternalModContext;
