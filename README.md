@@ -2,7 +2,7 @@
   <img src="./img/banner.svg" width="100%" />
 </a>
 
-# ⚡️ react-native-bignumber
+# 🔢 react-native-bignumber
 
 The fastest Big Number library for React Native.
 
