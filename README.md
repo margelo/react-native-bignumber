@@ -74,7 +74,7 @@ const f = fibonacci(50) // 12.586.269.025
 
 Since popular libraries like [ethers.js](https://github.com/ethers-io/ethers.js/) or [elliptic](https://github.com/indutny/elliptic) use [BN.js](https://github.com/indutny/bn.js/) under the hood, react-native-bignumber exposes exactly the same API as [BN.js](https://github.com/indutny/bn.js/) so it can be used as a drop-in replacement and promises much greater speed at common crypto operations.
 
-In your `metro.config.js`, add a module resolver to replace `bn` with `react-native-bignumber`:
+In your `metro.config.js`, add a module resolver to replace `bn.js` with `react-native-bignumber`:
 
 ```diff
 +const path = require('path');
@@ -82,13 +82,13 @@ In your `metro.config.js`, add a module resolver to replace `bn` with `react-nat
  module.exports = {
 +  resolver: {
 +    extraNodeModules: {
-+      bn: path.resolve(__dirname, './node_modules/react-native-bignumber'),
++      'bn.js': path.resolve(__dirname, './node_modules/react-native-bignumber'),
 +    },
 +  },
    ...
 ```
 
-Now, all imports for `bn` will be resolved as `react-native-bignumber` instead.
+Now, all imports for `bn.js` will be resolved as `react-native-bignumber` instead.
 
 In the Exodus app, this single line change reduced app launch time by **4 seconds**! 🚀
 
