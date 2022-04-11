@@ -225,11 +225,11 @@ export class BN {
     return native.toArray.call(this.internalBigNum, endian === 'le', len || -1);
   }
 
-  // TODO(MARC ts magician )
+  // TODO(MARC ts magician - please check )
   toArrayLike<T extends (len: number) => { buffer: ArrayBuffer }>(
     arrayLike: T,
-    endian: 'le' | 'be',
-    len: number
+    endian?: 'le' | 'be',
+    len?: number
   ) {
     if (typeof arrayLike !== 'function') {
       console.log('toArrayLike exptects constructor');
@@ -240,7 +240,9 @@ export class BN {
       return this.toArray(endian, len);
     }
 
-    const res = new (arrayLike as any)(len);
+    const outLen = (len)? len : this.byteLength();
+
+    const res = new (arrayLike as any)(outLen);
 
     native.toArrayLike.call(
       this.internalBigNum,
