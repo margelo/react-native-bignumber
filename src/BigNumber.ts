@@ -240,7 +240,7 @@ export class BN {
       return this.toArray(endian, len);
     }
 
-    const outLen = (len)? len : this.byteLength();
+    const outLen = len != null ? len : this.byteLength();
 
     const res = new (arrayLike as any)(outLen);
 
