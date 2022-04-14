@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { RootStackParamList } from '../../RootProps';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import FastBN from 'react-native-bignumber';
+import { BN as FastBN } from 'react-native-bignumber';
 import elliptic from 'elliptic';
 import bn_elliptic from 'bn_elliptic';
 import BN from 'bn.js';
