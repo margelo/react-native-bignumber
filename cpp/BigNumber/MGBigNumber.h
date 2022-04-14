@@ -32,6 +32,7 @@ namespace margelo
 
         virtual ~MGBigNumber();
 
+        virtual void set(jsi::Runtime &runtime, const jsi::PropNameID &propNameId, const jsi::Value & value) override;
         virtual jsi::Value get(jsi::Runtime &runtime, const jsi::PropNameID &propNameId);
         virtual std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime &runtime);
 

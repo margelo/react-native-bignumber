@@ -208,6 +208,11 @@ namespace margelo
         return propertyNames;
     }
 
+    void MGBigNumber::set(jsi::Runtime &runtime, const jsi::PropNameID &propNameId, const jsi::Value & value) {
+        // do nothing;
+    }
+
+
     MGBigNumber::~MGBigNumber()
     {
         BN_free(this->bign);
