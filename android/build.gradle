@@ -88,7 +88,7 @@ def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME").split("\\
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   buildToolsVersion getExtOrDefault('buildToolsVersion')
-  ndkVersion '21.4.7075529'
+  ndkVersion getExtOrDefault('ndkVersion')
 
   defaultConfig {
     minSdkVersion 21
