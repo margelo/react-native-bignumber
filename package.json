@@ -1,6 +1,6 @@
 {
   "name": "react-native-bignumber",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "⚡️ The fastest Big Number library for React Native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
