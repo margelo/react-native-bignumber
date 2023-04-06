@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "paths": {
+      "react-native-bignumber": ["../src/index"]
+    },
+  },
+  "include": [
+    "src",
+    "index.js",
+    "App.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
