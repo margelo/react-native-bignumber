@@ -1,9 +1,7 @@
 import type { RowItemType } from '../navigators/children/TestingScreen/RowItemType';
-import { rootSuite, describe, it, clearTests } from './MochaRNAdapter';
+import { rootSuite, clearTests } from './MochaRNAdapter';
 import 'mocha';
 import type * as MochaTypes from 'mocha';
-import chai from 'chai';
-import BN from 'react-native-bignumber';
 
 export function testLib(
   addTestResult: (testResult: RowItemType) => void,

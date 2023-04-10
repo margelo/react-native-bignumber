@@ -35,10 +35,8 @@ function Point(curve, x, z) {
   } else {
     this.x = new BN(x, 16);
     this.z = new BN(z, 16);
-    if (!this.x.red)
-      this.x = this.x.toRed(this.curve.red);
-    if (!this.z.red)
-      this.z = this.z.toRed(this.curve.red);
+    if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+    if (!this.z.red) this.z = this.z.toRed(this.curve.red);
   }
 }
 inherits(Point, Base.BasePoint);
@@ -68,10 +66,14 @@ Point.fromJSON = function fromJSON(curve, obj) {
 };
 
 Point.prototype.inspect = function inspect() {
-  if (this.isInfinity())
-    return '<EC Point Infinity>';
-  return '<EC Point x: ' + this.x.fromRed().toString(16, 2) +
-      ' z: ' + this.z.fromRed().toString(16, 2) + '>';
+  if (this.isInfinity()) return '<EC Point Infinity>';
+  return (
+    '<EC Point x: ' +
+    this.x.fromRed().toString(16, 2) +
+    ' z: ' +
+    this.z.fromRed().toString(16, 2) +
+    '>'
+  );
 };
 
 Point.prototype.isInfinity = function isInfinity() {
@@ -133,8 +135,7 @@ Point.prototype.mul = function mul(k) {
   var b = this.curve.point(null, null); // (N / 2) * Q
   var c = this; // Q
 
-  for (var bits = []; t.cmpn(0) !== 0; t.iushrn(1))
-    bits.push(t.andln(1));
+  for (var bits = []; t.cmpn(0) !== 0; t.iushrn(1)) bits.push(t.andln(1));
 
   for (var i = bits.length - 1; i >= 0; i--) {
     if (bits[i] === 0) {

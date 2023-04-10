@@ -7,18 +7,17 @@ var cachedProperty = utils.cachedProperty;
 var parseBytes = utils.parseBytes;
 
 /**
-* @param {EDDSA} eddsa - eddsa instance
-* @param {Array<Bytes>|Object} sig -
-* @param {Array<Bytes>|Point} [sig.R] - R point as Point or bytes
-* @param {Array<Bytes>|bn} [sig.S] - S scalar as bn or bytes
-* @param {Array<Bytes>} [sig.Rencoded] - R point encoded
-* @param {Array<Bytes>} [sig.Sencoded] - S scalar encoded
-*/
+ * @param {EDDSA} eddsa - eddsa instance
+ * @param {Array<Bytes>|Object} sig -
+ * @param {Array<Bytes>|Point} [sig.R] - R point as Point or bytes
+ * @param {Array<Bytes>|bn} [sig.S] - S scalar as bn or bytes
+ * @param {Array<Bytes>} [sig.Rencoded] - R point encoded
+ * @param {Array<Bytes>} [sig.Sencoded] - S scalar encoded
+ */
 function Signature(eddsa, sig) {
   this.eddsa = eddsa;
 
-  if (typeof sig !== 'object')
-    sig = parseBytes(sig);
+  if (typeof sig !== 'object') sig = parseBytes(sig);
 
   if (Array.isArray(sig)) {
     sig = {
@@ -29,10 +28,8 @@ function Signature(eddsa, sig) {
 
   assert(sig.R && sig.S, 'Signature without R or S');
 
-  if (eddsa.isPoint(sig.R))
-    this._R = sig.R;
-  if (sig.S instanceof BN)
-    this._S = sig.S;
+  if (eddsa.isPoint(sig.R)) this._R = sig.R;
+  if (sig.S instanceof BN) this._S = sig.S;
 
   this._Rencoded = Array.isArray(sig.R) ? sig.R : sig.Rencoded;
   this._Sencoded = Array.isArray(sig.S) ? sig.S : sig.Sencoded;

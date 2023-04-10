@@ -10,16 +10,13 @@ function KeyPair(ec, options) {
   this.pub = null;
 
   // KeyPair(ec, { priv: ..., pub: ... })
-  if (options.priv)
-    this._importPrivate(options.priv, options.privEnc);
-  if (options.pub)
-    this._importPublic(options.pub, options.pubEnc);
+  if (options.priv) this._importPrivate(options.priv, options.privEnc);
+  if (options.pub) this._importPublic(options.pub, options.pubEnc);
 }
 module.exports = KeyPair;
 
 KeyPair.fromPublic = function fromPublic(ec, pub, enc) {
-  if (pub instanceof KeyPair)
-    return pub;
+  if (pub instanceof KeyPair) return pub;
 
   return new KeyPair(ec, {
     pub: pub,
@@ -28,8 +25,7 @@ KeyPair.fromPublic = function fromPublic(ec, pub, enc) {
 };
 
 KeyPair.fromPrivate = function fromPrivate(ec, priv, enc) {
-  if (priv instanceof KeyPair)
-    return priv;
+  if (priv instanceof KeyPair) return priv;
 
   return new KeyPair(ec, {
     priv: priv,
@@ -40,8 +36,7 @@ KeyPair.fromPrivate = function fromPrivate(ec, priv, enc) {
 KeyPair.prototype.validate = function validate() {
   var pub = this.getPublic();
 
-  if (pub.isInfinity())
-    return { result: false, reason: 'Invalid public key' };
+  if (pub.isInfinity()) return { result: false, reason: 'Invalid public key' };
   if (!pub.validate())
     return { result: false, reason: 'Public key is not a point' };
   if (!pub.mul(this.ec.curve.n).isInfinity())
@@ -57,20 +52,16 @@ KeyPair.prototype.getPublic = function getPublic(compact, enc) {
     compact = null;
   }
 
-  if (!this.pub)
-    this.pub = this.ec.g.mul(this.priv);
+  if (!this.pub) this.pub = this.ec.g.mul(this.priv);
 
-  if (!enc)
-    return this.pub;
+  if (!enc) return this.pub;
 
   return this.pub.encode(enc, compact);
 };
 
 KeyPair.prototype.getPrivate = function getPrivate(enc) {
-  if (enc === 'hex')
-    return this.priv.toString(16, 2);
-  else
-    return this.priv;
+  if (enc === 'hex') return this.priv.toString(16, 2);
+  else return this.priv;
 };
 
 KeyPair.prototype._importPrivate = function _importPrivate(key, enc) {
@@ -88,8 +79,10 @@ KeyPair.prototype._importPublic = function _importPublic(key, enc) {
     // `y` coordinates.
     if (this.ec.curve.type === 'mont') {
       assert(key.x, 'Need x coordinate');
-    } else if (this.ec.curve.type === 'short' ||
-               this.ec.curve.type === 'edwards') {
+    } else if (
+      this.ec.curve.type === 'short' ||
+      this.ec.curve.type === 'edwards'
+    ) {
       assert(key.x && key.y, 'Need both x and y coordinate');
     }
     this.pub = this.ec.curve.point(key.x, key.y);
@@ -100,7 +93,7 @@ KeyPair.prototype._importPublic = function _importPublic(key, enc) {
 
 // ECDH
 KeyPair.prototype.derive = function derive(pub) {
-  if(!pub.validate()) {
+  if (!pub.validate()) {
     assert(pub.validate(), 'public point not validated');
   }
   return pub.mul(this.priv).getX();
@@ -116,6 +109,11 @@ KeyPair.prototype.verify = function verify(msg, signature) {
 };
 
 KeyPair.prototype.inspect = function inspect() {
-  return '<Key priv: ' + (this.priv && this.priv.toString(16, 2)) +
-         ' pub: ' + (this.pub && this.pub.inspect()) + ' >';
+  return (
+    '<Key priv: ' +
+    (this.priv && this.priv.toString(16, 2)) +
+    ' pub: ' +
+    (this.pub && this.pub.inspect()) +
+    ' >'
+  );
 };

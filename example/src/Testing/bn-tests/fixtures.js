@@ -1,6 +1,7 @@
 exports.dhGroups = {
   p16: {
-    prime: 'ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd1' +
+    prime:
+      'ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd1' +
       '29024e088a67cc74020bbea63b139b22514a08798e3404dd' +
       'ef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245' +
       'e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7ed' +
@@ -22,7 +23,8 @@ exports.dhGroups = {
       '1f612970cee2d7afb81bdd762170481cd0069127d5b05aa9' +
       '93b4ea988d8fddc186ffb7dc90a6c08f4df435c934063199' +
       'ffffffffffffffff',
-    priv: '6d5923e6449122cbbcc1b96093e0b7e4fd3e469f58daddae' +
+    priv:
+      '6d5923e6449122cbbcc1b96093e0b7e4fd3e469f58daddae' +
       '53b49b20664f4132675df9ce98ae0cfdcac0f4181ccb643b' +
       '625f98104dcf6f7d8e81961e2cab4b5014895260cb977c7d' +
       '2f981f8532fb5da60b3676dfe57f293f05d525866053ac7e' +
@@ -44,7 +46,8 @@ exports.dhGroups = {
       'd3889d0cc17e5fa00b54d8d9f0f46fb523698af965950f4b' +
       '941369e180f0aece3870d9335f2301db251595d173902cad' +
       '394eaa6ffef8be6c',
-    pub: 'd53703b7340bc89bfc47176d351e5cf86d5a18d9662eca3c' +
+    pub:
+      'd53703b7340bc89bfc47176d351e5cf86d5a18d9662eca3c' +
       '9759c83b6ccda8859649a5866524d77f79e501db923416ca' +
       '2636243836d3e6df752defc0fb19cc386e3ae48ad647753f' +
       'bf415e2612f8a9fd01efe7aca249589590c7e6a0332630bb' +
@@ -65,10 +68,11 @@ exports.dhGroups = {
       '11587ac7af0a442b8367a7bd940f752ddabf31cf01171e24' +
       'd78df136e9681cd974ce4f858a5fb6efd3234a91857bb52d' +
       '9e7b414a8bc66db4b5a73bbeccfb6eb764b4f0cbf0375136' +
-      'b024b04e698d54a5'
+      'b024b04e698d54a5',
   },
   p17: {
-    prime: 'ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd1' +
+    prime:
+      'ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd1' +
       '29024e088a67cc74020bbea63b139b22514a08798e3404dd' +
       'ef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245' +
       'e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7ed' +
@@ -100,7 +104,8 @@ exports.dhGroups = {
       '06a1d58bb7c5da76f550aa3d8a1fbff0eb19ccb1a313d55c' +
       'da56c9ec2ef29632387fe8d76e3c0468043e8f663f4860ee' +
       '12bf2d5b0b7474d6e694f91e6dcc4024ffffffffffffffff',
-    priv: '6017f2bc23e1caff5b0a8b4e1fc72422b5204415787801dc' +
+    priv:
+      '6017f2bc23e1caff5b0a8b4e1fc72422b5204415787801dc' +
       '025762b8dbb98ab57603aaaa27c4e6bdf742b4a1726b9375' +
       'a8ca3cf07771779589831d8bd18ddeb79c43e7e77d433950' +
       'e652e49df35b11fa09644874d71d62fdaffb580816c2c88c' +
@@ -132,7 +137,8 @@ exports.dhGroups = {
       'a29fadd82491a4b4c23f2d06ba45483ab59976da1433c9ce' +
       '500164b957a04cf62dd67595319b512fc4b998424d1164dd' +
       'bbe5d1a0f7257cbb04ec9b5ed92079a1502d98725023ecb2',
-    pub: '3bf836229c7dd874fe37c1790d201e82ed8e192ed61571ca' +
+    pub:
+      '3bf836229c7dd874fe37c1790d201e82ed8e192ed61571ca' +
       '7285264974eb2a0171f3747b2fc23969a916cbd21e14f7e2' +
       'f0d72dcd2247affba926f9e7bb99944cb5609aed85e71b89' +
       'e89d2651550cb5bd8281bd3144066af78f194032aa777739' +
@@ -164,7 +170,8 @@ exports.dhGroups = {
       '6985cc83f693f686eaac17411a8247bf62f5ccc7782349b5' +
       'cc1f20e312fa2acc0197154d1bfee507e8db77e8f2732f2d' +
       '641440ccf248e8643b2bd1e1f9e8239356ab91098fcb431d',
-    q: 'a899c59999bf877d96442d284359783bdc64b5f878b688fe' +
+    q:
+      'a899c59999bf877d96442d284359783bdc64b5f878b688fe' +
       '51407f0526e616553ad0aaaac4d5bed3046f10a1faaf42bb' +
       '2342dc4b7908eea0c46e4c4576897675c2bfdc4467870d3d' +
       'cd90adaed4359237a4bc6924bfb99aa6bf5f5ede15b574ea' +
@@ -196,7 +203,8 @@ exports.dhGroups = {
       'fe83fbd3ab53602263410f143b73d5b46fc761882e78c782' +
       'd2c36e716a770a7aefaf7f76cea872db7bffefdbc4c2f9e0' +
       '39c19adac915e7a63dcb8c8c78c113f29a3e0bc10e100ce0',
-    qs: '6f0a2fb763eaeb8eb324d564f03d4a55fdcd709e5f1b65e9' +
+    qs:
+      '6f0a2fb763eaeb8eb324d564f03d4a55fdcd709e5f1b65e9' +
       '5702b0141182f9f945d71bc3e64a7dfdae7482a7dd5a4e58' +
       'bc38f78de2013f2c468a621f08536969d2c8d011bb3bc259' +
       '2124692c91140a5472cad224acdacdeae5751dadfdf068b8' +
@@ -259,6 +267,6 @@ exports.dhGroups = {
       '5e9eba6a071678c8ebd009c328c3eb643679de86e69a9fa5' +
       '67a9e146030ff03d546310a0a568c5ba0070e0da22f2cef8' +
       '54714b04d399bbc8fd261f9e8efcd0e83bdbc3f5cfb2d024' +
-      '3e398478cc598e000124eb8858f9df8f52946c2a1ca5c400'
-  }
+      '3e398478cc598e000124eb8858f9df8f52946c2a1ca5c400',
+  },
 };

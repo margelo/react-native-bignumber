@@ -1,12 +1,6 @@
-/* eslint-disable no-lone-blocks */
-import chai from 'chai';
-import { describe, it, itOnly } from '../MochaRNAdapter';
-const assert = chai.assert;
-import { Buffer } from '@craftzdog/react-native-buffer';
-import BN from 'react-native-bignumber';
-import SLOWBN from 'bn.js';
-
-import bn_elliptic from 'bn_elliptic';
+import { assert } from 'chai';
+import { describe, it } from '../MochaRNAdapter';
+import {BN} from 'react-native-bignumber';
 import elliptic from 'elliptic';
 
 export function registerCurvedTests() {
