@@ -11,20 +11,20 @@ var KeyPair = require('./key');
 var Signature = require('./signature');
 
 function EC(options) {
-  if (!(this instanceof EC))
-    return new EC(options);
+  if (!(this instanceof EC)) return new EC(options);
 
   // Shortcut `elliptic.ec(curve-name)`
   if (typeof options === 'string') {
-    assert(Object.prototype.hasOwnProperty.call(curves, options),
-      'Unknown curve ' + options);
+    assert(
+      Object.prototype.hasOwnProperty.call(curves, options),
+      'Unknown curve ' + options
+    );
 
     options = curves[options];
   }
 
   // Shortcut for `elliptic.ec(elliptic.curves.curveName)`
-  if (options instanceof curves.PresetCurve)
-    options = { curve: options };
+  if (options instanceof curves.PresetCurve) options = { curve: options };
 
   this.curve = options.curve.curve;
   this.n = this.curve.n;
@@ -53,8 +53,7 @@ EC.prototype.keyFromPublic = function keyFromPublic(pub, enc) {
 };
 
 EC.prototype.genKeyPair = function genKeyPair(options) {
-  if (!options)
-    options = {};
+  if (!options) options = {};
 
   // Instantiate Hmac_DRBG
   var drbg = new HmacDRBG({
@@ -62,7 +61,7 @@ EC.prototype.genKeyPair = function genKeyPair(options) {
     pers: options.pers,
     persEnc: options.persEnc || 'utf8',
     entropy: options.entropy || rand(this.hash.hmacStrength),
-    entropyEnc: options.entropy && options.entropyEnc || 'utf8',
+    entropyEnc: (options.entropy && options.entropyEnc) || 'utf8',
     nonce: this.n.toArray(),
   });
 
@@ -70,8 +69,7 @@ EC.prototype.genKeyPair = function genKeyPair(options) {
   var ns2 = this.n.sub(new BN(2));
   for (;;) {
     var priv = new BN(drbg.generate(bytes));
-    if (priv.cmp(ns2) > 0)
-      continue;
+    if (priv.cmp(ns2) > 0) continue;
 
     priv.iaddn(1);
     return this.keyFromPrivate(priv);
@@ -80,12 +78,9 @@ EC.prototype.genKeyPair = function genKeyPair(options) {
 
 EC.prototype._truncateToN = function _truncateToN(msg, truncOnly) {
   var delta = msg.byteLength() * 8 - this.n.bitLength();
-  if (delta > 0)
-    msg = msg.ushrn(delta);
-  if (!truncOnly && msg.cmp(this.n) >= 0)
-    return msg.sub(this.n);
-  else
-    return msg;
+  if (delta > 0) msg = msg.ushrn(delta);
+  if (!truncOnly && msg.cmp(this.n) >= 0) return msg.sub(this.n);
+  else return msg;
 };
 
 EC.prototype.sign = function sign(msg, key, enc, options) {
@@ -93,8 +88,7 @@ EC.prototype.sign = function sign(msg, key, enc, options) {
     options = enc;
     enc = null;
   }
-  if (!options)
-    options = {};
+  if (!options) options = {};
 
   key = this.keyFromPrivate(key, enc);
   msg = this._truncateToN(new BN(msg, 16));
@@ -119,29 +113,25 @@ EC.prototype.sign = function sign(msg, key, enc, options) {
   var ns1 = this.n.sub(new BN(1));
 
   for (var iter = 0; ; iter++) {
-    var k = options.k ?
-      options.k(iter) :
-      new BN(drbg.generate(this.n.byteLength()));
+    var k = options.k
+      ? options.k(iter)
+      : new BN(drbg.generate(this.n.byteLength()));
     k = this._truncateToN(k, true);
-    if (k.cmpn(1) <= 0 || k.cmp(ns1) >= 0)
-      continue;
+    if (k.cmpn(1) <= 0 || k.cmp(ns1) >= 0) continue;
 
     var kp = this.g.mul(k);
-    if (kp.isInfinity())
-      continue;
+    if (kp.isInfinity()) continue;
 
     var kpX = kp.getX();
     var r = kpX.umod(this.n);
-    if (r.cmpn(0) === 0)
-      continue;
+    if (r.cmpn(0) === 0) continue;
 
     var s = k.invm(this.n).mul(r.mul(key.getPrivate()).iadd(msg));
     s = s.umod(this.n);
-    if (s.cmpn(0) === 0)
-      continue;
+    if (s.cmpn(0) === 0) continue;
 
-    var recoveryParam = (kp.getY().isOdd() ? 1 : 0) |
-                        (kpX.cmp(r) !== 0 ? 2 : 0);
+    var recoveryParam =
+      (kp.getY().isOdd() ? 1 : 0) | (kpX.cmp(r) !== 0 ? 2 : 0);
 
     // Use complement of `s`, if it is > `n / 2`
     if (options.canonical && s.cmp(this.nh) > 0) {
@@ -161,10 +151,8 @@ EC.prototype.verify = function verify(msg, signature, key, enc) {
   // Perform primitive values validation
   var r = signature.r;
   var s = signature.s;
-  if (r.cmpn(1) < 0 || r.cmp(this.n) >= 0)
-    return false;
-  if (s.cmpn(1) < 0 || s.cmp(this.n) >= 0)
-    return false;
+  if (r.cmpn(1) < 0 || r.cmp(this.n) >= 0) return false;
+  if (s.cmpn(1) < 0 || s.cmp(this.n) >= 0) return false;
 
   // Validate signature
   var sinv = s.invm(this.n);
@@ -174,8 +162,7 @@ EC.prototype.verify = function verify(msg, signature, key, enc) {
 
   if (!this.curve._maxwellTrick) {
     p = this.g.mulAdd(u1, key.getPublic(), u2);
-    if (p.isInfinity())
-      return false;
+    if (p.isInfinity()) return false;
 
     return p.getX().umod(this.n).cmp(r) === 0;
   }
@@ -184,8 +171,7 @@ EC.prototype.verify = function verify(msg, signature, key, enc) {
   // https://git.io/vad3K
 
   p = this.g.jmulAdd(u1, key.getPublic(), u2);
-  if (p.isInfinity())
-    return false;
+  if (p.isInfinity()) return false;
 
   // Compare `p.x` of Jacobian point with `r`,
   // this will do `p.x == r * p.z^2` instead of multiplying `p.x` by the
@@ -193,7 +179,7 @@ EC.prototype.verify = function verify(msg, signature, key, enc) {
   return p.eqXToP(r);
 };
 
-EC.prototype.recoverPubKey = function(msg, signature, j, enc) {
+EC.prototype.recoverPubKey = function (msg, signature, j, enc) {
   assert((3 & j) === j, 'The recovery param is more than two bits');
   signature = new Signature(signature, enc);
 
@@ -209,10 +195,8 @@ EC.prototype.recoverPubKey = function(msg, signature, j, enc) {
     throw new Error('Unable to find sencond key candinate');
 
   // 1.1. Let x = r + jn.
-  if (isSecondKey)
-    r = this.curve.pointFromX(r.add(this.curve.n), isYOdd);
-  else
-    r = this.curve.pointFromX(r, isYOdd);
+  if (isSecondKey) r = this.curve.pointFromX(r.add(this.curve.n), isYOdd);
+  else r = this.curve.pointFromX(r, isYOdd);
 
   var rInv = signature.r.invm(n);
   var s1 = n.sub(e).mul(rInv).umod(n);
@@ -223,10 +207,9 @@ EC.prototype.recoverPubKey = function(msg, signature, j, enc) {
   return this.g.mulAdd(s1, r, s2);
 };
 
-EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
+EC.prototype.getKeyRecoveryParam = function (e, signature, Q, enc) {
   signature = new Signature(signature, enc);
-  if (signature.recoveryParam !== null)
-    return signature.recoveryParam;
+  if (signature.recoveryParam !== null) return signature.recoveryParam;
 
   for (var i = 0; i < 4; i++) {
     var Qprime;
@@ -236,8 +219,7 @@ EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
       continue;
     }
 
-    if (Qprime.eq(Q))
-      return i;
+    if (Qprime.eq(Q)) return i;
   }
   throw new Error('Unable to find valid recovery factor');
 };

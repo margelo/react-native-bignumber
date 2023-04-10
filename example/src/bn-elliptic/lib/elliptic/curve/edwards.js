@@ -29,17 +29,13 @@ inherits(EdwardsCurve, Base);
 module.exports = EdwardsCurve;
 
 EdwardsCurve.prototype._mulA = function _mulA(num) {
-  if (this.mOneA)
-    return num.redNeg();
-  else
-    return this.a.redMul(num);
+  if (this.mOneA) return num.redNeg();
+  else return this.a.redMul(num);
 };
 
 EdwardsCurve.prototype._mulC = function _mulC(num) {
-  if (this.oneC)
-    return num;
-  else
-    return this.c.redMul(num);
+  if (this.oneC) return num;
+  else return this.c.redMul(num);
 };
 
 // Just for compatibility with Short curve
@@ -49,8 +45,7 @@ EdwardsCurve.prototype.jpoint = function jpoint(x, y, z, t) {
 
 EdwardsCurve.prototype.pointFromX = function pointFromX(x, odd) {
   x = new BN(x, 16);
-  if (!x.red)
-    x = x.toRed(this.red);
+  if (!x.red) x = x.toRed(this.red);
 
   var x2 = x.redSqr();
   var rhs = this.c2.redSub(this.a.redMul(x2));
@@ -62,8 +57,7 @@ EdwardsCurve.prototype.pointFromX = function pointFromX(x, odd) {
     throw new Error('invalid point');
 
   var isOdd = y.fromRed().isOdd();
-  if (odd && !isOdd || !odd && isOdd)
-    y = y.redNeg();
+  if ((odd && !isOdd) || (!odd && isOdd)) y = y.redNeg();
 
   return this.point(x, y);
 };
@@ -71,10 +65,7 @@ EdwardsCurve.prototype.pointFromX = function pointFromX(x, odd) {
 EdwardsCurve.prototype.pointFromY = function pointFromY(y, odd) {
   y = new BN(y, 16);
 
-
-  if (!y.red)
-    y = y.toRed(this.red);
-
+  if (!y.red) y = y.toRed(this.red);
 
   // x^2 = (y^2 - c^2) / (c^2 d y^2 - a)
   var y2 = y.redSqr();
@@ -84,25 +75,21 @@ EdwardsCurve.prototype.pointFromY = function pointFromY(y, odd) {
   var x2 = lhs.redMul(rhs.redInvm());
 
   if (x2.cmp(this.zero) === 0) {
-    if (odd)
-      throw new Error('invalid point');
-    else
-      return this.point(this.zero, y);
+    if (odd) throw new Error('invalid point');
+    else return this.point(this.zero, y);
   }
 
   var x = x2.redSqrt();
   if (x.redSqr().redSub(x2).cmp(this.zero) !== 0)
     throw new Error('invalid point');
 
-  if (x.fromRed().isOdd() !== odd)
-    x = x.redNeg();
+  if (x.fromRed().isOdd() !== odd) x = x.redNeg();
 
   return this.point(x, y);
 };
 
 EdwardsCurve.prototype.validate = function validate(point) {
-  if (point.isInfinity())
-    return true;
+  if (point.isInfinity()) return true;
 
   // Curve: A * X^2 + Y^2 = C^2 * (1 + D * X^2 * Y^2)
   point.normalize();
@@ -128,21 +115,16 @@ function Point(curve, x, y, z, t) {
     this.y = new BN(y, 16);
     this.z = z ? new BN(z, 16) : this.curve.one;
     this.t = t && new BN(t, 16);
-    if (!this.x.red)
-      this.x = this.x.toRed(this.curve.red);
-    if (!this.y.red)
-      this.y = this.y.toRed(this.curve.red);
-    if (!this.z.red)
-      this.z = this.z.toRed(this.curve.red);
-    if (this.t && !this.t.red)
-      this.t = this.t.toRed(this.curve.red);
+    if (!this.x.red) this.x = this.x.toRed(this.curve.red);
+    if (!this.y.red) this.y = this.y.toRed(this.curve.red);
+    if (!this.z.red) this.z = this.z.toRed(this.curve.red);
+    if (this.t && !this.t.red) this.t = this.t.toRed(this.curve.red);
     this.zOne = this.z === this.curve.one;
 
     // Use extended coordinates
     if (this.curve.extended && !this.t) {
       this.t = this.x.redMul(this.y);
-      if (!this.zOne)
-        this.t = this.t.redMul(this.z.redInvm());
+      if (!this.zOne) this.t = this.t.redMul(this.z.redInvm());
     }
   }
 }
@@ -161,18 +143,24 @@ Point.fromJSON = function fromJSON(curve, obj) {
 };
 
 Point.prototype.inspect = function inspect() {
-  if (this.isInfinity())
-    return '<EC Point Infinity>';
-  return '<EC Point x: ' + this.x.fromRed().toString(16, 2) +
-      ' y: ' + this.y.fromRed().toString(16, 2) +
-      ' z: ' + this.z.fromRed().toString(16, 2) + '>';
+  if (this.isInfinity()) return '<EC Point Infinity>';
+  return (
+    '<EC Point x: ' +
+    this.x.fromRed().toString(16, 2) +
+    ' y: ' +
+    this.y.fromRed().toString(16, 2) +
+    ' z: ' +
+    this.z.fromRed().toString(16, 2) +
+    '>'
+  );
 };
 
 Point.prototype.isInfinity = function isInfinity() {
   // XXX This code assumes that zero is always zero in red
-  return this.x.cmpn(0) === 0 &&
-    (this.y.cmp(this.z) === 0 ||
-    (this.zOne && this.y.cmp(this.curve.c) === 0));
+  return (
+    this.x.cmpn(0) === 0 &&
+    (this.y.cmp(this.z) === 0 || (this.zOne && this.y.cmp(this.curve.c) === 0))
+  );
 };
 
 Point.prototype._extDbl = function _extDbl() {
@@ -270,14 +258,11 @@ Point.prototype._projDbl = function _projDbl() {
 };
 
 Point.prototype.dbl = function dbl() {
-  if (this.isInfinity())
-    return this;
+  if (this.isInfinity()) return this;
 
   // Double in extended coordinates
-  if (this.curve.extended)
-    return this._extDbl();
-  else
-    return this._projDbl();
+  if (this.curve.extended) return this._extDbl();
+  else return this._projDbl();
 };
 
 Point.prototype._extAdd = function _extAdd(p) {
@@ -352,52 +337,46 @@ Point.prototype._projAdd = function _projAdd(p) {
 };
 
 Point.prototype.add = function add(p) {
-  if (this.isInfinity())
-    return p;
-  if (p.isInfinity())
-    return this;
+  if (this.isInfinity()) return p;
+  if (p.isInfinity()) return this;
 
-  if (this.curve.extended)
-    return this._extAdd(p);
-  else
-    return this._projAdd(p);
+  if (this.curve.extended) return this._extAdd(p);
+  else return this._projAdd(p);
 };
 
 Point.prototype.mul = function mul(k) {
-  if (this._hasDoubles(k))
-    return this.curve._fixedNafMul(this, k);
-  else
-    return this.curve._wnafMul(this, k);
+  if (this._hasDoubles(k)) return this.curve._fixedNafMul(this, k);
+  else return this.curve._wnafMul(this, k);
 };
 
 Point.prototype.mulAdd = function mulAdd(k1, p, k2) {
-  return this.curve._wnafMulAdd(1, [ this, p ], [ k1, k2 ], 2, false);
+  return this.curve._wnafMulAdd(1, [this, p], [k1, k2], 2, false);
 };
 
 Point.prototype.jmulAdd = function jmulAdd(k1, p, k2) {
-  return this.curve._wnafMulAdd(1, [ this, p ], [ k1, k2 ], 2, true);
+  return this.curve._wnafMulAdd(1, [this, p], [k1, k2], 2, true);
 };
 
 Point.prototype.normalize = function normalize() {
-  if (this.zOne)
-    return this;
+  if (this.zOne) return this;
 
   // Normalize coordinates
   var zi = this.z.redInvm();
   this.x = this.x.redMul(zi);
   this.y = this.y.redMul(zi);
-  if (this.t)
-    this.t = this.t.redMul(zi);
+  if (this.t) this.t = this.t.redMul(zi);
   this.z = this.curve.one;
   this.zOne = true;
   return this;
 };
 
 Point.prototype.neg = function neg() {
-  return this.curve.point(this.x.redNeg(),
+  return this.curve.point(
+    this.x.redNeg(),
     this.y,
     this.z,
-    this.t && this.t.redNeg());
+    this.t && this.t.redNeg()
+  );
 };
 
 Point.prototype.getX = function getX() {
@@ -411,26 +390,24 @@ Point.prototype.getY = function getY() {
 };
 
 Point.prototype.eq = function eq(other) {
-  return this === other ||
-         this.getX().cmp(other.getX()) === 0 &&
-         this.getY().cmp(other.getY()) === 0;
+  return (
+    this === other ||
+    (this.getX().cmp(other.getX()) === 0 && this.getY().cmp(other.getY()) === 0)
+  );
 };
 
 Point.prototype.eqXToP = function eqXToP(x) {
   var rx = x.toRed(this.curve.red).redMul(this.z);
-  if (this.x.cmp(rx) === 0)
-    return true;
+  if (this.x.cmp(rx) === 0) return true;
 
   var xc = x.clone();
   var t = this.curve.redN.redMul(this.z);
   for (;;) {
     xc.iadd(this.curve.n);
-    if (xc.cmp(this.curve.p) >= 0)
-      return false;
+    if (xc.cmp(this.curve.p) >= 0) return false;
 
     rx.redIAdd(t);
-    if (this.x.cmp(rx) === 0)
-      return true;
+    if (this.x.cmp(rx) === 0) return true;
   }
 };
 

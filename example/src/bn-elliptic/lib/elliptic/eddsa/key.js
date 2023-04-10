@@ -6,32 +6,28 @@ var parseBytes = utils.parseBytes;
 var cachedProperty = utils.cachedProperty;
 
 /**
-* @param {EDDSA} eddsa - instance
-* @param {Object} params - public/private key parameters
-*
-* @param {Array<Byte>} [params.secret] - secret seed bytes
-* @param {Point} [params.pub] - public key point (aka `A` in eddsa terms)
-* @param {Array<Byte>} [params.pub] - public key point encoded as bytes
-*
-*/
+ * @param {EDDSA} eddsa - instance
+ * @param {Object} params - public/private key parameters
+ *
+ * @param {Array<Byte>} [params.secret] - secret seed bytes
+ * @param {Point} [params.pub] - public key point (aka `A` in eddsa terms)
+ * @param {Array<Byte>} [params.pub] - public key point encoded as bytes
+ *
+ */
 function KeyPair(eddsa, params) {
   this.eddsa = eddsa;
   this._secret = parseBytes(params.secret);
-  if (eddsa.isPoint(params.pub))
-    this._pub = params.pub;
-  else
-    this._pubBytes = parseBytes(params.pub);
+  if (eddsa.isPoint(params.pub)) this._pub = params.pub;
+  else this._pubBytes = parseBytes(params.pub);
 }
 
 KeyPair.fromPublic = function fromPublic(eddsa, pub) {
-  if (pub instanceof KeyPair)
-    return pub;
+  if (pub instanceof KeyPair) return pub;
   return new KeyPair(eddsa, { pub: pub });
 };
 
 KeyPair.fromSecret = function fromSecret(eddsa, secret) {
-  if (secret instanceof KeyPair)
-    return secret;
+  if (secret instanceof KeyPair) return secret;
   return new KeyPair(eddsa, { secret: secret });
 };
 
@@ -44,8 +40,7 @@ cachedProperty(KeyPair, 'pubBytes', function pubBytes() {
 });
 
 cachedProperty(KeyPair, 'pub', function pub() {
-  if (this._pubBytes)
-    return this.eddsa.decodePoint(this._pubBytes);
+  if (this._pubBytes) return this.eddsa.decodePoint(this._pubBytes);
   return this.eddsa.g.mul(this.priv());
 });
 
