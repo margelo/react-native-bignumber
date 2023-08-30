@@ -38,6 +38,11 @@ export function registerConstructorTests() {
       it('should accept two-limb LE number', function () {
         assert.equal(new BN(0x4123456, null, 'le').toString(16), '56341204');
       });
+
+      it('should correctly convert number to hexadecimal', function () {
+        assert.equal(new BN(100).toString('hex'), '64');
+        assert.equal(new BN(100).toString(16), '64');
+      });
     });
 
     describe('with String input', function () {
