@@ -333,9 +333,16 @@ namespace margelo
             std::shared_ptr<MGBigNumber> thiz = thisValue.getObject(runtime).getHostObject<MGBigNumber>(runtime);
 
             int base = 10;
-            if (!arguments[0].isUndefined() && arguments[0].isNumber())
-            {
-                base = (int)arguments[0].asNumber();
+            if (!arguments[0].isUndefined()) {
+                if (arguments[0].isNumber()) {
+                    base = static_cast<int>(arguments[0].asNumber());
+                } else if (arguments[0].isString()) {
+                    std::string argValue = arguments[0].getString(runtime).utf8(runtime);
+                    if (argValue == "hex") {
+                        base = 16;
+                    }
+                    // TODO: Add more conditions here if you support other string representations for bases.
+                }
             }
             int len = -1;
             if (!arguments[1].isUndefined())
