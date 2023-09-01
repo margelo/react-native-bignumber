@@ -99,6 +99,10 @@ Now, all imports for `bn.js` will be resolved as `react-native-bignumber` instea
 
 In the Exodus app, this single line change reduced app launch time by **4 seconds**! 🚀
 
+## Community Discord
+
+[Join the Margelo Community Discord](https://discord.gg/6CSHz2qAvA) to chat about react-native-bignumber or other Margelo libraries.
+
 ## Sponsors
 
 <a href="https://exodus.com">
