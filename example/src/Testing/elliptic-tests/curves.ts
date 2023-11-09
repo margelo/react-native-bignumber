@@ -1,7 +1,9 @@
-import { assert } from 'chai';
-import { describe, it } from '../MochaRNAdapter';
+import { assert, expect } from 'chai';
+import { describe, it, itOnly } from '../MochaRNAdapter';
 import {BN} from 'react-native-bignumber';
 import elliptic from 'elliptic';
+import bn_elliptic from 'bn_elliptic';
+var SLOW_BN = require('bn.js');
 
 export function registerCurvedTests() {
   describe('Curve', function () {
@@ -19,6 +21,64 @@ export function registerCurvedTests() {
       assert(p.dbl().add(p.dbl()).validate());
       assert(p.dbl().add(p.dbl()).eq(p.add(p).add(p).add(p)));
     });
+
+    itOnly('issue #55', function () {
+      const secp256k1 = new elliptic.ec('secp256k1');
+      const bn_secp256k1 = new bn_elliptic.ec('secp256k1');
+
+      const kI =
+        '9dc74cbfd383980fb4ae5d2680acddac9dac956dca65a28c80ac9c847c2374e4';
+      const n = secp256k1.curve.n;
+      const G = secp256k1.curve.g;
+      const Q = G.mul(kI)
+
+      const n_BN = bn_secp256k1.curve.n;
+      const G_BN = bn_secp256k1.curve.g;
+      const Q_BN = G_BN.mul(kI);
+
+      const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
+      const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16)
+      const FAST_Q = new BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
+      const FAST_N = new BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
+
+      console.log("n", n);
+      console.log("Q.x", Q.x);
+      console.log("res:", `${Q.x.umod(n)}`)
+      console.log("after Q.x", Q.x);
+      console.log("from string fast  Q.x", new BN(`${Q.x}`));
+      console.log("from string slow Q.x", new SLOW_BN(`${Q.x}`));
+      console.log("res2:", `${new BN(`${Q.x}`).umod(new BN(`${n}`))}`)
+      console.log("res3:", `${new SLOW_BN(`${Q.x}`).umod(new SLOW_BN(`${n}`))}`)
+
+      console.log('new FAST_Q', FAST_Q)
+      console.log('old FAST_Q', Q.x)
+      console.log('new FAST_N', FAST_N)
+      console.log('old FAST_N', n)
+      console.log('eq', Q.x.eq(FAST_Q))
+
+      console.log('is it red', Q_BN.x.red != null)
+      // Looks like the problem is that in BN normal methods changes value to non red
+      expect(`${Q.x.fromRed().umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
+      expect(`${Q.x.umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
+      //expect(`${Q.x.umod(n)}`).to.be.equal(`${Q_BN.x.umod(n_BN)}`);
+      /*console.log(Q.x.umod(n));
+      // output: e696d0036454d7b7890bd425947329f68d9c7c0e2de44958e5700a30ca98b02c
+      console.log(Q_BN.x.umod(n_BN));
+      // output: 54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed*/
+    })
+
+    it('issue #55 (simpler)', function () {
+      const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
+      const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16)
+      const FAST_Q = new BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
+      const FAST_N = new BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
+      console.log('slow_n', SLOW_N)
+      console.log('slow_q', SLOW_Q)
+      console.log('res1', FAST_Q.umod(FAST_N))
+      console.log('res2', SLOW_Q.umod(SLOW_N))
+      expect(`${FAST_Q.umod(FAST_N)}`).to.be.equal(`${SLOW_Q.umod(SLOW_N)}`);
+
+    })
 
     it('should dbl points on edwards curve using proj coordinates', function () {
       var curve = new elliptic.curve.edwards({

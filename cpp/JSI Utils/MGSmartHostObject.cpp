@@ -21,6 +21,15 @@ namespace margelo
         return propertyNames;
     }
 
+    FieldDefinition buildPair(std::string name, jsi::HostFunctionType &&f) {
+      auto valueBuilder = [f, name](jsi::Runtime &runtime) {
+        const auto func = f;
+        auto propNameID = jsi::PropNameID::forAscii(runtime, name);
+        return jsi::Function::createFromHostFunction(runtime, propNameID, 0, func);
+      };
+      return std::make_pair(name, valueBuilder);
+    }
+
     // TODO(Szymon) maybe add memoization here
     jsi::Value MGSmartHostObject::get(jsi::Runtime &runtime,
                                       const jsi::PropNameID &propNameId)

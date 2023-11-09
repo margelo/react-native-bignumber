@@ -1199,7 +1199,7 @@ namespace margelo
             return jsi::Value(runtime, BN_cmp(thiz->bign, other->bign) >= 0);
         }));
 
-        this->fields.push_back(HOST_LAMBDA("eq", {
+        this->fields.push_back(buildPair("eq", JSIF([this]) {
             std::shared_ptr<MGBigNumber> thiz = thisValue.getObject(runtime).getHostObject<MGBigNumber>(runtime);
             const jsi::Value &otherValue = arguments[0];
             if (!otherValue.isObject())

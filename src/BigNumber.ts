@@ -356,6 +356,9 @@ export class BN {
   }
 
   umod(other: BN) {
+    if (this.red != null) {
+      return this.clone()
+    }
     return new BN(native.umod.call(this.internalBigNum, other.internalBigNum));
   }
 
