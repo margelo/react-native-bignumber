@@ -22,7 +22,7 @@ export function registerCurvedTests() {
       assert(p.dbl().add(p.dbl()).eq(p.add(p).add(p).add(p)));
     });
 
-    itOnly('issue #55', function () {
+    it('issue #55 umod', function () {
       const secp256k1 = new elliptic.ec('secp256k1');
       const bn_secp256k1 = new bn_elliptic.ec('secp256k1');
 
@@ -36,40 +36,15 @@ export function registerCurvedTests() {
       const G_BN = bn_secp256k1.curve.g;
       const Q_BN = G_BN.mul(kI);
 
-      const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
-      const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16)
-      const FAST_Q = new BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
-      const FAST_N = new BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
-
-      console.log("n", n);
-      console.log("Q.x", Q.x);
-      console.log("res:", `${Q.x.umod(n)}`)
-      console.log("after Q.x", Q.x);
-      console.log("from string fast  Q.x", new BN(`${Q.x}`));
-      console.log("from string slow Q.x", new SLOW_BN(`${Q.x}`));
-      console.log("res2:", `${new BN(`${Q.x}`).umod(new BN(`${n}`))}`)
-      console.log("res3:", `${new SLOW_BN(`${Q.x}`).umod(new SLOW_BN(`${n}`))}`)
-
-      console.log('new FAST_Q', FAST_Q)
-      console.log('old FAST_Q', Q.x)
-      console.log('new FAST_N', FAST_N)
-      console.log('old FAST_N', n)
-      console.log('eq', Q.x.eq(FAST_Q))
-
-      console.log('is it red', Q_BN.x.red != null)
-      console.log('is it red2', Q_BN.x.umod(n_BN).red != null)
-      // Looks like the problem is that in BN normal methods changes value to non red
-      expect(`${Q.x.fromRed().umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
-      expect(`${Q.x.umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
       expect(`${Q.x.umod(n)}`).to.be.equal(`${Q_BN.x.umod(n_BN)}`);
       
-      console.log("FAST", Q.x.umod(n));
+      //console.log("FAST", Q.x.umod(n));
       // output: e696d0036454d7b7890bd425947329f68d9c7c0e2de44958e5700a30ca98b02c
-      console.log("SLOW", Q_BN.x.umod(n_BN));
+      //console.log("SLOW", Q_BN.x.umod(n_BN));
       // output: 54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed
     })
 
-    it('issue #55 (simpler)', function () {
+    it('issue #55 (simpler) umod', function () {
       const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
       const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16)
       const FAST_Q = new BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
