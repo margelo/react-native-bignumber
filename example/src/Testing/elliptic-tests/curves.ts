@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { describe, it, itOnly } from '../MochaRNAdapter';
+import { describe, it } from '../MochaRNAdapter';
 import {BN} from 'react-native-bignumber';
 import elliptic from 'elliptic';
 import bn_elliptic from 'bn_elliptic';
@@ -30,7 +30,7 @@ export function registerCurvedTests() {
         '9dc74cbfd383980fb4ae5d2680acddac9dac956dca65a28c80ac9c847c2374e4';
       const n = secp256k1.curve.n;
       const G = secp256k1.curve.g;
-      const Q = G.mul(kI)
+      const Q = G.mul(kI);
 
       const n_BN = bn_secp256k1.curve.n;
       const G_BN = bn_secp256k1.curve.g;
@@ -45,16 +45,15 @@ export function registerCurvedTests() {
     })
 
     it('issue #55 (simpler) umod', function () {
-      const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
-      const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16)
+      const SLOW_N = new SLOW_BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16);
+      const SLOW_Q = new SLOW_BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
       const FAST_Q = new BN('54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed', 16);
-      const FAST_N = new BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16)
-      console.log('slow_n', SLOW_N)
-      console.log('slow_q', SLOW_Q)
-      console.log('res1', FAST_Q.umod(FAST_N))
-      console.log('res2', SLOW_Q.umod(SLOW_N))
+      const FAST_N = new BN('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141', 16);
+      console.log('slow_n', SLOW_N);
+      console.log('slow_q', SLOW_Q);
+      console.log('res1', FAST_Q.umod(FAST_N));
+      console.log('res2', SLOW_Q.umod(SLOW_N));
       expect(`${FAST_Q.umod(FAST_N)}`).to.be.equal(`${SLOW_Q.umod(SLOW_N)}`);
-
     })
 
     it('should dbl points on edwards curve using proj coordinates', function () {
