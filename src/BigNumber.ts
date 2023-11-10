@@ -356,7 +356,13 @@ export class BN {
   }
 
   umod(other: BN) {
-    return new BN(native.umod.call(this.internalBigNum, other.internalBigNum));
+    const res = new BN(
+      native.umod.call(this.internalBigNum, other.internalBigNum)
+    );
+    if (this.red) {
+      res.forceRed(this._mctx!);
+    }
+    return res;
   }
 
   imodn(other: number) {

@@ -19,6 +19,8 @@ namespace margelo
 
     typedef std::pair<std::string, JSIValueBuilder> FieldDefinition;
 
+    FieldDefinition buildPair(std::string name, jsi::HostFunctionType &&f);
+
     class JSI_EXPORT MGSmartHostObject : public MGThreadAwareHostObject
     {
 
