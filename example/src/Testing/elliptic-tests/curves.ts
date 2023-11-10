@@ -57,14 +57,16 @@ export function registerCurvedTests() {
       console.log('eq', Q.x.eq(FAST_Q))
 
       console.log('is it red', Q_BN.x.red != null)
+      console.log('is it red2', Q_BN.x.umod(n_BN).red != null)
       // Looks like the problem is that in BN normal methods changes value to non red
       expect(`${Q.x.fromRed().umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
       expect(`${Q.x.umod(n)}`).to.be.equal(`${FAST_Q.umod(FAST_N)}`);
-      //expect(`${Q.x.umod(n)}`).to.be.equal(`${Q_BN.x.umod(n_BN)}`);
-      /*console.log(Q.x.umod(n));
+      expect(`${Q.x.umod(n)}`).to.be.equal(`${Q_BN.x.umod(n_BN)}`);
+      
+      console.log("FAST", Q.x.umod(n));
       // output: e696d0036454d7b7890bd425947329f68d9c7c0e2de44958e5700a30ca98b02c
-      console.log(Q_BN.x.umod(n_BN));
-      // output: 54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed*/
+      console.log("SLOW", Q_BN.x.umod(n_BN));
+      // output: 54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed
     })
 
     it('issue #55 (simpler)', function () {
