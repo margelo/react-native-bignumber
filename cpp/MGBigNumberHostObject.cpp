@@ -23,7 +23,7 @@ namespace margelo
     {
         this->fields.push_back(HOST_LAMBDA("createFromString", {
             std::string strRep = arguments[0].getString(runtime).utf8(runtime);
-            strRep.erase(std::remove_if(strRep.begin(), strRep.end(), std::isspace), strRep.end());
+            strRep.erase(remove_if(strRep.begin(), strRep.end(), isspace), strRep.end());
             int base = 10;
             if (!arguments[1].isUndefined())
             {
