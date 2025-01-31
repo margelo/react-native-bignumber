@@ -1,5 +1,5 @@
 project("react-native-bignumber")
-cmake_minimum_required(VERSION 3.9.0)
+cmake_minimum_required(VERSION 3.10.2)
 
 set(PACKAGE_NAME "reactnativeBigNumber")
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Consume shared libraries and headers from prefabs
 find_package(fbjni REQUIRED CONFIG)
 find_package(ReactAndroid REQUIRED CONFIG)
+find_package(openssl REQUIRED CONFIG)
+find_library(log-lib log)
 
 include_directories(
         "../cpp"
@@ -45,23 +47,12 @@ set_target_properties(
         POSITION_INDEPENDENT_CODE ON
 )
 
-file(GLOB LIBRN_DIR "${BUILD_DIR}/react-native-0*/jni/${ANDROID_ABI}")
-
-find_library(
-        log-lib
-        log
-)
-
-find_package(openssl REQUIRED CONFIG)
-
 target_link_libraries(
         ${PACKAGE_NAME}
-        ReactAndroid::turbomodulejsijni
         fbjni::fbjni
         ${log-lib}
         ReactAndroid::jsi
-        ReactAndroid::reactnativejni
-        ReactAndroid::react_nativemodule_core
+        ReactAndroid::reactnative
         android
         openssl::crypto
         openssl::ssl
