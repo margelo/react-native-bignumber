@@ -9,6 +9,8 @@ import BN from 'react-native-bignumber';
 import { describe, it } from './MochaRNAdapter';
 import chai from 'chai';
 
+console.log('BN', BN);
+
 export const TEST_LIST: Array<TestItemType> = [
   {
     description: 'SimpleTests',

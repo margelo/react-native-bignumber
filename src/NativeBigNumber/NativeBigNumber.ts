@@ -1,5 +1,7 @@
 import { NativeModules, Platform } from 'react-native';
 
+console.log('NativeModules', NativeModules);
+
 export interface InternalNumber {}
 
 export interface InternalRedNumber extends InternalNumber {
@@ -231,4 +233,5 @@ const native = {} as any;
 Object.keys(proxy).forEach((key: string) => {
   native[key] = proxy[key];
 });
+console.log('native', native);
 export const NativeBigNumber = native as NativeBigNumberSpec;

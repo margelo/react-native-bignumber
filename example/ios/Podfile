@@ -31,6 +31,14 @@ target 'BigNumberExample' do
   end
 
   post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+        config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+        config.build_settings['GCC_C_LANGUAGE_STANDARD'] = 'gnu11'
+      end
+    end
+
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
