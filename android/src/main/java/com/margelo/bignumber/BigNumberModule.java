@@ -41,7 +41,7 @@ public class BigNumberModule extends ReactContextBaseJavaModule {
         return false;
       }
       Log.i(NAME, "Loading C++ library...");
-      System.loadLibrary("reactnativeBigNumber");
+      System.loadLibrary("react-native-bignumber");
 
       JavaScriptContextHolder jsContext = getReactApplicationContext().getJavaScriptContextHolder();
       CallInvokerHolderImpl jsCallInvokerHolder = (CallInvokerHolderImpl) getReactApplicationContext()

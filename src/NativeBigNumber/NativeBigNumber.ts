@@ -174,6 +174,7 @@ declare global {
 if (global.__BigNumberProxy == null) {
   // Get the native BigNumber ReactModule
   const BigNumberModule = NativeModules.BigNumber;
+  console.log('BigNumberModule', BigNumberModule);
   if (BigNumberModule == null) {
     let message =
       'Failed to install react-native-bignumber: The native `BigNumber` Module could not be found.';

@@ -90,12 +90,14 @@ android {
               '**/libreactnativejni.so',
               '**/libjsi.so',
               '**/libreact_nativemodule_core.so',
-              '**/libturbomodulejsijni.so'
+              '**/libturbomodulejsijni.so',
+              '**/libreactnative.so'
             ]
         }
         resources {
             excludes += ['**/MANIFEST.MF']
         }
+        exclude 'META-INF/LICENSE.md'
     }
 
 

@@ -38,7 +38,7 @@ export const TEST_LIST: Array<TestItemType> = [
 
         it('basic toArray', () => {
           chai.assert.deepEqual(
-            new BN([1, 2, 3, 4], 'hex', 'le').toArray('le', 3),
+            new BN([1, 2, 3, 4], 16, 'le').toArray('le', 3),
             [1, 2, 3]
           );
         });
