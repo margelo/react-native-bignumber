@@ -1,9 +1,10 @@
 project("react-native-bignumber")
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.9.0)
 
 set(PACKAGE_NAME "react-native-bignumber")
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_STANDARD 20)
 
 # Consume shared libraries and headers from prefabs
 find_package(fbjni REQUIRED CONFIG)
@@ -42,7 +43,7 @@ add_library(
 set_target_properties(
         ${PACKAGE_NAME}
         PROPERTIES
-        CXX_STANDARD 17
+        CXX_STANDARD 20
         CXX_EXTENSIONS OFF
         POSITION_INDEPENDENT_CODE ON
 )
@@ -52,8 +53,21 @@ target_link_libraries(
         fbjni::fbjni
         ${log-lib}
         ReactAndroid::jsi
-        ReactAndroid::reactnative
         android
         openssl::crypto
         openssl::ssl
 )
+
+if (ReactAndroid_VERSION_MINOR GREATER_EQUAL 76)
+    target_link_libraries(
+            ${PACKAGE_NAME}
+            ReactAndroid::reactnative
+    )
+else ()
+    target_link_libraries(
+            ${PACKAGE_NAME}
+            ReactAndroid::reactnativejni
+            ReactAndroid::turbomodulejsijni
+            ReactAndroid::react_nativemodule_core
+    )
+endif ()
