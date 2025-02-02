@@ -27,6 +27,7 @@ void install(jsi::Runtime& runtime, std::shared_ptr<facebook::react::CallInvoker
 
 void nativeInstall(jlong jsiPtr, jni::alias_ref<facebook::react::CallInvokerHolder::javaobject>
                    jsCallInvokerHolder) {
+  __android_log_print(ANDROID_LOG_INFO, "BigNumber", "nativeInstall called");
   auto jsCallInvoker = jsCallInvokerHolder->cthis()->getCallInvoker();
   auto runtime = reinterpret_cast<jsi::Runtime*>(jsiPtr);
   if (runtime) {
@@ -47,7 +48,9 @@ friend HybridBase;
 };
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
+  __android_log_print(ANDROID_LOG_INFO, "BigNumber", "JNI_OnLoad called");
   return facebook::jni::initialize(vm, [] {
+    __android_log_print(ANDROID_LOG_INFO, "BigNumber", "Registering natives");
     BigNumberCppAdapter::registerNatives();
   });
 }

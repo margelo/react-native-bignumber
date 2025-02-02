@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(fbjni REQUIRED CONFIG)
 find_package(ReactAndroid REQUIRED CONFIG)
 find_package(openssl REQUIRED CONFIG)
-find_library(log-lib log)
+find_library(LOG_LIB log)
 
 include_directories(
         "../cpp"
@@ -50,8 +50,8 @@ set_target_properties(
 
 target_link_libraries(
         ${PACKAGE_NAME}
+        ${LOG_LIB}
         fbjni::fbjni
-        ${log-lib}
         ReactAndroid::jsi
         android
         openssl::crypto
