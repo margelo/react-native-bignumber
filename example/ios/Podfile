@@ -21,7 +21,7 @@ target 'BigNumberExample' do
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/..",
-    :fabric_enabled => true,
+    :fabric_enabled => false,
     :hermes_enabled => true
   )
 
