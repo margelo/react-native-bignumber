@@ -1,7 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
 
-console.log('NativeModules', NativeModules);
-
 export interface InternalNumber {}
 
 export interface InternalRedNumber extends InternalNumber {
@@ -176,6 +174,7 @@ declare global {
 if (global.__BigNumberProxy == null) {
   // Get the native BigNumber ReactModule
   const BigNumberModule = NativeModules.BigNumber;
+  console.log('BigNumberModule', BigNumberModule);
   if (BigNumberModule == null) {
     let message =
       'Failed to install react-native-bignumber: The native `BigNumber` Module could not be found.';
@@ -233,5 +232,4 @@ const native = {} as any;
 Object.keys(proxy).forEach((key: string) => {
   native[key] = proxy[key];
 });
-console.log('native', native);
 export const NativeBigNumber = native as NativeBigNumberSpec;
