@@ -95,14 +95,35 @@ namespace margelo
             {
                 len = std::max(1, numberLen);
             }
+            else
+            {
+                len = std::min(len, numberLen);
+            }
+
             unsigned char *to = new unsigned char[len];
             if (le)
             {
-                BN_bn2lebinpad(thiz->bign, to, len);
+                if (len == numberLen) {
+                    BN_bn2lebinpad(thiz->bign, to, len);
+                } else {
+                    // For smaller lengths, we need to get the full number and truncate
+                    unsigned char *full = new unsigned char[numberLen];
+                    BN_bn2lebinpad(thiz->bign, full, numberLen);
+                    memcpy(to, full, len);
+                    delete[] full;
+                }
             }
             else
             {
-                BN_bn2binpad(thiz->bign, to, len);
+                if (len == numberLen) {
+                    BN_bn2binpad(thiz->bign, to, len);
+                } else {
+                    // For smaller lengths, we need to get the full number and truncate
+                    unsigned char *full = new unsigned char[numberLen];
+                    BN_bn2binpad(thiz->bign, full, numberLen);
+                    memcpy(to, full, len);
+                    delete[] full;
+                }
             }
 
             jsi::Array res(runtime, len);

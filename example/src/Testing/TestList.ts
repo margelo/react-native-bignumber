@@ -9,8 +9,6 @@ import BN from 'react-native-bignumber';
 import { describe, it } from './MochaRNAdapter';
 import chai from 'chai';
 
-console.log('BN', BN);
-
 export const TEST_LIST: Array<TestItemType> = [
   {
     description: 'SimpleTests',
@@ -40,7 +38,7 @@ export const TEST_LIST: Array<TestItemType> = [
 
         it('basic toArray', () => {
           chai.assert.deepEqual(
-            new BN([1, 2, 3, 4], 'hex', 'le').toArray('le', 3),
+            new BN([1, 2, 3, 4], 16, 'le').toArray('le', 3),
             [1, 2, 3]
           );
         });
