@@ -5,5 +5,5 @@ rootProject.name = 'BigNumberExample'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 
-include ':reactnativeBigNumber'
-project(':reactnativeBigNumber').projectDir = new File(rootProject.projectDir, '../../android')
+include ':react-native-bignumber'
+project(':react-native-bignumber').projectDir = new File(rootProject.projectDir, '../../android')

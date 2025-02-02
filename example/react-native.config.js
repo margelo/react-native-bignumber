@@ -14,7 +14,7 @@ module.exports = {
         },
         android: {
           sourceDir: path.resolve(__dirname, '../android'),
-          packageImportPath: 'com.margelo.bignumber.BigNumberPackage',
+          packageImportPath: 'import com.margelo.bignumber.BigNumberPackage;',
           packageInstance: 'new BigNumberPackage()',
         },
       },
