@@ -53,7 +53,7 @@ yarn test
 
 To edit the Objective-C files, open `example/ios/BigNumberExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-bignumber`.
 
-To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativeBigNumber` under `Android`.
+To edit the Kotlin files, open `example/android` in Android studio and find the source files at `react-native-bignumber` under `Android`.
 
 ### Commit message convention
 

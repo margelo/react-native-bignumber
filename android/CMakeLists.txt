@@ -1,7 +1,7 @@
 project("react-native-bignumber")
 cmake_minimum_required(VERSION 3.9.0)
 
-set(PACKAGE_NAME "reactnativeBigNumber")
+set(PACKAGE_NAME "react-native-bignumber")
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_CXX_STANDARD 17)
 
