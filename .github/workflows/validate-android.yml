@@ -58,15 +58,14 @@ jobs:
       - name: Verify lint report exists
         run: |
           ls -R build/reports
-          if [ ! -f "build/reports/lint-results.xml" ]; then
+          if [ ! -f "build/reports/lint-results-debug.xml" ]; then
             echo "Lint report not found!"
             exit 1
           fi
-
       - name: Parse Gradle Lint Report
         uses: yutailang0119/action-android-lint@v1.0.2
         with:
-          xml_path: android/build/reports/lint-results.xml
+          xml_path: android/build/reports/lint-results-debug.xml
   # ktlint:
   #   name: Kotlin Lint
   #   runs-on: ubuntu-latest
