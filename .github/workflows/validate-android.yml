@@ -54,7 +54,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Run Gradle Lint
-        run: ./gradlew lint --build-cache
+        run: ./gradlew lint --build-cache --stacktrace
+
+      - name: Verify lint report exists
+        run: |
+          ls -R build/reports
+          if [ ! -f "build/reports/lint-results.xml" ]; then
+            echo "Lint report not found!"
+            exit 1
+          fi
 
       - name: Parse Gradle Lint Report
         uses: yutailang0119/action-android-lint@v1.0.2
