@@ -54,8 +54,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Run Gradle Lint
-        run: ./gradlew lint --build-cache --stacktrace
-
+        run: ./gradlew lint --build-cache
       - name: Verify lint report exists
         run: |
           ls -R build/reports
