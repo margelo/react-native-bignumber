@@ -5,7 +5,6 @@ set(PACKAGE_NAME "react-native-bignumber")
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Consume shared libraries and headers from prefabs
 find_package(fbjni REQUIRED CONFIG)
