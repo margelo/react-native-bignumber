@@ -117,5 +117,5 @@ dependencies {
         implementation jscFlavor
     }
 
-     implementation project(':react-native-bignumber')
+    implementation project(':react-native-bignumber')
 }
