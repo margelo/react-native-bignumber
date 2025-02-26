@@ -4,7 +4,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-native",
     "lib": ["esnext"],
@@ -22,15 +21,6 @@
     "target": "esnext",
     "outDir": "lib"
   },
-  "include": [
-    "src",
-    ".eslintrc.js",
-    "babel.config.js",
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "docs",
-    "example"
-  ]
+  "include": ["src", ".eslintrc.js", "babel.config.js"],
+  "exclude": ["node_modules", "lib", "docs", "example"]
 }

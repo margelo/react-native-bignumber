@@ -1,5 +1,5 @@
 <a href="https://margelo.io">
-  <img src="./img/banner.svg" width="100%" />
+  <img src="./docs/banner.svg" width="100%" />
 </a>
 
 # 🔢 react-native-bignumber
@@ -17,7 +17,7 @@ The fastest Big Number library for React Native.
 ## Installation
 
 <h3>
-  React Native  <a href="#"><img src="./img/react-native.png" height="15" /></a>
+  React Native  <a href="#"><img src="./docs/react-native.png" height="15" /></a>
 </h3>
 
 ```sh
@@ -26,7 +26,7 @@ cd ios && pod install
 ```
 
 <h3>
-  Expo  <a href="#"><img src="./img/expo.png" height="12" /></a>
+  Expo  <a href="#"><img src="./docs/expo.png" height="12" /></a>
 </h3>
 
 ```sh
@@ -106,7 +106,7 @@ In the Exodus app, this single line change reduced app launch time by **4 second
 ## Sponsors
 
 <a href="https://exodus.com">
-  <img align="right" src="img/exodus.svg" height="65" alt="Exodus" />
+  <img align="right" src="docs/exodus.svg" height="65" alt="Exodus" />
 </a>
 
 This library is supported by [**Exodus**](https://exodus.com).

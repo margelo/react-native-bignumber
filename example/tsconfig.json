@@ -1,10 +1,5 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "react-native-bignumber": ["../src/index"]
-    }
-  },
   "include": ["src", "index.js", "App.tsx"],
   "exclude": ["node_modules"]
 }
