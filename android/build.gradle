@@ -125,8 +125,8 @@ repositories {
 }
 
 dependencies {
-  // https://mvnrepository.com/artifact/com.android.ndk.thirdparty/openssl
-  implementation 'com.android.ndk.thirdparty:openssl:1.1.1l-beta-1'
+  // Add a dependency on OpenSSL
+  implementation "io.github.ronickg:openssl:3.3.2"
 
   implementation "com.facebook.react:react-android:0.71.6"
   implementation "com.facebook.react:hermes-android:0.71.6"
