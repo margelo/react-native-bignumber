@@ -1,5 +1,9 @@
-<a href="https://margelo.io">
-  <img src="./img/banner.svg" width="100%" />
+<a href="https://margelo.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./img/banner-dark.png" />
+    <source media="(prefers-color-scheme: light)" srcset="./img/banner-light.png" />
+    <img alt="react-native-bignumber" src="./img/banner-light.png" />
+  </picture>
 </a>
 
 # 🔢 react-native-bignumber
