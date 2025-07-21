@@ -240,7 +240,8 @@ export class BN {
       return this.toArray(endian, len);
     }
 
-    const outLen = len != null ? len : this.byteLength();
+    // Ensure minimum array length of 1 to prevent native crashes with zero-length buffers
+    const outLen = len != null ? len : Math.max(1, this.byteLength());
 
     const res = new (arrayLike as any)(outLen);
 
